@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/Stock-Market-API-CS499.git/static/css/main.978a72ba.chunk.css",
+    "main.js": "/Stock-Market-API-CS499.git/static/js/main.fc7cddd0.chunk.js",
+    "main.js.map": "/Stock-Market-API-CS499.git/static/js/main.fc7cddd0.chunk.js.map",
+    "runtime-main.js": "/Stock-Market-API-CS499.git/static/js/runtime-main.345dbaff.js",
+    "runtime-main.js.map": "/Stock-Market-API-CS499.git/static/js/runtime-main.345dbaff.js.map",
+    "static/js/2.18d9d3dd.chunk.js": "/Stock-Market-API-CS499.git/static/js/2.18d9d3dd.chunk.js",
+    "static/js/2.18d9d3dd.chunk.js.map": "/Stock-Market-API-CS499.git/static/js/2.18d9d3dd.chunk.js.map",
+    "static/js/3.f625ce5d.chunk.js": "/Stock-Market-API-CS499.git/static/js/3.f625ce5d.chunk.js",
+    "static/js/3.f625ce5d.chunk.js.map": "/Stock-Market-API-CS499.git/static/js/3.f625ce5d.chunk.js.map",
+    "index.html": "/Stock-Market-API-CS499.git/index.html",
+    "static/css/main.978a72ba.chunk.css.map": "/Stock-Market-API-CS499.git/static/css/main.978a72ba.chunk.css.map",
+    "static/js/2.18d9d3dd.chunk.js.LICENSE.txt": "/Stock-Market-API-CS499.git/static/js/2.18d9d3dd.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.345dbaff.js",
+    "static/js/2.18d9d3dd.chunk.js",
+    "static/css/main.978a72ba.chunk.css",
+    "static/js/main.fc7cddd0.chunk.js"
+  ]
+}
