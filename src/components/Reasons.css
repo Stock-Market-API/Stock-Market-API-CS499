@@ -1,0 +1,87 @@
+.lp1container1{
+    width: 100%;
+    height: 450px;
+    background-color: rgb(228, 227, 227);
+}
+
+.lptitle{
+    text-align: center;
+    padding-top: 75px;
+   }
+.lpreasons{
+    display: flex;
+    text-align: center;
+}
+.lpreasonbox{
+    width: 20%;
+    height: 150px;
+    
+    margin: 1px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
+   
+}
+.titledesc{
+    margin-top: 20px;
+    color: black;
+}
+
+.lpcontainer2{
+    width: 100%;
+    height: 850px;
+    background-color: white;
+    display: flex;
+}
+.box1{
+    width: 50%;
+    height: 850px;
+   
+    justify-content: center;
+    display: flex;
+    padding: 10px;
+}
+.box2{
+    width: 50%;
+   
+    height: 850px;
+   
+    margin-left: auto;
+    display: block;
+    text-align: center;
+    margin-top: 350px;
+}
+.box3{
+   
+    margin-top: 25px;
+   margin-left: 30%;
+   margin-right: 30%;
+}
+
+.lpcontainer3{
+    width: 100%;
+    height: 450px;
+    background-color: rgb(228, 227, 227);
+    padding-top: 40px;
+}
+.container3steps{
+    text-align: center;
+    margin: 10px;
+    font-size: 20px;
+    line-height: 400%;
+       
+      
+       
+    
+}    
+
+.stepone{
+  display: flex;
+  margin-top: 15px;
+  
+}
+.wrapper{
+    margin-top: 10px;
+    margin-right: 35px;
+    margin-left: 43%;
+}
