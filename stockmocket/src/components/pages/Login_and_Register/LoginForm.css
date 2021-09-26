@@ -40,14 +40,14 @@
 
 .form-content {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', 
-     Arial, sans-serif;
+      Arial, sans-serif;
     position: absolute;
     text-align: center;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
     background-color: rgba(0, 0, 0, 0.89);
-    border-radius: 3px;
+    border-radius: 24px;
     padding: 70px 100px;
 }
 

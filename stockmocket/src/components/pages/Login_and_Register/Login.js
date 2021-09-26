@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import "./LoginForm.css";
 
 function Login() {
 
-    const [user, setUser] = useState('')
-    const [pass, setPass] = useState('')
+    const [user, setUser] = useState('');
+    const [pass, setPass] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
     //Form Submission
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
         if (user.length === 0 || pass.length === 0) {
@@ -34,8 +35,14 @@ function Login() {
                 console.log(err)
              })
             */
-        }
 
+            setRedirect(true);
+        }
+    }
+
+    //Redirects to home page upon successful form submission
+    if (redirect) {
+        return <Redirect to="/" />;
     }
 
     return (
@@ -67,7 +74,7 @@ function Login() {
                     </div>
                     <div className="form-buttons">
                         <button type="submit" className="formbtn"> 
-                                Login
+                            Login
                         </button>
                         <Link to="/register"><button className = "formbtn">
                             Sign Up

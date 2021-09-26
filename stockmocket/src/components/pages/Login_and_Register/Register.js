@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import "./LoginForm.css";
 
 function Register() {
@@ -9,46 +9,67 @@ function Register() {
     const [passRegister, setpassRegister] = useState('')
     const [confirmpassRegister, setconfirmpassRegister] = useState('')
     const [emailRegister, setemailRegister] = useState('')
+    const [redirect, setRedirect] = useState(false);
 
     //Form Submission
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
         if (userRegister.length === 0 || passRegister.length === 0 || confirmpassRegister === 0
-        || emailRegister === 0) {
+            || emailRegister === 0) {
             alert("Fill in empty fields");
         }
 
-        if (passRegister != confirmpassRegister) {
+        else if (passRegister != confirmpassRegister) {
             alert("Passwords do not match");
         }
 
         else {
-             /*
-            
-            let newUser = {
-                username: userRegister,
-                password: passRegister,
-                email: emailRegister
-            }
+            /*
+           
+           let newUser = {
+               username: userRegister,
+               password: passRegister,
+               email: emailRegister
+           }
 
-            //Take inputs from register url to send to backend
-            const register = () => {
-            axios.post('http://localhost:3000/register', newUser {
-                .then (res=>{
-                    console.log(res)
-                 }
+           //Take inputs from register url to send to backend
+           const register = () => {
+           axios.post('http://localhost:3000/register', newUser {
+               .then (res=>{
+                   console.log(res)
+                }
 
-                 .catch(err => {
-                    console.log(err)
-                 })
+                .catch(err => {
+                   console.log(err)
+                })
 
-            });
-            };
-            */
+           });
+           };
+
+           const response = await fetch(input:http://localhost:3000/register){
+               method :'POST',
+               headers: {'Content-Type': 'application/json'},
+               credentials: 'include',
+               body: JSON.stringify ({
+                   name,
+                   password,
+                   email
+               })
+           }
+
+           const content = await response.json()
+           console.log(content);
+ 
+           */
+            setRedirect(true);
         }
     }
 
+    //Redirects to login page upon successful form submission
+    if (redirect) {
+        return <Redirect to="/login" />;
+    }
 
     return (
         <div className="form-bg">
@@ -58,7 +79,7 @@ function Register() {
             <div className="form-content"> Register
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="form-inputs">
-                        <input type="text"
+                        <input type="text" required
                             //Saves username input to be inputted to backend
                             //upon submission
                             value = {userRegister}
@@ -68,7 +89,7 @@ function Register() {
                             name="Username" placeholder="Username" />
                     </div>
                     <div className="form-inputs">
-                        <input type="Password"
+                        <input type="Password" required
                             //Saves password input to be inputted to backend
                             //upon submission
                             value = {passRegister}
@@ -78,7 +99,7 @@ function Register() {
                             name="Password" placeholder="Password" />
                         </div>
                     <div className="form-inputs">
-                            <input type="Password"
+                            <input type="Password" required
                                 //Saves password input to be inputted to backend
                                 //upon submission
                             value={confirmpassRegister}
@@ -88,7 +109,7 @@ function Register() {
                             name="Password" placeholder="Confirm Password" />
                     </div>
                     <div className="form-inputs">
-                    <input type="Email"
+                    <input type="Email" required
                         //Saves email input to be inputted to backend
                         //upon submission
                         value={emailRegister}
@@ -98,10 +119,9 @@ function Register() {
                         name="Email" placeholder="Email" />
                     </div>
                     <div className="form-buttons">
-                        <Link to="/"><button className="formbtn">
+                        <button className="formbtn" >
                             Register
                         </button>
-                        </Link>
                     </div>
                 </form>
             </div>
