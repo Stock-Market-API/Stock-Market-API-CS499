@@ -102,6 +102,7 @@
     padding: 6px 24px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #ffffff;
+    margin-right: 2px;
 }
     .formbtn:hover {
         transform: scale(1.08,1.08);
