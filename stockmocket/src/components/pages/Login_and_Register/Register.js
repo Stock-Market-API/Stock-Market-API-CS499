@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import "./LoginForm.css";
 
+const Parse = require('parse/node');
+
 function Register() {
 
     const [userRegister, setuserRegister] = useState('')
@@ -25,43 +27,21 @@ function Register() {
         }
 
         else {
-            /*
-           
-           let newUser = {
-               username: userRegister,
-               password: passRegister,
-               email: emailRegister
-           }
+            try {
+                // create a new Parse Object instance
+                const Person = new Parse.Object('Person');
+                // define the attributes you want for your Object
+                Person.set('name', userRegister);
+                Person.set('email', emailRegister);
+                // save it on Back4App Data Store
+                await Person.save();
+                alert('Person saved!');
+              } catch (error) {
+                console.log('Error saving new person: ', error);
+              }
 
-           //Take inputs from register url to send to backend
-           const register = () => {
-           axios.post('http://localhost:3000/register', newUser {
-               .then (res=>{
-                   console.log(res)
-                }
 
-                .catch(err => {
-                   console.log(err)
-                })
-
-           });
-           };
-
-           const response = await fetch(input:http://localhost:3000/register){
-               method :'POST',
-               headers: {'Content-Type': 'application/json'},
-               credentials: 'include',
-               body: JSON.stringify ({
-                   name,
-                   password,
-                   email
-               })
-           }
-
-           const content = await response.json()
-           console.log(content);
- 
-           */
+  
             setRedirect(true);
         }
     }

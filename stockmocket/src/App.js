@@ -6,6 +6,12 @@ import Home from './components/pages/Home';
 import Login from './components/pages/Login_and_Register/Login'
 import Register from './components/pages/Login_and_Register/Register'
 
+const Parse = require('parse/node');
+const PARSE_APPLICATION_ID = 'PkKseo3f5GALlC6FbYTPof2xofIOOOqxsfeIJ2Lx';
+const PARSE_HOST_URL = 'https://parseapi.back4app.com/';
+const PARSE_JAVASCRIPT_KEY = '2FokkUXZSKpMu65pSht3JHfeaGUKcwmbg4E5ISJ3';
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
+Parse.serverURL = PARSE_HOST_URL;
 
 function App() {
   return (
