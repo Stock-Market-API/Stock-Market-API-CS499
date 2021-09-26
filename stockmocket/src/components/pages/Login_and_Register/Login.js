@@ -1,54 +1,67 @@
 import React, { useState } from "react";
-import Axios from 'axios';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import "./LoginForm.css";
 
 function Login() {
 
-    const [user, setuser] = useState('')
-    const [pass, setpass] = useState('')
+    const [user, setUser] = useState('')
+    const [pass, setPass] = useState('')
 
-
-    function checkForm() {
-        return user > 0 && pass > 0;
-    }
-
+    //Form Submission
     function handleSubmit(event) {
         event.preventDefault();
-    }
 
-    /*
-    //Take inputs from login url to send to backend
-    const register = () => {
-        Axios.post('http://localhost:3000/Login', {
-            username: user,
-            password: pass,
-        });
-    };
-    */
+        if (user.length === 0 || pass.length === 0) {
+            alert("Fill in empty fields");
+        }
+
+        else {
+            /*
+            
+            let userLogin = {
+                username: user,
+                password: pass
+            }
+
+            //Checks if user login data is found 
+            axios.post('http://localhost:3000/login', userLogin)
+            .then (res=>{
+                console.log(res)
+             })
+
+             .catch(err => {
+                console.log(err)
+             })
+            */
+        }
+
+    }
 
     return (
         <div className="form-bg">
          <video src="/videos/video-4.mp4" autoPlay loop muted />
             <div className="form-container">
-            <div className = "form-header"> Login </div>
-            <div className = "form-content">
-                <div className="form">
+            <div className = "form-header"></div>
+            <div className = "form-content"> Login
+                <form className="form" onSubmit={handleSubmit}>
                     <div className="form-inputs">
-                        <input type="text"
+                        <input type="text" required
                             //Saves username input to be inputted to backend
                             //upon submission
+                            value={user}
                             onChange={(e) => {
-                            setuser(e.target.value);
+                            setUser(e.target.value);
                         }}
                             name="Username" placeholder="Username" />
                     </div>
                     <div className="form-inputs">
-                        <input type="Password"
+                        <input type="Password" required
                             //Saves password input to be inputted to backend
                             //upon submission
+                            value={pass}
                             onChange={(e) => {
-                            setpass(e.target.value);
+                            setPass(e.target.value);
                         }}
                             name="Password" placeholder="Password" />
                     </div>
@@ -61,7 +74,7 @@ function Login() {
                         </button>
                         </Link>
                     </div>
-                </div>
+                </form>
             </div>
          </div>
         </div>

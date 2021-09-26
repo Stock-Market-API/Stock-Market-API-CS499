@@ -1,4 +1,6 @@
-﻿.form-bg {
+﻿
+
+.form-bg {
     margin-top: -80px;
     width: 100%;
     display: flex;
@@ -37,12 +39,14 @@
 }
 
 .form-content {
-    display: flex;
-    flex-direction: column;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-color: rgba(0, 0, 0, 0.89);
+    border-radius: 3px;
+    padding: 70px 100px;
 }
 
 .form {
@@ -56,18 +60,34 @@
 .form-inputs {
     display: flex;
     height: 30px;
-    padding: 0px px;
     font-size: 16px;
     border: 0;
     border-radius: 4px;
-    margin-bottom: 26px;
+    margin-bottom: 20px;
+
 }
-    .form-inputs >  input {
-        border: none;
-        background-color: rgb(235,235,237);
+    .form-inputs > input {
+        border: 0;
+        border-bottom: 1px solid #555;
+        background: transparent;
+        width: 100%;
+        padding: 8px 0 5px 0;
+        font-size: 16px;
+        color: #fff;
+        width: 200px;
     }
+        .form-inputs input:focus {
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #e74c3c;
+        }
+
+
 
 .formbtn {
+    display: flex;
+    font-size: 24px;
+    transition: all 0.3s;
     box-shadow: inset 0px 1px 0px 0px #ffffff;
     background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
     background-color: #ffffff;
@@ -83,19 +103,9 @@
     text-decoration: none;
     text-shadow: 0px 1px 0px #ffffff;
 }
-
     .formbtn:hover {
-        background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
-        background-color: #f6f6f6;
+        transform: scale(1.08,1.08);
     }
-
-    .formbtn:active {
-        position: relative;
-        top: 1px;
-    }
-
-
-
 
 
 
