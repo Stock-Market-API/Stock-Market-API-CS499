@@ -25,8 +25,8 @@ function Register() {
         }
 
         else {
-            /*
-           
+
+           /*
            let newUser = {
                username: userRegister,
                password: passRegister,
@@ -35,18 +35,21 @@ function Register() {
 
            //Take inputs from register url to send to backend
            const register = () => {
-           axios.post('http://localhost:3000/register', newUser {
+           axios.post('http://localhost:3000/register', newUser)
                .then (res=>{
                    console.log(res)
-                }
+                })
 
                 .catch(err => {
                    console.log(err)
                 })
 
-           });
-           };
+            };
 
+            setRedirect(true);
+        }
+
+           /*
            const response = await fetch(input:http://localhost:3000/register){
                method :'POST',
                headers: {'Content-Type': 'application/json'},
@@ -62,9 +65,7 @@ function Register() {
            console.log(content);
  
            */
-            setRedirect(true);
         }
-    }
 
     //Redirects to login page upon successful form submission
     if (redirect) {
