@@ -20,7 +20,7 @@ function Cards() {
             />
              <CardItem
               src='images/Dibba_aboutus3.jpeg'
-              text='Hey! Im a software engineer from NYC. Throughout college, Ive focused on building mobile applications as side projects - but now Im exploring more fullstack web development. For this project I worked on the frontend side of things with the use of ReactJS.'
+              text='Hey im Dibba! Throughout college, Ive focused on building mobile applications - but now Im exploring more fullstack web development. For this project I worked on the frontend side of things with the use of ReactJS.'
               label='Dibba Roy'
               contact='Email: Roydibba@gmail.com'
               path='/aboutus'
@@ -28,17 +28,17 @@ function Cards() {
           </ul>
           <ul className='cards__items'>
             <CardItem
-              src='images/kento_aboutus.jpeg'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              src='images/Jordan_aboutus.jpeg'
+              text='Hey! Im Jordan and Im an aspiring fullstack developer. For this project I focused more on the frontend for this site using ReactJS.'
               label='Jordan Sze'
-              contact='Email: unknown'
+              contact='Email: jsze5341@gmail.com'
               path='/aboutus'
             />
             <CardItem
-              src='images/emran_aboutus.png'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
-              label='Shu Qiang Qu'
-              contact='Email: unknown'
+              src='Images/shuqiang_aboutus.jpg'
+              text='Hello! Im Shu Qiang,  I am a CS major with a interest in FinTech'
+              label='Shu Qiang Wu'
+              contact='shuqiangwu1@gmail.com'
               path='/aboutus'
             />
           </ul>

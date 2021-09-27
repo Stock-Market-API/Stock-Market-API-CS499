@@ -3,10 +3,11 @@ import { Button } from './Button';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar(props) {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const [navbar,setNavbar] = useState(false);
+  const [buttonStyle, setButtonStyle] = useState(true);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -26,13 +27,23 @@ function Navbar() {
   window.addEventListener('resize', showButton);
 
   const changeBackground = () => {
-      if(window.scrollY >= 80) {
+
+      if (window.location.pathname.includes('/login') || window.location.pathname.includes('/register') || window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/Market')) {
           setNavbar(true);
-      } else {
-          setNavbar(false);
+          setButtonStyle(false);
+      }
+      else if(window.scrollY >= 80) {
+          setNavbar(true);
+          setButtonStyle(false);
+      }
+      else {
+          setNavbar(false); 
+          setButtonStyle(true);
       }
   }
-
+  
+  window.addEventListener('click', changeBackground); 
+  window.addEventListener('load', changeBackground); 
   window.addEventListener('scroll', changeBackground);
 
 
@@ -61,7 +72,7 @@ function Navbar() {
             </li>
             <li className='nav-item'>
               <Link
-                to='/Aboutus'
+                to='/aboutus'
                 className='nav-links'
                 onClick={closeMobileMenu}
               >
@@ -69,7 +80,7 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          {button && <Button link='/login' buttonStyle='btn--outline' >Login / Signup</Button>}
+          {button && <Button link='/login' buttonStyle={buttonStyle ? 'btn--outline' : 'btn--primary'} >Login / Signup</Button>}
         </div>
       </nav>
     </React.Fragment>

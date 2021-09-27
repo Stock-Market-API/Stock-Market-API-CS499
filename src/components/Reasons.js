@@ -24,7 +24,7 @@ function Reasons() {
         
     </div>
     <div className ='lpcontainer2'>  
-    <div className = "box1"> <img src =" ./Images/stockmocket.jpg" /> </div>
+    <div className = "box1"> <img src =" ./Images/stockmocket.jpeg" /> </div>
     <div className = "box2">  
     <h1> Trade with confidence </h1>
     <div className= 'box3'>  Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
