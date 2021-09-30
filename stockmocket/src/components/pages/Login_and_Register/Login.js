@@ -38,7 +38,6 @@ function Login() {
                 setPass('');
 
                 setloggedIn(true);
-                console.log(loggedIn);
                 setRedirect(true);
 
             } catch (error) {
