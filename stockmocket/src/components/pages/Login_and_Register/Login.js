@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import "./LoginForm.css";
+
+const Parse = require('parse/node');
 
 function Login() {
 
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
     const [redirect, setRedirect] = useState(false);
+    const [loggedIn, setloggedIn] = useState(false);
 
     //Form Submission
     async function handleSubmit(event) {
@@ -18,31 +20,37 @@ function Login() {
         }
 
         else {
-            /*
-            
-            let userLogin = {
-                username: user,
-                password: pass
+
+            try {
+                const loggedInUser = await Parse.User.logIn(user, pass);
+
+                //logIn returns the corresponding Parse User object
+                alert(`${loggedInUser.get('username')} has successfully signed in!`);
+
+                /*
+                //Verify this is the current user
+                const currentUser = await Parse.User.current();
+                console.log(loggedIn === currentUser);
+                */
+
+                // Clear input fields
+                setUser('');
+                setPass('');
+
+                setloggedIn(true);
+                console.log(loggedIn);
+                setRedirect(true);
+
+            } catch (error) {
+                alert(`${error.message}`);
             }
-
-            //Checks if user login data is found 
-            axios.post('http://localhost:3000/login', userLogin)
-            .then (res=>{
-                console.log(res)
-             })
-
-             .catch(err => {
-                console.log(err)
-             })
-            */
-
-            setRedirect(true);
+            
         }
     }
 
     //Redirects to home page upon successful form submission
     if (redirect) {
-        return <Redirect to="/" />;
+        return <Redirect to="/market" />;
     }
 
     return (
