@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Redirect } from 'react-router-dom';
 import "./LoginForm.css";
 
@@ -22,22 +22,20 @@ function Login() {
         else {
 
             try {
+                //Login operation
                 const loggedInUser = await Parse.User.logIn(user, pass);
 
-                //logIn returns the corresponding Parse User object
+                //Displays the corresponding Parse User object
                 alert(`${loggedInUser.get('username')} has successfully signed in!`);
 
-                /*
                 //Verify this is the current user
                 const currentUser = await Parse.User.current();
                 console.log(loggedIn === currentUser);
-                */
 
                 // Clear input fields
                 setUser('');
                 setPass('');
 
-                setloggedIn(true);
                 setRedirect(true);
 
             } catch (error) {
@@ -46,6 +44,9 @@ function Login() {
             
         }
     }
+
+    //Print loggedIn state
+    //useEffect(() => console.log(loggedIn), [loggedIn]);
 
     //Redirects to home page upon successful form submission
     if (redirect) {
