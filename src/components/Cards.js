@@ -35,10 +35,10 @@ function Cards() {
               path='/aboutus'
             />
             <CardItem
-              src='Images/shuqiang_aboutus.jpg'
-              text='Hello! Im Shu Qiang,  I am a CS major with a interest in FinTech'
-              label='Shu Qiang Wu'
-              contact='shuqiangwu1@gmail.com'
+              src='images/emran_aboutus.png'
+              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              label='Shu Qiang Qu'
+              contact='Email: unknown'
               path='/aboutus'
             />
           </ul>
