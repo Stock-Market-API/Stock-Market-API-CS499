@@ -1,55 +1,75 @@
-import React from 'react'
-import Mock_Data from './Mock_Data.js'
-import './MockData.css'
+import React, { Component } from 'react';
+import Mock_Data from './Mock_Data.js';
+import './MockData.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import iex from './iexapitoken.js'
+import StockRow from "./StockRow.js"
+
+const changeStyle = { 
+    color: 'blue',
+}
+  
+function getData(){
+    const url = `${iex.base_url}/stock/${'googl'}/peers/?&token=${iex.api_token}`
+
+    fetch(url).then((Response) => Response.json()).then((data) => {
+        console.log(data)
+        this.setState({
+           data: data
+        })
+    })
+}
+
 function MarketData(){
+  
+
+    getData("")
+
     return (
-        <div className="listing">
-               <div className = "stocktitle">   <h1> Top 25 Most Popular Stocks </h1>  </div>
-               <div className = "chartticker">   <h1> Ticker </h1>    <div className = "chartnames">   <h1> Name </h1>  
-                </div>  <div className = "chartprice">   <h1> Price </h1>  
-                </div>  <div className = "chartopening">   <h1> Opening  </h1>  
-                </div>  <div className = "chartclosing">   <h1> Closing  </h1>  
-                </div> <div className ="chartdailychange"> <h1> Changes </h1></div>
-                <div className ="chartgraph"> <h1> Chart? </h1></div>
-                </div>
-              
+     <div>
+         <div className= "container">  
+         <div className = "titledesign">  <h1> Our Top 20 Recommended Stocks </h1></div>
+         <table className ="table table-striped">
+        <thead>
+            <tr className = "chartdesign">
+               
+                <th className = "publicsans"> TICKER </th>
+                <th className = "publicsans"> NAME</th>
+                <th className = "publicsans"> PRICE </th>
+                <th className = "publicsans"> OPEN </th>
+                <th className = "publicsans"> CLOSE</th>
+                <th className = "publicsans"> % CHANGE</th>
+                <th className = "publicsans"> LAST UPDATE </th>
                 
               
-            {Mock_Data.map(stock => {
-                return(
-                
-                <div className ="stockview"> 
-                
-                    <div className="stockticker"> 
-                    <p1>  {stock.ticker}</p1>
-                            </div> 
-                            <div className = "stockname"> 
-                            <p1>  {stock.name} </p1>
-                            
-                            </div>
-                            <div className ="stockprice">
-                            <p1>  $ { (stock.price).toFixed(2)} </p1>
-                                </div>
-                                <div className ="stockopeningprice">
-                            <p1>  $ {stock.opening_price .toFixed(2) } </p1>
-                                </div>
-                                <div className ="stockclosingprice">
-                            <p1>  $ {stock.closing_price .toFixed(2)} </p1>
-                                </div>
-                                <div className ="stockpercent">
-                            <p1>   $ {(stock.closing_price - stock.opening_price).toFixed(2)}</p1>
-                                </div>
-                                <div className ="stockgraph">
-                            <p1>   
-                            ╭───────────╯
-                                 
-                                 </p1>
-                                </div>
-                   </div>
-                  
-                )
-            })}
-        </div>
+            </tr>
+        </thead>
+        <tbody className = "tabledesign">
+            
+            < StockRow  ticker = "AMZN" />
+            <StockRow ticker = "GOOG" />
+            <StockRow ticker = "TSLA" />
+            <StockRow ticker = "MA" />
+            <StockRow ticker = "DIS" />
+            <StockRow ticker = "MSFT" />
+            <StockRow ticker = "SPOT" />
+            <StockRow ticker = "NFLX" />
+            <StockRow ticker = "NKE" />
+            <StockRow ticker = "FB" />
+            <StockRow ticker = "UNH" />
+            <StockRow ticker = "SPY" />
+            <StockRow ticker = "VOO" />
+            <StockRow ticker = "NVDA" />
+            <StockRow ticker = "BAC" />
+            <StockRow ticker = "XOM" />
+       
+        </tbody>
+
+         </table>
+         
+         
+         </div>
+     </div>
     );
 
 }

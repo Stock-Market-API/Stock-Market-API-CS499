@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
 .stocktitle{
     margin: 35px;
 }
@@ -77,4 +80,39 @@
 .stockgraph{
    
     width: 15%;
+}
+
+
+.p1{
+    background-color: green;
+}
+.cellcolor{
+    color: blue;
+}
+
+.tabledesign{
+    font-size: 17px;
+    
+}
+.chartdesign{
+    font-size: 20px;
+    font-family: 'Public Sans';
+    font-weight: normal;
+   
+}
+.publicsans{
+    font-family: 'Public Sans';
+    font-weight: bolder;
+}
+.titledesign{
+    margin: 15px;
+}
+.companyname{
+    font-family: 'Josefin Sans';
+    font-size: 18px;
+    font-weight: bold;
+}
+.numbers{
+    font-family: 'Quattrocento Sans';
+    font-weight: bold;
 }
