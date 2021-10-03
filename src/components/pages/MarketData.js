@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Mock_Data from './Mock_Data.js';
 import './MockData.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import iex from './iexapitoken.js'
 import StockRow from "./StockRow.js"
 
@@ -29,7 +29,7 @@ function MarketData(){
      <div>
          <div className= "container">  
          <div className = "titledesign">  <h1> Our Top 20 Recommended Stocks </h1></div>
-         <table className ="table table-striped">
+         <table className ="table">
         <thead>
             <tr className = "chartdesign">
                

@@ -40,7 +40,7 @@ render (){
                 <td   className = "numbers"> $ {this.state.data.close} </td>
                 <td  className = "numbers"  style= {{color: Math.sign(this.state.data.changePercent) == -1 ? "red" : "green"}}> {this.state.data.changePercent} </td>
                 <td  className = "numbers"> {t + " " + d} </td>
-                <div> Chart??   </div>
+                
             </tr>
 
     )
