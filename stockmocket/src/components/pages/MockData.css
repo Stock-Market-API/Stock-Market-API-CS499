@@ -1,0 +1,80 @@
+.stocktitle{
+    margin: 35px;
+}
+.chartnames{
+    display: flex;
+    margin-left: 7%;
+
+}
+.chartticker{
+    display: flex;
+    margin-left: 10%;
+    margin-bottom: 30px;
+  
+}
+.chartprice{
+    display: flex;
+    margin-left: 10%;
+}
+.chartopening{
+    display: flex;
+    margin-left: 5%;
+}
+.chartclosing{
+    display: flex;
+    margin-left: 5%;
+}
+.chartdailychange{
+    margin-left: 3%;
+}
+.chartgraph{
+    margin-left: 5%;
+}
+.stockview{
+  display: flex;
+  height: 60px;
+  font-size: 17px;
+ 
+}
+
+.stockticker{
+  
+    width: 10%;
+    margin-left: 10%;
+    color: Blue;
+   
+    
+   
+}
+
+.stockname{
+   
+    width: 15%;
+   font-weight: 300;
+    
+}
+.stockprice{
+  
+    width: 10%;
+   
+   
+}
+.stockopeningprice{
+    
+    width: 10%;
+   
+   
+}
+.stockclosingprice{
+   
+    width: 10%;
+   
+}.stockpercent{
+   
+    width: 5%;
+   
+}
+.stockgraph{
+   
+    width: 15%;
+}
