@@ -31,7 +31,7 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard')) {
+        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard' )|| window.location.pathname.includes('/usermarketpage') ) {
             setNavbar(true);
             setButtonStyle(false);
         }
@@ -94,7 +94,9 @@ function Navbar(props) {
         </Link>
         </li>
     }
-
+    function usermarketplace(){
+      
+    }
     function dashboardDisplay(loggedIn) {
         if (!loggedIn) {
             return null;
@@ -117,7 +119,7 @@ function Navbar(props) {
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                         <li className='nav-item'>
                             <Link
-                                to='/market'
+                                to='/usermarketpage'
                                 className='nav-links'
                                 onClick={closeMobileMenu}
                             >
