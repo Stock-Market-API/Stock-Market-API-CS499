@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
+.uncontainer{
+    background-color: aliceblue;
+    
+}
+.usergreeting{
+    width: 100%;
+    height: 150px;
+    padding: 25px;
+  
+    
+    
+   
+}
+.searchbar{
+    width: 50%;
+    height: 50px;
+     /* border: solid 1px black; */
+   margin-left: auto;
+   margin-right: auto;
+
+}
+.stockinfodisplay{
+    width: 100%;
+    height: 650px;
+     /* border: solid 1px black; */
+    display: inline;
+}
+.stockinfocenter{
+    width: 80%;
+    height: 250px;
+    /* border: solid 1px black; */
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+.stocklogo{
+      /* border: solid 1px black; */
+    width: 200px;
+    height: 200px;
+    margin-left: 30px;
+    padding: 30px;
+   
+}
+.stockinfo{
+    /* border: solid 1px black; */
+    width: 1000px;
+    height: 200px;
+    margin-left: 30px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 800;
+    letter-spacing: .004em;
+}
+.stockbutton{
+    border: solid 1px black;
+    width: 100px;
+    height: 50px;
+    margin-left: 30px;
+}
+.stockdescription{
+    width: 80%;
+    height: 300px;
+     /* border: solid 1px black; */
+    margin-left: auto;
+   margin-right: auto;
+     font-size: 10px;
+    
+}
+.maxstockdescription{
+    max-width: 80%;
+    max-height: 250px;
+   /* border: solid 1px black; */
+    margin-left: auto;
+   margin-right: auto;
+     font-size: 12px;
+     
+}
+.newcycle{
+    max-width: 80%;
+    height: 250px;
+   /* border: solid 1px black; */
+    margin-left: auto;
+   margin-right: auto;
+    font-size: 12px;
+}
+.descfont{
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+
+}
+.tableinfo{
+    width: 800px;
+    margin-top: 10px;
+    margin-left: -15px;
+}
+
+.wp-table th:first-child, 
+.wp-table td:first-child {
+    padding-left: 16px;
+}
+
+
+.wp-table td, 
+.wp-table th {
+    padding: 8px 8px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: top;
+}
+
+.wp-table th {
+    font-weight: bold;
+}
+ 
+.wp-table {
+    font-size: 15px!important;
+   
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    display: table;
+}
+.userfonts{
+    color: black;
+}
+.companyname{
+    font-family: 'Josefin Sans';
+    font-size: 18px;
+    font-weight: bold;
+}
+.numbers{
+    font-family: 'Quattrocento Sans';
+    font-weight: bold;
+    }
+
+  .tablenamestyling {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 800;
+        letter-spacing: .004em;
+       
+}
+.namedesc{
+   
+}
