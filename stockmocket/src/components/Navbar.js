@@ -31,8 +31,7 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market')) {
+        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard') || window.location.pathname.includes('/profile')) {
             setNavbar(true);
             setButtonStyle(false);
         }
@@ -55,15 +54,13 @@ function Navbar(props) {
     //Sets loggedIn state to true if user is found
     async function loginStatus() {
         const currentUser = await Parse.User.current();
+        console.log(currentUser);
 
         if (currentUser !== null) {
             setloggedIn(true);
-            console.log("Status: Logged in");
         }
-
         else {
             setloggedIn(false);
-            console.log("Status: Not logged in");
         }
     }
 
@@ -73,13 +70,47 @@ function Navbar(props) {
         return button && <Button link='/login' buttonStyle={buttonStyle ? 'btn--outline' : 'btn--primary'} >Login / Signup</Button>;
     }
 
+
     //Changes button display to either login or logout 
     //depending if user is logged in or not
-    function buttonDisplay(loggedIn) {
+    function loginDisplay(loggedIn) {
         if (!loggedIn) {
             return loginButton();
         } else {
             return <LogoutButton />;
+        }
+    }
+
+    function profileDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null;
+        } else {
+            return <Link
+                to='/profile'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Profile
+                            </Link>;
+        }
+    }
+
+    function dashboard() {
+        return <li className='nav-item'> <Link
+            to='/dashboard'
+            className='nav-links'
+            onClick={closeMobileMenu}
+        >
+            <i class="far fa-user-circle profileIcon"></i>  
+        </Link>
+        </li>
+    }
+
+    function dashboardDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null;
+        } else {
+            return dashboard();
         }
     }
 
@@ -95,6 +126,9 @@ function Navbar(props) {
                         <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                     </div>
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+                        <u1 id="para">
+                            {profileDisplay(loggedIn)}
+                        </u1>
                         <li className='nav-item'>
                             <Link
                                 to='/market'
@@ -102,7 +136,7 @@ function Navbar(props) {
                                 onClick={closeMobileMenu}
                             >
                                 Market
-              </Link>
+                            </Link>
                         </li>
                         <li className='nav-item'>
                             <Link
@@ -111,11 +145,14 @@ function Navbar(props) {
                                 onClick={closeMobileMenu}
                             >
                                 AboutUs
-              </Link>
+                            </Link>
                         </li>
+                    <u1 id="para">
+                        {dashboardDisplay(loggedIn)}
+                    </u1>
                     </ul>
                     <u1 id="para">
-                        {buttonDisplay(loggedIn)}
+                        {loginDisplay(loggedIn)}
                     </u1>
                 </div>
             </nav>
