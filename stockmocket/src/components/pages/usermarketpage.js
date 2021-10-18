@@ -1,11 +1,12 @@
-
-import React, {Component,} from "react";
+import React, {Component, useState} from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
 
+const Parse = require('parse/node');
 
-var user = "brian";
-var currentbal = parseFloat("1540.547892")
+
+//var user = "brian";
+//var currentbal = parseFloat("1540.547892")
 var key1 ="tsla"
 var key = "";
 var logo1 = '';
@@ -13,15 +14,16 @@ var s ='';
 
 const BarStyling = {width:"40rem",background:"#F2F1F9", border:"none", padding:"0.5rem"};
 
-
 class usermarketpage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-           data: {}, logo: [], info:{}, value: 'tsla'
+            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: []
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getUserBalance = this.getUserBalance(this);
+        this.getUsername = this.getUsername(this);
 
     }
     handleChange(event) {
@@ -33,9 +35,35 @@ class usermarketpage extends Component{
       event.preventDefault();
       console.log(this.state.value);
     }
- 
 
-        
+    async getUserBalance() {
+        try {
+            const currentUser = await Parse.User.current();
+            this.setState({
+                balanceDisplay: currentUser.get('balance')
+            });
+        }
+
+        catch (err) {
+            //alert("Please login");
+            console.log("not logged in");
+        }
+    }
+
+    async getUsername() {
+        try {
+            const currentUser = await Parse.User.current();
+            this.setState({
+                username: currentUser.get('username')
+            });
+        }
+
+        catch (err) {
+            //alert("Please login");
+            console.log("not logged in");
+        }
+    }
+
 componentDidMount() {
         key = this.state.value.toString();
         console.log(key)
@@ -58,19 +86,20 @@ componentDidMount() {
            })
          });
     }
+
 render() {
     return(
         <div className="uncontainer">
             <div className ="usergreeting">
-                <h1 className = "namedesc"> Hello {user} </h1>
-                <h1> Current Balance is $ {currentbal.toFixed(2)}</h1>
+                <h1 className = "namedesc"> Hello {this.state.username} </h1>
+                <h1> Current Balance is $ {this.state.balanceDisplay}</h1>
             </div> 
             <div className="searchbar">
             <form onSubmit={this.handleSubmit}>
           <label>
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
+          <input className="barrr" type="text" value={this.state.value} onChange={this.handleChange} />
           </label>
-          <input type="submit" value="Submit" />
+          <input className="subbbb" type="submit" value="Submit" />
         </form>
           
             
