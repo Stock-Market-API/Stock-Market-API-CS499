@@ -1,11 +1,13 @@
-
-import React, {Component,} from "react";
+import React, {Component, useState} from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
+import { Button } from '../Button';
+
+const Parse = require('parse/node');
 
 
-var user = "brian";
-var currentbal = parseFloat("1540.547892")
+//var user = "brian";
+//var currentbal = parseFloat("1540.547892")
 var key1 ="tsla"
 var key = "";
 var logo1 = '';
@@ -13,57 +15,143 @@ var s ='';
 
 const BarStyling = {width:"40rem",background:"#F2F1F9", border:"none", padding:"0.5rem"};
 
-
 class usermarketpage extends Component{
     constructor(props) {
         super(props);
         this.state = {
-           data: {}, logo: [], info:{}, value: 'tsla'
+            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: [], sharesAmount: []
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getUserBalance = this.getUserBalance(this);
+        this.getUsername = this.getUsername(this);
+        this.handleBuy = this.handleBuy.bind(this);
+        this.handleSell = this.handleSell.bind(this);
 
     }
     handleChange(event) {
         this.setState({value: event.target.value});
-      }
+    }
   
     handleSubmit(event) {
     this.componentDidMount();
       event.preventDefault();
       console.log(this.state.value);
     }
- 
 
-        
-componentDidMount() {
+    async getUserBalance() {
+        try {
+            const currentUser = await Parse.User.current();
+            this.setState({
+                balanceDisplay: currentUser.get('balance')
+            });
+        }
+
+        catch (err) {
+            //alert("Please login");
+            console.log("not logged in");
+        }
+    }
+
+    async getUsername() {
+        try {
+            const currentUser = await Parse.User.current();
+            this.setState({
+                username: currentUser.get('username')
+            });
+        }
+
+        catch (err) {
+            //alert("Please login");
+            console.log("not logged in");
+        }
+    }
+
+    componentDidMount() {
         key = this.state.value.toString();
         console.log(key)
         const url = `${iex.base_url}/stock/${key}/quote/?&token=${iex.api_token}`
         const urltwo = `${iex.base_url}/stock/${key}/company/?&token=${iex.api_token}`
         const urlthree = `${iex.base_url}/stock/${key}/logo/?&token=${iex.api_token}`
-        
-        Promise.all([fetch(url), fetch(urltwo) ,fetch(urlthree)]).then(([res1, res2, res3]) => { 
-            return Promise.all([res1.json(), res2.json(), res3.json()]) 
-         })
-         .then(([res1, res2, res3]) => {
-            logo1 = (res3.url); 
-             s = logo1.toString();
-             console.log(res1)
-             console.log(res2)
-           this.setState({
-               data : res1,
-               info : res2,
-               logo : res3
-           })
-         });
+
+        Promise.all([fetch(url), fetch(urltwo), fetch(urlthree)]).then(([res1, res2, res3]) => {
+            return Promise.all([res1.json(), res2.json(), res3.json()])
+        })
+            .then(([res1, res2, res3]) => {
+                logo1 = (res3.url);
+                s = logo1.toString();
+                console.log(res1)
+                console.log(res2)
+                this.setState({
+                    data: res1,
+                    info: res2,
+                    logo: res3
+                })
+            });
     }
+
+    async handleBuy() {
+        //Number of shares inputted saved to sharedAmount upon
+        //prompt submission
+        const shares = prompt('Buy shares');
+        this.setState({
+            sharesAmount: shares
+        });
+
+        var volume = 10000000; //Hardcoded volume for now, might need a volume per
+                               //ticker to keep track of volume in backend
+
+        console.log("Shares to buy: ", shares);
+
+        try {
+            const currentUser = await Parse.User.current();
+            var balance = currentUser.get('balance'); 
+
+            //Code goes here
+
+
+            //console.log("Shares bought: ", shares);
+        }
+
+        catch (err) {
+            alert("Please log in to buy shares");
+        }
+    }
+
+    async handleSell() {
+        //Number of shares inputted saved to sharedAmount upon
+        //prompt submission
+        const shares = prompt('Sell shares');
+        this.setState({
+            sharesAmount: shares
+        });
+
+        var volume = 10000000; //Hardcoded volume for now, might need a volume per
+                               //ticker to keep track of volume in backend
+
+        console.log("Shares to sell: ", shares);
+
+        try {
+            const currentUser = await Parse.User.current();
+            var balance = currentUser.get('balance');  
+
+            //Code goes here
+
+
+            //console.log("Shares sold: ", shares);
+        }
+
+        catch (err) {
+            alert("Please log in to sell shares");
+        }
+    }
+
 render() {
     return(
         <div className="uncontainer">
             <div className ="usergreeting">
-                <h1 className = "namedesc"> Hello {user} </h1>
-                <h1> Current Balance is $ {currentbal.toFixed(2)}</h1>
+                <h1 className = "namedesc"> Hello {this.state.username} </h1>
+                <h1> Current Balance is $ {this.state.balanceDisplay}</h1>
             </div> 
             <div className="searchbar">
             <form onSubmit={this.handleSubmit}>
@@ -107,9 +195,10 @@ render() {
   </table>
                    </div>
                 </div>
-                <div className="stockbutton">
-                        <p1> buy button underworks</p1>
-                </div>
+                    <div className="stockbutton">
+                        <Button onClick={this.handleBuy} >Buy</Button>
+                        <Button onClick={this.handleSell} >Sell</Button>
+                    </div>
                 </div>
                 <div className="stockdescription">
                 <div className ='maxstockdescription'> 
