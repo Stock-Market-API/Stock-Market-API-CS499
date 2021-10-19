@@ -91,9 +91,9 @@ class usermarketpage extends Component{
     }
 
     async handleBuy() {
-        //Number of shares inputted saved to sharedAmount upon
-        //prompt submission
-        const shares = prompt('Buy shares');
+        const shares = prompt('Buy shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
+        const price = this.state.data.latestPrice; //Current price
+
         this.setState({
             sharesAmount: shares
         });
@@ -119,9 +119,9 @@ class usermarketpage extends Component{
     }
 
     async handleSell() {
-        //Number of shares inputted saved to sharedAmount upon
-        //prompt submission
-        const shares = prompt('Sell shares');
+        const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
+        const price = this.state.data.latestPrice; //Current price
+
         this.setState({
             sharesAmount: shares
         });
