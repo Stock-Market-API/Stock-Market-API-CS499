@@ -31,19 +31,23 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard') || window.location.pathname.includes('/profile')
-        || window.location.pathname.includes('/usermarketpage')) {
-            setNavbar(true);
-            setButtonStyle(false);
+        if (window.location.pathname == '/' || window.location.pathname == '/login' || window.location.pathname == '/register')
+        {
+            if (window.location.pathname.includes('/') && window.scrollY >= 80) {
+                setNavbar(true);
+                setButtonStyle(false);
+            }
+            else {
+                setNavbar(false);
+                setButtonStyle(true);
+            }
         }
-        else if (window.location.pathname.includes('/') && window.scrollY >= 80) {
-            setNavbar(true);
-            setButtonStyle(false);
-        }
+
         else {
-            setNavbar(false);
-            setButtonStyle(true);
+            setNavbar(true);
+            setButtonStyle(false);
         }
+
     }
 
     window.addEventListener('click', changeBackground);
