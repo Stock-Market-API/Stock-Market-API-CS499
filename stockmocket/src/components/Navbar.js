@@ -31,7 +31,8 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard') || window.location.pathname.includes('/profile')) {
+        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard') || window.location.pathname.includes('/profile')
+        || window.location.pathname.includes('/usermarketpage')) {
             setNavbar(true);
             setButtonStyle(false);
         }
@@ -114,6 +115,27 @@ function Navbar(props) {
         }
     }
 
+    function marketDirect(loggedIn) {
+        if (!loggedIn) {
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
+        } else {
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+        }
+    }
+
     return (
         <React.Fragment>
             <nav className={navbar ? 'navbar active' : 'navbar'}>
@@ -130,13 +152,7 @@ function Navbar(props) {
                             {profileDisplay(loggedIn)}
                         </u1>
                         <li className='nav-item'>
-                            <Link
-                                to='/market'
-                                className='nav-links'
-                                onClick={closeMobileMenu}
-                            >
-                                Market
-                            </Link>
+                            {marketDirect(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link
