@@ -107,7 +107,63 @@ class usermarketpage extends Component{
             const currentUser = await Parse.User.current();
             var balance = currentUser.get('balance'); 
 
-            //Code goes here
+            const stockQuery = new Parse.Query('Portfolio')
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', 'PTON');
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are recieved then create a row for it
+            if(stockResult.length == 0 ){
+                var stockObj = new Parse.Object('Portfolio');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', 'PTON');
+                stockObj.set('AveragePrice', price);
+                stockObj.set('sharesBought', parseInt(shares));
+                try{
+                    await stockObj.save();
+                    //console.log('saving the stock success!')
+                } catch(err){
+                    console.log(err.message);
+                }
+  
+            }
+
+            else{
+                var lastPrice = 0;
+                var lastShares = 0;
+              
+                
+                for(let result of stockResult){
+                    var stockObj = result;
+                    lastPrice = result.get('AveragePrice');
+                    lastShares = result.get('sharesBought');
+                }
+                var sumStocks = (lastShares * lastPrice) + (price * parseInt(shares));
+                var newAveragePrice = Math.floor((sumStocks / (lastShares + parseInt(shares))) * 100)/100;
+                  
+                stockObj.set('AveragePrice', newAveragePrice);
+                stockObj.set('sharesBought', (lastShares + shares));
+
+                try{
+                    await stockObj.save();
+                  //console.log('else saving the stock success!');
+                } catch(err){
+                    console.log(err.message);
+                }
+              
+              
+            }
+
+
+            var newBalance = balance - (price * shares);
+            currentUser.set('balance', newBalance);
+            try{
+                await currentUser.save();
+                //console.log('saving user balance success!');
+            }
+            catch(err){
+                console.log(err.message);
+            }
 
 
             //console.log("Shares bought: ", shares);
@@ -117,6 +173,14 @@ class usermarketpage extends Component{
             alert("Please log in to buy shares");
         }
     }
+
+    
+
+
+    
+
+
+
 
     async handleSell() {
         const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
@@ -135,7 +199,57 @@ class usermarketpage extends Component{
             const currentUser = await Parse.User.current();
             var balance = currentUser.get('balance');  
 
-            //Code goes here
+            const stockQuery = new Parse.Query('Portfolio');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', 'PTON');
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are recieved
+            if(stockResult.length == 0 ){
+            //console.log('That stock does not exist');
+            }
+
+            else{
+                var lastShares = 0;
+            
+                for(let result of stockResult){
+                  var stockObj = result;
+                  var lastShares = result.get('sharesBought');
+                }
+
+                stockObj.set('sharesBought', (lastShares-shares));
+
+                //delete the object if you sell all of it
+                if((lastShares - shares) <= 0){
+                    try{
+                        await stockObj.destroy();
+                        //console.log('Deleting the stock success!');
+                    } catch(err){
+                        console.log(err.message);
+                    }
+                }
+            
+                else{
+                    try{
+                        await stockObj.save();
+                        //console.log('else selling the stock success!');
+                    } catch(err){
+                        console.log(err.message);
+                    }
+                }
+            
+            
+              }
+            
+              var newBalance = balance+ (price * shares);
+              currentUser.set('balance', newBalance);
+              try{
+                    await currentUser.save();
+                    //console.log('saving user balance success!');
+                }catch(err){
+                    console.log(err.message);
+                }
+                
 
 
             //console.log("Shares sold: ", shares);
