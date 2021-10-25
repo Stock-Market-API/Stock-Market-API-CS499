@@ -3,34 +3,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
-.uncontainer{
+
+.uncontainer {
     background-color: aliceblue;
-    
 }
-.usergreeting{
+
+.usergreeting {
     width: 100%;
     height: 150px;
     padding: 25px;
-  
-    
-    
-   
 }
-.searchbar{
-    width: 50%;
-    height: 50px;
-     /* border: solid 1px black; */
-   margin-left: auto;
-   margin-right: auto;
 
+.searchbar {
+    width: 100%;
+    height: 50px;
+    /* border: solid 1px black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
 }
-.stockinfodisplay{
+
+.stockinfodisplay {
     width: 100%;
     height: 650px;
-     /* border: solid 1px black; */
+    /* border: solid 1px black; */
     display: inline;
 }
-.stockinfocenter{
+
+.stockinfocenter {
     width: 80%;
     height: 250px;
     /* border: solid 1px black; */
@@ -38,15 +39,16 @@
     margin-right: auto;
     display: flex;
 }
-.stocklogo{
-      /* border: solid 1px black; */
+
+.stocklogo {
+    /* border: solid 1px black; */
     width: 200px;
     height: 200px;
     margin-left: 30px;
     padding: 30px;
-   
 }
-.stockinfo{
+
+.stockinfo {
     /* border: solid 1px black; */
     width: 1000px;
     height: 200px;
@@ -55,57 +57,61 @@
     font-weight: 800;
     letter-spacing: .004em;
 }
-.stockbutton{
+/*
+.stockbutton {
     border: solid 1px black;
     width: 100px;
     height: 50px;
     margin-left: 30px;
 }
-.stockdescription{
+*/
+
+.stockdescription {
     width: 80%;
     height: 300px;
-     /* border: solid 1px black; */
+    /* border: solid 1px black; */
     margin-left: auto;
-   margin-right: auto;
-     font-size: 10px;
-    
+    margin-right: auto;
+    font-size: 10px;
 }
-.maxstockdescription{
+
+.maxstockdescription {
     max-width: 80%;
     max-height: 250px;
-   /* border: solid 1px black; */
+    /* border: solid 1px black; */
     margin-left: auto;
-   margin-right: auto;
-     font-size: 12px;
-     
-}
-.newcycle{
-    max-width: 80%;
-    height: 250px;
-   /* border: solid 1px black; */
-    margin-left: auto;
-   margin-right: auto;
+    margin-right: auto;
     font-size: 12px;
 }
-.descfont{
+
+.newcycle {
+    max-width: 80%;
+    height: 250px;
+    /* border: solid 1px black; */
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12px;
+}
+
+.descfont {
     font-family: 'Noto Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
-
 }
-.tableinfo{
+
+.tableinfo {
     width: 800px;
     margin-top: 10px;
     margin-left: -15px;
 }
 
-.wp-table th:first-child, 
+.wp-table th:first-child,
 .wp-table td:first-child {
     padding-left: 16px;
 }
 
 
-.wp-table td, 
+.wp-table td,
 .wp-table th {
     padding: 8px 8px;
     display: table-cell;
@@ -116,34 +122,86 @@
 .wp-table th {
     font-weight: bold;
 }
- 
+
 .wp-table {
-    font-size: 15px!important;
-   
+    font-size: 15px !important;
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
     display: table;
 }
-.userfonts{
+
+.userfonts {
     color: black;
 }
-.companyname{
+
+.companyname {
     font-family: 'Josefin Sans';
     font-size: 18px;
     font-weight: bold;
 }
-.numbers{
+
+.numbers {
     font-family: 'Quattrocento Sans';
     font-weight: bold;
-    }
+}
 
-  .tablenamestyling {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 800;
-        letter-spacing: .004em;
-       
+.tablenamestyling {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 800;
+    letter-spacing: .004em;
 }
-.namedesc{
-   
+
+.usergreeting {
+    width: 100%;
+    height: 150px;
+    padding: 25px;
 }
+
+.barrr {
+    width: 300px;
+    height: 35px;
+    font-size: 25px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.input[type=text] {
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+}
+
+.rounded-input {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.input[type=submit] {
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+    padding: 10px;
+    border-radius: 10px;
+    width: 300px;
+    height: 35px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
+.subbbb {
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+    padding: 10px;
+    border-radius: 10px;
+    width: 100px;
+    background-color: gray;
+    height: 35px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+
+.input[type="submit"].btn:hover {
+    border: 1px solid black;
+}
+
