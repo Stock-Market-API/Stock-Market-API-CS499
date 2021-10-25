@@ -17,7 +17,10 @@ function ProfilePage() {
     async function getUserBalance() {
         try {
             const currentUser = await Parse.User.current();
-            setbalanceDisplay(currentUser.get('balance'));
+
+            var floatbalance = parseFloat(currentUser.get('balance'));
+            var roundedbalance = Math.round(floatbalance * 100) / 100;
+            setbalanceDisplay(roundedbalance);
         }
         catch (err) {
             //alert("Not logged in");
@@ -29,11 +32,12 @@ function ProfilePage() {
     //Saves user balance to backend
     async function setUserBalance(event) {
         event.preventDefault();
-        var intbalance = parseFloat(balance); 
+        var floatbalance = parseFloat(balance); 
+        var roundedbalance = Math.round(floatbalance * 100)/ 100;
 
         const currentUser = await Parse.User.current();
 
-        currentUser.set('balance', intbalance);
+        currentUser.set('balance', roundedbalance);
         currentUser.save();
     }
 
@@ -48,18 +52,18 @@ function ProfilePage() {
         var sharesBought = [];
         var count = 0;
 
-        //Get username
+        //Get stock owner's username
         const currentUser = await Parse.User.current();
         const OwnerQuery = new Parse.Query('User');
         OwnerQuery.equalTo('username', currentUser.get('username'));
         const Owner = await OwnerQuery.first();
 
-        //Get all owned stocks
+        //Get all stocks owned by user
         const portfolioQuery = new Parse.Query('Portfolio');
         portfolioQuery.equalTo('stockOwner', Owner);
         let queryResults = await portfolioQuery.find();
 
-        //Append stock data to be set to corresponding states
+        //Append user owned stock data to be set to corresponding states
         for (let result of queryResults) {
             stockName.push(result.get('stockName'));
             AveragePrice.push(result.get('AveragePrice'));
@@ -81,10 +85,9 @@ function ProfilePage() {
     function stockDisplay() {
         var profileStocks = [];
 
-        for (const stock of stocks) {
-            console.log("stock to push: ", stock);
+        for (const stock of stocks) 
             profileStocks.push(<StockRow ticker={stock} />)
-        }
+
         return profileStocks;
     }
 
@@ -101,6 +104,8 @@ function ProfilePage() {
                 accountValue += values[i];
 
             accountValue += balanceDisplay;
+
+            accountValue = Math.round(accountValue * 100) / 100;
             return accountValue;
         }
 
@@ -135,8 +140,9 @@ function ProfilePage() {
                 </div>
             </div>
             <tbody className="stock-table">
+                <h1> Your Stocks </h1>
                 <div className="container">
-                    <div className="titledesign">  <h1> Your Stocks </h1></div>
+                    <div className="titledesign">  </div>
                     <table className="table">
                         <thead>
                             <tr className="chartdesign">

@@ -22,6 +22,9 @@
 
 .stock-table {
     transform: translate(-580px,50%);
+    max-height: 500px;
+    height: auto;
+    overflow: auto;
 }
 
 .balancebtn {
