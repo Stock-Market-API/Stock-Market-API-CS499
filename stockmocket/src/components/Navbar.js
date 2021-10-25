@@ -31,18 +31,22 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard' )|| window.location.pathname.includes('/usermarketpage') ) {
-            setNavbar(true);
-            setButtonStyle(false);
+        if (window.location.pathname == '/' || window.location.pathname == '/login' || window.location.pathname == '/register') {
+            if (window.location.pathname.includes('/') && window.scrollY >= 80) {
+                setNavbar(true);
+                setButtonStyle(false);
+            }
+            else {
+                setNavbar(false);
+                setButtonStyle(true);
+            }
         }
-        else if (window.location.pathname.includes('/') && window.scrollY >= 80) {
-            setNavbar(true);
-            setButtonStyle(false);
-        }
+
         else {
-            setNavbar(false);
-            setButtonStyle(true);
+            setNavbar(true);
+            setButtonStyle(false);
         }
+
     }
 
     window.addEventListener('click', changeBackground);
@@ -58,12 +62,9 @@ function Navbar(props) {
 
         if (currentUser !== null) {
             setloggedIn(true);
-            console.log("Status: Logged in");
         }
-
         else {
             setloggedIn(false);
-            console.log("Status: Not logged in");
         }
     }
 
@@ -76,11 +77,25 @@ function Navbar(props) {
 
     //Changes button display to either login or logout 
     //depending if user is logged in or not
-    function buttonDisplay(loggedIn) {
+    function loginDisplay(loggedIn) {
         if (!loggedIn) {
             return loginButton();
         } else {
             return <LogoutButton />;
+        }
+    }
+
+    function profileDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null;
+        } else {
+            return <Link
+                to='/profile'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Profile
+                            </Link>;
         }
     }
 
@@ -94,14 +109,33 @@ function Navbar(props) {
         </Link>
         </li>
     }
-    function usermarketplace(){
-      
-    }
+
     function dashboardDisplay(loggedIn) {
         if (!loggedIn) {
             return null;
         } else {
             return dashboard();
+        }
+    }
+
+    function marketDirect(loggedIn) {
+        if (!loggedIn) {
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
+        } else {
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
         }
     }
 
@@ -117,14 +151,11 @@ function Navbar(props) {
                         <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
                     </div>
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
+                        <u1 id="para">
+                            {profileDisplay(loggedIn)}
+                        </u1>
                         <li className='nav-item'>
-                            <Link
-                                to='/usermarketpage'
-                                className='nav-links'
-                                onClick={closeMobileMenu}
-                            >
-                                Market
-              </Link>
+                            {marketDirect(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link
@@ -133,14 +164,14 @@ function Navbar(props) {
                                 onClick={closeMobileMenu}
                             >
                                 AboutUs
-              </Link>
+                            </Link>
                         </li>
                     <u1 id="para">
                         {dashboardDisplay(loggedIn)}
                     </u1>
                     </ul>
                     <u1 id="para">
-                        {buttonDisplay(loggedIn)}
+                        {loginDisplay(loggedIn)}
                     </u1>
                 </div>
             </nav>
