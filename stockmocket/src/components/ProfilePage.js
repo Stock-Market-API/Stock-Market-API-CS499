@@ -92,9 +92,11 @@ function ProfilePage() {
         var profileStocks = [];
 
         for (var i = 0; i < stocksLength; i++) {
-            profileStocks.push(<React.Fragment>
-                <UserStockRow ticker={stocks[i]} shares={shares[i]} stockPrice={stockPrice[i]}></UserStockRow>
-            </React.Fragment>)
+            profileStocks.push(
+                <UserStockRow ticker={stocks[i]}
+                              shares={shares[i]}
+                              stockPrice={stockPrice[i]}>
+                </UserStockRow>)
         }
 
         return profileStocks;
