@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import iex from './iexapitoken.js'
-import StockRow from "./StockRow.js"
+import UserStockRow from "./UserStockRow.js"
 import "./ProfilePage.css";
-import "./MockData.css";
 
 const Parse = require('parse/node');
 
@@ -27,18 +25,26 @@ function ProfilePage() {
         }
     }
 
-    getUserBalance();
+    //Only sets balance display when there is a valid balance
+    if (balance >= 0)
+        getUserBalance();
 
     //Saves user balance to backend
     async function setUserBalance(event) {
         event.preventDefault();
-        var floatbalance = parseFloat(balance); 
-        var roundedbalance = Math.round(floatbalance * 100)/ 100;
 
-        const currentUser = await Parse.User.current();
+        if (balance >= 0) {
+            var floatbalance = parseFloat(balance);
+            var roundedbalance = Math.round(floatbalance * 100) / 100;
 
-        currentUser.set('balance', roundedbalance);
-        currentUser.save();
+            const currentUser = await Parse.User.current();
+
+            currentUser.set('balance', roundedbalance);
+            currentUser.save();
+        }
+        else {
+            console.log("Invalid balance");
+        }
     }
 
     window.addEventListener('submit', getUserBalance);
@@ -85,8 +91,11 @@ function ProfilePage() {
     function stockDisplay() {
         var profileStocks = [];
 
-        for (const stock of stocks) 
-            profileStocks.push(<StockRow ticker={stock} />)
+        for (var i = 0; i < stocksLength; i++) {
+            profileStocks.push(<React.Fragment>
+                <UserStockRow ticker={stocks[i]} shares={shares[i]} stockPrice={stockPrice[i]}></UserStockRow>
+            </React.Fragment>)
+        }
 
         return profileStocks;
     }
@@ -97,14 +106,13 @@ function ProfilePage() {
         var values = [];
 
         if (stocksLength != 0) {
-            for (var i = 0; i < stocksLength; i++)
+            for (var i = 0; i < stocksLength; i++) 
                 values.push(stockPrice[i] * shares[i]);
 
-            for (var i = 0; i < stocksLength; i++)
+            for (var i = 0; i < stocksLength; i++) 
                 accountValue += values[i];
 
             accountValue += balanceDisplay;
-
             accountValue = Math.round(accountValue * 100) / 100;
             return accountValue;
         }
@@ -148,12 +156,10 @@ function ProfilePage() {
                             <tr className="chartdesign">
 
                                 <th className="publicsans"> TICKER </th>
-                                <th className="publicsans"> NAME</th>
-                                <th className="publicsans"> PRICE </th>
-                                <th className="publicsans"> OPEN </th>
-                                <th className="publicsans"> CLOSE</th>
-                                <th className="publicsans"> % CHANGE</th>
-                                <th className="publicsans"> LAST UPDATE </th>
+                                <th className="publicsans"> SHARES</th>
+                                <th className="publicsans"> AVERAGE PRICE </th>
+                                <th className="publicsans"> CURRENT PRICE </th>
+                                <th className="publicsans"> CHANGE </th>
 
                             </tr>
                         </thead>
