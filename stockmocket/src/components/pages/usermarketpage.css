@@ -4,8 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
 .uncontainer{
-    background-color: aliceblue;
-    
+    /* background-color: aliceblue; */
+    max-height: 1600px;
 }
 .usergreeting{
     width: 100%;
@@ -64,11 +64,12 @@
 }
 .stockdescription{
     width: 80%;
-    height: 300px;
+    max-height: 300px;
      /* border: solid 1px black; */
     margin-left: auto;
    margin-right: auto;
      font-size: 10px;
+     margin-bottom: 40px;
     
 }
 .maxstockdescription{
@@ -82,11 +83,13 @@
 }
 .newcycle{
     max-width: 80%;
-    height: 250px;
-   /* border: solid 1px black; */
+    max-height: 700px;
     margin-left: auto;
-   margin-right: auto;
+    margin-right: auto;
     font-size: 12px;
+    margin-bottom: 80px;
+    /* background-color: aliceblue; */
+  
 }
 .descfont{
     font-family: 'Noto Sans', sans-serif;
@@ -95,9 +98,10 @@
 
 }
 .tableinfo{
-    width: 800px;
+    max-width: 75vw;
     margin-top: 10px;
     margin-left: -15px;
+    max-height: 500px;
 }
 
 .wp-table th:first-child, 
@@ -192,6 +196,57 @@
     border-radius:10px;
     margin-left: 10px;
 }
-.input[type="submit"].btn:hover {
-    border: 1px solid black;
+
+  .threeboxes{
+   
+    display: flex;
   }
+  .boxone{
+    
+    max-height: 800px;
+    width: 23vw;
+    margin-left: auto;
+    margin-right: auto;
+   
+   
+  }
+  .boxtwo{
+  
+    max-height: 800px;
+    width: 23vw;
+    margin-left: auto;
+    margin-right: auto;
+   
+  
+  }
+  .boxthree{
+    
+    max-height: 800px;
+    width: 23vw;
+    margin-left: auto;
+    margin-right: auto;
+   
+   
+  }
+  .newheader{
+    margin: 10px;
+  }
+  .imagebox{
+    max-width: 23vw;
+    max-height: 23vh;
+   margin-top: 15px;
+   margin-bottom: 15px;
+   
+ 
+  }
+
+ .summary{
+    
+    text-indent: 25px;
+     margin-top: 15px;
+     max-width: 23vw;
+     max-height: 600px;
+     margin-left: auto;
+     margin-right: auto;
+     
+ }
