@@ -19,7 +19,7 @@ class usermarketpage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: [], sharesAmount: []
+            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: []
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -93,10 +93,7 @@ class usermarketpage extends Component {
     async handleBuy() {
         const shares = prompt('Buy shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to buy: ", shares);
 
@@ -111,7 +108,7 @@ class usermarketpage extends Component {
 
             console.log("result: ", stockResult);
 
-            //If no Queries are recieved then create a row for it
+            //If no Queries are receieved then create a row for it
             if (stockResult.length == 0) {
                 var stockObj = new Parse.Object('Portfolio');
                 stockObj.set('stockOwner', currentUser);
@@ -175,10 +172,7 @@ class usermarketpage extends Component {
     async handleSell() {
         const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to sell: ", parseInt(shares));
 
