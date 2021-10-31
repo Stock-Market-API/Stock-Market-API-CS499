@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
+.stocktitle{
+    margin: 35px;
+}
+.chartnames{
+    display: flex;
+    margin-left: 7%;
+
+}
+.chartticker{
+    display: flex;
+    margin-left: 10%;
+    margin-bottom: 30px;
+  
+}
+.chartprice{
+    display: flex;
+    margin-left: 10%;
+}
+.chartopening{
+    display: flex;
+    margin-left: 5%;
+}
+.chartclosing{
+    display: flex;
+    margin-left: 5%;
+}
+.chartdailychange{
+    margin-left: 3%;
+}
+.chartgraph{
+    margin-left: 5%;
+}
+.stockview{
+  display: flex;
+  height: 60px;
+  font-size: 17px;
+ 
+}
+
+.stockticker{
+  
+    width: 10%;
+    margin-left: 10%;
+    color: Blue;
+   
+    
+   
+}
+
+.stockname{
+   
+    width: 15%;
+   font-weight: 300;
+    
+}
+.stockprice{
+  
+    width: 10%;
+   
+   
+}
+.stockopeningprice{
+    
+    width: 10%;
+   
+   
+}
+.stockclosingprice{
+   
+    width: 10%;
+   
+}.stockpercent{
+   
+    width: 5%;
+   
+}
+.stockgraph{
+   
+    width: 15%;
+}
+
+
+
+.cellcolor{
+    color: blue;
+}
+
+.tabledesign{
+    font-size: 17px;
+    margin: 10px;
+   
+    
+}
+.chartdesign{
+    font-size: 20px;
+    font-family: 'Public Sans';
+    font-weight: normal;
+    margin: 10px;
+   
+}
+.publicsans{
+    font-family: 'Public Sans';
+    font-weight: bolder;
+    padding: 10px;
+}
+.titledesign{
+    margin: 15px;
+    
+}
+.companyname{
+    font-family: 'Josefin Sans';
+    font-size: 18px;
+    font-weight: bold;
+}
+.numbers{
+    font-family: 'Quattrocento Sans';
+    font-weight: bold;
+    }
+.table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+  }
+  
+.table td, .table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+.table tr:nth-child(even){background-color: #f2f2f2;}
+  
+.table tr:hover {background-color: #ddd;}
+  
+.table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: Blue;
+    color: white;
+  }
