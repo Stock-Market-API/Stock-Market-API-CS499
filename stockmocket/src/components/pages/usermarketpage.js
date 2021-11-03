@@ -151,10 +151,7 @@ componentDidMount() {
     async handleBuy() {
         const shares = prompt('Buy shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to buy: ", shares);
 
@@ -169,7 +166,7 @@ componentDidMount() {
 
             console.log("result: ", stockResult);
 
-            //If no Queries are recieved then create a row for it
+            //If no Queries are receieved then create a row for it
             if (stockResult.length == 0) {
                 var stockObj = new Parse.Object('Portfolio');
                 stockObj.set('stockOwner', currentUser);
@@ -186,7 +183,7 @@ componentDidMount() {
                 }
             }
 
-            else {
+            else if (balance >= price) {
                 var lastPrice = 0;
                 var lastShares = 0;
 
@@ -205,24 +202,27 @@ componentDidMount() {
                 try {
                     await stockObj.save();
                     console.log('else saving the stock success!');
+
+                    var newBalance = balance - (price * parseInt(shares));
+                    currentUser.set('balance', newBalance);
+                    try {
+                        await currentUser.save();
+                        console.log('saving user balance success!');
+                    }
+                    catch (err) {
+                        console.log(err.message);
+                    }
+
+                    console.log("Shares bought: ", shares);
+
                 } catch (err) {
                     console.log(err.message);
                 }
-
             }
 
-            var newBalance = balance - (price * parseInt(shares));
-            currentUser.set('balance', newBalance);
-            try {
-                await currentUser.save();
-                console.log('saving user balance success!');
+            else {
+                alert("Balance too low");
             }
-            catch (err) {
-                console.log(err.message);
-            }
-
-
-            console.log("Shares bought: ", shares);
         }
 
         catch (err) {
@@ -230,13 +230,11 @@ componentDidMount() {
         }
     }
 
+
     async handleSell() {
         const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to sell: ", parseInt(shares));
 
@@ -279,22 +277,25 @@ componentDidMount() {
                     try {
                         await stockObj.save();
                         console.log('else selling the stock success!');
+
+                        var newBalance = balance + (price * parseInt(shares));
+                        currentUser.set('balance', newBalance);
+                        try {
+                            await currentUser.save();
+                            console.log('saving user balance success!');
+                        } catch (err) {
+                            console.log(err.message);
+                        }
+
+                        console.log("Shares sold: ", shares);
+
                     } catch (err) {
                         console.log(err.message);
                     }
                 }
+
             }
 
-            var newBalance = balance + (price * parseInt(shares));
-            currentUser.set('balance', newBalance);
-            try {
-                await currentUser.save();
-                console.log('saving user balance success!');
-            } catch (err) {
-                console.log(err.message);
-            }
-
-            console.log("Shares sold: ", shares);
         }
 
         catch (err) {
@@ -351,9 +352,9 @@ render() {
   </table>
                    </div>
                 </div>
-                <div className="stockbutton">
-                            <Button onClick={this.handleBuy} >Buy</Button>
-                            <Button onClick={this.handleSell} >Sell</Button>
+                <div className = "stock-trading">
+                            <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
+                            <button className="stockbtn" onClick={this.handleSell}> Sell </button>
                         </div>
                 </div>
                 <div className="stockdescription">

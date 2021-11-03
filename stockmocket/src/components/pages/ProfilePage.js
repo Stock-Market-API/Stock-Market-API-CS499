@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import UserStockRow from "./StockRow.js"
+import UserStockRow from "./UserStockRow.js"
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
@@ -17,7 +17,7 @@ function ProfilePage() {
             const currentUser = await Parse.User.current();
 
             var floatbalance = parseFloat(currentUser.get('balance'));
-            var roundedbalance = Math.round(floatbalance * 100) / 100;
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
             setbalanceDisplay(roundedbalance);
         }
         catch (err) {
@@ -26,8 +26,8 @@ function ProfilePage() {
     }
 
     //Only sets balance display when there is a valid balance
-    if (balance >= 0)
-        getUserBalance();
+    //if (balance >= 0)
+       getUserBalance();
 
     //Saves user balance to backend
     async function setUserBalance(event) {
@@ -35,7 +35,7 @@ function ProfilePage() {
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
-            var roundedbalance = Math.round(floatbalance * 100) / 100;
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
             const currentUser = await Parse.User.current();
 
@@ -86,6 +86,11 @@ function ProfilePage() {
 
     useEffect(() => {
         window.addEventListener('load', getUserStocks());
+        // window.addEventListener('submit', getUserBalance());
+        // window.addEventListener('load', getUserBalance());
+        // window.addEventListener('submit', setUserBalance());
+        // window.addEventListener('load', getUserBalance());
+        // window.addEventListener('submit', setUserBalance());
     }, []);
 
     function stockDisplay() {
@@ -115,12 +120,13 @@ function ProfilePage() {
                 accountValue += values[i];
 
             accountValue += balanceDisplay;
-            accountValue = Math.round(accountValue * 100) / 100;
+            accountValue = Math.floor(accountValue * 100) / 100;
             return accountValue;
         }
 
-        else {
-            return 0;
+        else{
+            accountValue += balanceDisplay;
+            return accountValue;
         }
     }
 
@@ -158,7 +164,7 @@ function ProfilePage() {
                             <tr className="chartdesign">
 
                                 <th className="publicsans"> TICKER </th>
-                                <th className="publicsans"> SHARES</th>
+                                <th className="publicsans"> SHARES </th>
                                 <th className="publicsans"> AVERAGE PRICE </th>
                                 <th className="publicsans"> CURRENT PRICE </th>
                                 <th className="publicsans"> CHANGE </th>
