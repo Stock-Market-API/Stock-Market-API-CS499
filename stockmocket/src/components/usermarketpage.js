@@ -1,17 +1,14 @@
 import React, { Component, useState } from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
-import { Button } from '../Button';
 
 const Parse = require('parse/node');
 
-
-//var user = "brian";
-//var currentbal = parseFloat("1540.547892")
 var key1 = "tsla"
 var key = "";
 var logo1 = '';
 var s = '';
+var d, t, d_newtwo, t_newtwo, d_newthree, t_newthree;
 
 const BarStyling = { width: "40rem", background: "#F2F1F9", border: "none", padding: "0.5rem" };
 
@@ -19,7 +16,7 @@ class usermarketpage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: [], sharesAmount: []
+            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: []
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -93,10 +90,7 @@ class usermarketpage extends Component {
     async handleBuy() {
         const shares = prompt('Buy shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to buy: ", shares);
 
@@ -111,7 +105,7 @@ class usermarketpage extends Component {
 
             console.log("result: ", stockResult);
 
-            //If no Queries are recieved then create a row for it
+            //If no Queries are receieved then create a row for it
             if (stockResult.length == 0) {
                 var stockObj = new Parse.Object('Portfolio');
                 stockObj.set('stockOwner', currentUser);
@@ -128,7 +122,7 @@ class usermarketpage extends Component {
                 }
             }
 
-            else {
+            else if (balance >= price) {
                 var lastPrice = 0;
                 var lastShares = 0;
 
@@ -151,20 +145,24 @@ class usermarketpage extends Component {
                     console.log(err.message);
                 }
 
+
+                var newBalance = balance - (price * parseInt(shares));
+                currentUser.set('balance', newBalance);
+                try {
+                    await currentUser.save();
+                    console.log('saving user balance success!');
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+
+                console.log("Shares bought: ", shares);
+
             }
 
-            var newBalance = balance - (price * parseInt(shares));
-            currentUser.set('balance', newBalance);
-            try {
-                await currentUser.save();
-                console.log('saving user balance success!');
+            else {
+                alert("Balance too low");
             }
-            catch (err) {
-                console.log(err.message);
-            }
-
-
-            console.log("Shares bought: ", shares);
         }
 
         catch (err) {
@@ -175,10 +173,7 @@ class usermarketpage extends Component {
     async handleSell() {
         const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
-
-        this.setState({
-            sharesAmount: shares
-        });
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
         console.log("Shares to sell: ", parseInt(shares));
 
@@ -225,18 +220,19 @@ class usermarketpage extends Component {
                         console.log(err.message);
                     }
                 }
+
+                var newBalance = balance + (price * parseInt(shares));
+                currentUser.set('balance', newBalance);
+                try {
+                    await currentUser.save();
+                    console.log('saving user balance success!');
+                } catch (err) {
+                    console.log(err.message);
+                }
+
+                console.log("Shares sold: ", shares);
             }
 
-            var newBalance = balance + (price * parseInt(shares));
-            currentUser.set('balance', newBalance);
-            try {
-                await currentUser.save();
-                console.log('saving user balance success!');
-            } catch (err) {
-                console.log(err.message);
-            }
-
-            console.log("Shares sold: ", shares);
         }
 
         catch (err) {
@@ -293,9 +289,9 @@ class usermarketpage extends Component {
                                 </table>
                             </div>
                         </div>
-                        <div className="stockbutton">
-                            <Button onClick={this.handleBuy} >Buy</Button>
-                            <Button onClick={this.handleSell} >Sell</Button>
+                        <div className = "stock-trading">
+                            <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
+                            <button className="stockbtn" onClick={this.handleSell}> Sell </button>
                         </div>
                     </div>
                     <div className="stockdescription">
