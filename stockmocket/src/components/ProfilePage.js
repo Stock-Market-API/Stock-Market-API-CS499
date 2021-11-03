@@ -47,9 +47,9 @@ function ProfilePage() {
         }
     }
 
-    //window.addEventListener('submit', getUserBalance);
-    //window.addEventListener('load', getUserBalance);
-    //window.addEventListener('submit', setUserBalance);
+    window.addEventListener('submit', getUserBalance);
+    window.addEventListener('load', getUserBalance);
+    window.addEventListener('submit', setUserBalance);
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
