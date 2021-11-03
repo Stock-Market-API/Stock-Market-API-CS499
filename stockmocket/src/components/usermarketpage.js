@@ -141,23 +141,22 @@ class usermarketpage extends Component {
                 try {
                     await stockObj.save();
                     console.log('else saving the stock success!');
+
+                    var newBalance = balance - (price * parseInt(shares));
+                    currentUser.set('balance', newBalance);
+                    try {
+                        await currentUser.save();
+                        console.log('saving user balance success!');
+                    }
+                    catch (err) {
+                        console.log(err.message);
+                    }
+
+                    console.log("Shares bought: ", shares);
+
                 } catch (err) {
                     console.log(err.message);
                 }
-
-
-                var newBalance = balance - (price * parseInt(shares));
-                currentUser.set('balance', newBalance);
-                try {
-                    await currentUser.save();
-                    console.log('saving user balance success!');
-                }
-                catch (err) {
-                    console.log(err.message);
-                }
-
-                console.log("Shares bought: ", shares);
-
             }
 
             else {
@@ -216,21 +215,23 @@ class usermarketpage extends Component {
                     try {
                         await stockObj.save();
                         console.log('else selling the stock success!');
+
+                        var newBalance = balance + (price * parseInt(shares));
+                        currentUser.set('balance', newBalance);
+                        try {
+                            await currentUser.save();
+                            console.log('saving user balance success!');
+                        } catch (err) {
+                            console.log(err.message);
+                        }
+
+                        console.log("Shares sold: ", shares);
+
                     } catch (err) {
                         console.log(err.message);
                     }
                 }
 
-                var newBalance = balance + (price * parseInt(shares));
-                currentUser.set('balance', newBalance);
-                try {
-                    await currentUser.save();
-                    console.log('saving user balance success!');
-                } catch (err) {
-                    console.log(err.message);
-                }
-
-                console.log("Shares sold: ", shares);
             }
 
         }
