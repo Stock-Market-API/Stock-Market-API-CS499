@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
@@ -31,18 +31,22 @@ function Navbar(props) {
     window.addEventListener('resize', showButton);
 
     const changeBackground = (event) => {
-        if (window.location.pathname.includes('/aboutus') || window.location.pathname.includes('/usermarketpage') || window.location.pathname.includes('/market') || window.location.pathname.includes('/dashboard') || window.location.pathname.includes('/profile')) {
-            setNavbar(true);
-            setButtonStyle(false);
+        if (window.location.pathname == '/' || window.location.pathname == '/login' || window.location.pathname == '/register') {
+            if (window.location.pathname.includes('/') && window.scrollY >= 80) {
+                setNavbar(true);
+                setButtonStyle(false);
+            }
+            else {
+                setNavbar(false);
+                setButtonStyle(true);
+            }
         }
-        else if (window.location.pathname.includes('/') && window.scrollY >= 80) {
-            setNavbar(true);
-            setButtonStyle(false);
-        }
+
         else {
-            setNavbar(false);
-            setButtonStyle(true);
+            setNavbar(true);
+            setButtonStyle(false);
         }
+
     }
 
     window.addEventListener('click', changeBackground);
@@ -52,9 +56,8 @@ function Navbar(props) {
 
     //Checks if a user is logged in or not
     //Sets loggedIn state to true if user is found
-    async function loginStatus() {
+    const loginStatus = useCallback(async () => {
         const currentUser = await Parse.User.current();
-        console.log(currentUser);
 
         if (currentUser !== null) {
             setloggedIn(true);
@@ -62,14 +65,15 @@ function Navbar(props) {
         else {
             setloggedIn(false);
         }
-    }
+    },[navbar])
 
-    loginStatus();
+    useEffect(() => {
+        loginStatus();
+    }, [loginStatus]);
 
     function loginButton() {
         return button && <Button link='/login' buttonStyle={buttonStyle ? 'btn--outline' : 'btn--primary'} >Login / Signup</Button>;
     }
-
 
     //Changes button display to either login or logout 
     //depending if user is logged in or not
@@ -90,27 +94,48 @@ function Navbar(props) {
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                Profile
+                <i class="far fa-user-circle profileIcon"></i>  
                             </Link>;
         }
     }
 
-    function dashboard() {
-        return <li className='nav-item'> <Link
-            to='/dashboard'
-            className='nav-links'
-            onClick={closeMobileMenu}
-        >
-            <i class="far fa-user-circle profileIcon"></i>  
-        </Link>
-        </li>
-    }
+    // function dashboard() {
+    //     return <li className='nav-item'> <Link
+    //         to='/dashboard'
+    //         className='nav-links'
+    //         onClick={closeMobileMenu}
+    //     >
+    //         <i class="far fa-user-circle profileIcon"></i>  
+    //     </Link>
+    //     </li>
+    // }
 
-    function dashboardDisplay(loggedIn) {
+    // function dashboardDisplay(loggedIn) {
+    //     if (!loggedIn) {
+    //         return null;
+    //     } else {
+    //         return dashboard();
+    //     }
+    // }
+
+    function marketDirect(loggedIn) {
         if (!loggedIn) {
-            return null;
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
         } else {
-            return dashboard();
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
         }
     }
 
@@ -130,13 +155,7 @@ function Navbar(props) {
                             {profileDisplay(loggedIn)}
                         </u1>
                         <li className='nav-item'>
-                            <Link
-                                to='/usermarketpage'
-                                className='nav-links'
-                                onClick={closeMobileMenu}
-                            >
-                                Market
-                            </Link>
+                            {marketDirect(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link
@@ -147,9 +166,6 @@ function Navbar(props) {
                                 AboutUs
                             </Link>
                         </li>
-                    <u1 id="para">
-                        {dashboardDisplay(loggedIn)}
-                    </u1>
                     </ul>
                     <u1 id="para">
                         {loginDisplay(loggedIn)}

@@ -157,7 +157,7 @@ componentDidMount() {
 
         try {
             const currentUser = await Parse.User.current();
-            var balance = currentUser.get('balance');
+            var balance = parseFloat(currentUser.get('balance'));
 
             const stockQuery = new Parse.Query('Portfolio')
             stockQuery.equalTo('stockOwner', currentUser);
@@ -203,7 +203,7 @@ componentDidMount() {
                     await stockObj.save();
                     console.log('else saving the stock success!');
 
-                    var newBalance = balance - (price * parseInt(shares));
+                    var newBalance = balance - (parseFloat(price) * parseInt(shares));
                     currentUser.set('balance', newBalance);
                     try {
                         await currentUser.save();
