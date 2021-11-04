@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
@@ -56,9 +56,8 @@ function Navbar(props) {
 
     //Checks if a user is logged in or not
     //Sets loggedIn state to true if user is found
-    async function loginStatus() {
+    const loginStatus = useCallback(async () => {
         const currentUser = await Parse.User.current();
-        console.log(currentUser);
 
         if (currentUser !== null) {
             setloggedIn(true);
@@ -66,14 +65,15 @@ function Navbar(props) {
         else {
             setloggedIn(false);
         }
-    }
+    },[navbar])
 
-    loginStatus();
+    useEffect(() => {
+        loginStatus();
+    }, [loginStatus]);
 
     function loginButton() {
         return button && <Button link='/login' buttonStyle={buttonStyle ? 'btn--outline' : 'btn--primary'} >Login / Signup</Button>;
     }
-
 
     //Changes button display to either login or logout 
     //depending if user is logged in or not
