@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
 import "./ProfilePage.css";
 
@@ -12,7 +12,9 @@ function ProfilePage() {
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
 
-    async function getUserBalance() {
+    const getUserBalance = useCallback(async () => {
+        console.log("get balance");
+
         try {
             const currentUser = await Parse.User.current();
 
@@ -23,13 +25,15 @@ function ProfilePage() {
         catch (err) {
             //alert("Not logged in");
         }
-    }
+    }, [balance])
 
-    //Only sets balance display when there is a valid balance
-    //if (balance >= 0)
-       getUserBalance();
+    //Gets User Balance upon page load
+    useEffect(() => {
+        getUserBalance();
+    },[getUserBalance]);
 
     //Saves user balance to backend
+    //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
 
@@ -41,15 +45,12 @@ function ProfilePage() {
 
             currentUser.set('balance', roundedbalance);
             currentUser.save();
+            getUserBalance();
         }
         else {
             console.log("Invalid balance");
         }
     }
-
-    window.addEventListener('submit', getUserBalance);
-    window.addEventListener('load', getUserBalance);
-    window.addEventListener('submit', setUserBalance);
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
@@ -84,14 +85,10 @@ function ProfilePage() {
 
     }
 
+    //Gets User stocks on page load
     useEffect(() => {
-        window.addEventListener('load', getUserStocks);
-        window.addEventListener('submit', getUserBalance);
-        window.addEventListener('load', getUserBalance);
-        window.addEventListener('submit', setUserBalance);
-        window.addEventListener('load', getUserBalance);
-        window.addEventListener('submit', setUserBalance);
-    }, []);
+        getUserStocks();
+    }, [getUserStocks]);
 
     function stockDisplay() {
         var profileStocks = [];
