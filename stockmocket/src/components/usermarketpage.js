@@ -92,12 +92,24 @@ class usermarketpage extends Component {
         const price = this.state.data.latestPrice; //Current price
         key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
+        //Handle prompt cancel
+        if (shares == null) {
+            console.log("Cancel buy");
+            return 0;
+        }
+
+        //Handle invalid share number 
+        else if (shares <= 0) {
+            alert("Enter a valid number of shares to buy");
+            return 0;
+        }
+
         console.log("Shares to buy: ", shares);
 
         try {
             const currentUser = await Parse.User.current();
             var balance = currentUser.get('balance');
-
+            
             const stockQuery = new Parse.Query('Portfolio')
             stockQuery.equalTo('stockOwner', currentUser);
             stockQuery.equalTo('stockName', key);
@@ -113,16 +125,32 @@ class usermarketpage extends Component {
                 stockObj.set('AveragePrice', price);
                 stockObj.set('sharesBought', parseInt(shares));
 
-                try {
-                    console.log("try now");
-                    await stockObj.save();
-                    console.log('saving the stock success!')
-                } catch (err) {
-                    console.log(err.message);
+                //Buying a number of shares within user's balance
+                if (balance >= price * shares) {
+                    try {
+                        console.log("try now");
+                        stockObj.save();
+                        var newBalance = balance - (price * parseInt(shares));
+                        newBalance = Math.floor(newBalance * 100) / 100;
+                        currentUser.set('balance', newBalance);
+
+                        this.setState({
+                            balanceDisplay: currentUser.get('balance')
+                        });
+                        console.log('saving the stock success!')
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                }
+
+                //Error when attempting to buy using more balance than you own
+                else {
+                    alert("Balance too low");
                 }
             }
 
-            else if (balance >= price) {
+            //Buying a number of shares within user's balance
+            else if (balance >= price * shares) {
                 var lastPrice = 0;
                 var lastShares = 0;
 
@@ -131,7 +159,7 @@ class usermarketpage extends Component {
                     lastPrice = result.get('AveragePrice');
                     lastShares = result.get('sharesBought');
                 }
-
+                
                 var sumStocks = (lastShares * lastPrice) + (price * parseInt(shares));
                 var newAveragePrice = Math.floor((sumStocks / (lastShares + parseInt(shares))) * 100) / 100;
 
@@ -139,13 +167,19 @@ class usermarketpage extends Component {
                 stockObj.set('sharesBought', parseInt(lastShares) + parseInt(shares));
 
                 try {
-                    await stockObj.save();
+                    stockObj.save();
                     console.log('else saving the stock success!');
 
                     var newBalance = balance - (price * parseInt(shares));
+                    newBalance = Math.floor(newBalance * 100) / 100;
                     currentUser.set('balance', newBalance);
+
+                    this.setState({
+                        balanceDisplay: currentUser.get('balance')
+                    });
+
                     try {
-                        await currentUser.save();
+                        currentUser.save();
                         console.log('saving user balance success!');
                     }
                     catch (err) {
@@ -159,6 +193,7 @@ class usermarketpage extends Component {
                 }
             }
 
+            //Error when attempting to buy using more balance than you own
             else {
                 alert("Balance too low");
             }
@@ -173,6 +208,18 @@ class usermarketpage extends Component {
         const shares = prompt('Sell shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
         key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        //Handle prompt cancel
+        if (shares == null) {
+            console.log("Cancel sell")
+            return 0;
+        }
+
+        //Handle invalid share number 
+        else if (shares <= 0) {
+            alert("Enter a valid number of shares to sell");
+            return 0;
+        }
 
         console.log("Shares to sell: ", parseInt(shares));
 
@@ -194,44 +241,65 @@ class usermarketpage extends Component {
                 var lastShares = 0;
 
                 for (let result of stockResult) {
+                    console.log("result: ", result);
                     var stockObj = result;
                     var lastShares = result.get('sharesBought');
                 }
 
-                stockObj.set('AveragePrice', stockObj.get('AveragePrice'));
-                stockObj.set('sharesBought', (parseInt(lastShares) - parseInt(shares)));
+                //Sell a valid number of owned shares
+                if (shares <= lastShares) {
+                    stockObj.set('AveragePrice', stockObj.get('AveragePrice'));
+                    stockObj.set('sharesBought', (parseInt(lastShares) - parseInt(shares)));
 
-                //delete the object if you sell all of it
-                if ((lastShares - parseInt(shares)) <= 0) {
-                    try {
-                        await stockObj.destroy();
-                        //console.log('Deleting the stock success!');
-                    } catch (err) {
-                        console.log(err.message);
-                    }
-                }
-
-                else {
-                    try {
-                        await stockObj.save();
-                        console.log('else selling the stock success!');
-
+                    //delete the object if you sell all of it
+                    if ((lastShares - parseInt(shares)) <= 0) {
                         var newBalance = balance + (price * parseInt(shares));
+                        newBalance = Math.floor(newBalance * 100) / 100;
+
                         currentUser.set('balance', newBalance);
+                        this.setState({
+                            balanceDisplay: currentUser.get('balance')
+                        });
+
                         try {
-                            await currentUser.save();
-                            console.log('saving user balance success!');
+                            stockObj.destroy();
+                            console.log('Deleting the stock success!');
                         } catch (err) {
                             console.log(err.message);
                         }
+                    }
 
-                        console.log("Shares sold: ", shares);
+                    else {
+                        try {
+                            stockObj.save();
+                            console.log('else selling the stock success!');
 
-                    } catch (err) {
-                        console.log(err.message);
+                            var newBalance = balance + (price * parseInt(shares));
+                            newBalance = Math.floor(newBalance * 100) / 100;
+
+                            currentUser.set('balance', newBalance);
+                            this.setState({
+                                balanceDisplay: currentUser.get('balance')
+                            });
+                            try {
+                                currentUser.save();
+                                console.log('saving user balance success!');
+                            } catch (err) {
+                                console.log(err.message);
+                            }
+
+                            console.log("Shares sold: ", shares);
+
+                        } catch (err) {
+                            console.log(err.message);
+                        }
                     }
                 }
 
+                //Error when selling more shares for a stock than what user owns
+                else {
+                    alert("Trying to sell too many shares");
+                }
             }
 
         }
@@ -292,7 +360,7 @@ class usermarketpage extends Component {
                         </div>
                         <div className = "stock-trading">
                             <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
-                            <button className="stockbtn" onClick={this.handleSell}> Sell </button>
+                            <button className= "stockbtn" onClick={this.handleSell}> Sell </button>
                         </div>
                     </div>
                     <div className="stockdescription">
