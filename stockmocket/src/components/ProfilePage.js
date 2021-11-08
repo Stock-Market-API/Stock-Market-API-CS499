@@ -36,9 +36,10 @@ function ProfilePage() {
     //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
-
+        console.log("set balance");
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
+            console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
             const currentUser = await Parse.User.current();
@@ -49,6 +50,89 @@ function ProfilePage() {
         }
         else {
             console.log("Invalid balance");
+        }
+    }
+
+    //Withdraw operation
+    //Triggers balance display upon withdrawal
+    async function handleWithdraw(event) {
+        event.preventDefault();
+        getUserBalance();
+
+        const withdraw = prompt('How much do you want to withdraw?'); 
+
+        if (withdraw == null) {
+            console.log("Cancel withdraw");
+            return 0;
+        }
+
+        else if (withdraw == 0) {
+            alert("Invalid number, please try again");
+            return 0;
+        }
+
+        else if (withdraw > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatwithdraw = parseFloat(withdraw);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            var totalbalance = Math.floor(((roundedbalance - floatwithdraw) * 100) / 100);
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
+
+    //Deposit operation
+    //Triggers balance display upon deposit
+    async function handleDeposit(event) {
+        event.preventDefault();
+        getUserBalance();
+
+        const deposit = prompt('How much do you want to deposit?');
+
+        if (deposit == null) {
+            console.log("Cancel deposit");
+            return 0;
+        }
+
+        else if (deposit == 0) {
+            alert("Invalid number, please try again");
+            return 0;
+        }
+
+        else if (deposit > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatdeposit = parseFloat(deposit);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            var totalbalance = Math.floor((roundedbalance + floatdeposit) * 100) / 100;
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
         }
     }
 
@@ -87,8 +171,8 @@ function ProfilePage() {
 
     //Gets User stocks on page load
     useEffect(() => {
-        getUserStocks();
-    }, [getUserStocks]);
+       getUserStocks();
+    }, []);
 
     function stockDisplay() {
         var profileStocks = [];
@@ -147,6 +231,15 @@ function ProfilePage() {
                                 }} />
                             <button type="submit" className="balancebtn">
                                 Set Balance
+                            </button>
+                        </div>
+                        <div> <br /> </div>
+                        <div>
+                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                Withdraw
+                            </button>
+                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                Deposit
                             </button>
                         </div>
                     </form>
