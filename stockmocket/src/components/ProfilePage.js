@@ -70,16 +70,15 @@ function ProfilePage() {
             return 0;
         }
 
-        else if (withdraw == 0) {
-            alert("Invalid number, please try again");
-            return 0;
+        else if (parseFloat(withdraw) > balance) {
+            alert("Attempting to withdraw more more money than allowed");
         }
 
         else if (withdraw > 0) {
             var floatbalance = parseFloat(balance);
-            var floatwithdraw = parseFloat(withdraw);
+            var floatwithdraw = parseFloat(withdraw).toFixed(2);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
-            var totalbalance = Math.floor(((roundedbalance - floatwithdraw) * 100) / 100);
+            var totalbalance = ((roundedbalance - floatwithdraw) * 100) / 100;
 
             try {
                 const currentUser = await Parse.User.current();
@@ -93,6 +92,7 @@ function ProfilePage() {
                 console.log("Could not save balance");
             }
         }
+
         else {
             alert("Invalid number, please try again");
         }
@@ -110,16 +110,11 @@ function ProfilePage() {
             return 0;
         }
 
-        else if (deposit == 0) {
-            alert("Invalid number, please try again");
-            return 0;
-        }
-
         else if (deposit > 0) {
             var floatbalance = parseFloat(balance);
-            var floatdeposit = parseFloat(deposit);
-            var roundedbalance = Math.floor(floatbalance * 100) / 100;
-            var totalbalance = Math.floor((roundedbalance + floatdeposit) * 100) / 100;
+            var floatdeposit = parseFloat(parseFloat(deposit).toFixed(2));
+            var roundedbalance = parseFloat(Math.floor(floatbalance * 100) / 100);
+            var totalbalance = parseFloat(((roundedbalance + floatdeposit) * 100) / 100);
 
             try {
                 const currentUser = await Parse.User.current();
