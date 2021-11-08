@@ -36,17 +36,22 @@ function ProfilePage() {
     //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
-        console.log("set balance");
+
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
             console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
-            const currentUser = await Parse.User.current();
+            try {
+                const currentUser = await Parse.User.current();
 
-            currentUser.set('balance', roundedbalance);
-            currentUser.save();
-            getUserBalance();
+                currentUser.set('balance', roundedbalance);
+                currentUser.save();
+                getUserBalance();
+            }
+            catch {
+                console.log("Could not save balance");
+            }
         }
         else {
             console.log("Invalid balance");
@@ -57,9 +62,8 @@ function ProfilePage() {
     //Triggers balance display upon withdrawal
     async function handleWithdraw(event) {
         event.preventDefault();
-        getUserBalance();
 
-        const withdraw = prompt('How much do you want to withdraw?'); 
+        const withdraw = prompt('Withdraw amount:'); 
 
         if (withdraw == null) {
             console.log("Cancel withdraw");
@@ -98,9 +102,8 @@ function ProfilePage() {
     //Triggers balance display upon deposit
     async function handleDeposit(event) {
         event.preventDefault();
-        getUserBalance();
 
-        const deposit = prompt('How much do you want to deposit?');
+        const deposit = prompt('Deposit amount:');
 
         if (deposit == null) {
             console.log("Cancel deposit");
