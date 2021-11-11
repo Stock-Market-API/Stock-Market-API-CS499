@@ -11,6 +11,15 @@ function ProfilePage() {
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+    
+    const [transDate, setTransDate] = useState([]);
+    const [orderType, setOrderType] = useState([]);
+    const [buysell, setBuySell] = useState([]);
+    const [effect, setEffect] = useState([]);
+    const [ticker, setTicker] = useState([]);
+    const [stock_amount, setStockAmount] = useState([]);
+    const [prices, setPrices] = useState([]);
+    const [transLength, setTransLength] = useState([]);
 
     const getUserBalance = useCallback(async () => {
         console.log("get balance");
@@ -170,6 +179,7 @@ function ProfilePage() {
     //Gets User stocks on page load
     useEffect(() => {
        getUserStocks();
+       getTransactionHistory();
     }, []);
 
     function stockDisplay() {
@@ -211,22 +221,124 @@ function ProfilePage() {
     
     //Get all transactions by user
     //@return list of transactions by user
-    function getTransactionHistory() {
-        var history = [
-            [
-            "Nov 1 2021",
-            "Market",
-            "Buy",
-            "Open",
-            "PLTR",
-            "1",
-            "26.00"
-            ]
-        ];
+    async function getTransactionHistory() {
         
-        var result = [];
+        var transDateArr = [];
+        var orderTypeArr = [];
+        var buysellArr = [];
+        var effectArr = [];
+        var tickerArr = [];
+        var stock_amountArr = [];
+        var price = [];
+        var count = 0;
+
+        //Get stock owner's username
+        const currentUser = await Parse.User.current();
+        const OwnerQuery = new Parse.Query('User');
+        OwnerQuery.equalTo('username', currentUser.get('username'));
+        const Owner = await OwnerQuery.first();
+
+        //Get all stocks owned by user
+        const historyQuery = new Parse.Query('Order');
+        historyQuery.equalTo('account', Owner);
+        let queryResults = await historyQuery.find();
+
+        //Append user owned stock data to be set to corresponding states
+        for (let result of queryResults) {
+            transDateArr.push(result.get('transDate'));
+            
+            var op_is_stock = result.get('isStockOperation');
+            var eff = result.get('isOpenPos');
+            if (true == op_is_stock) {
+                orderTypeArr.push("Stock");
+                
+                if (true == eff) {
+                    effectArr.push("Open");
+                }
+            }
+            else if (true == eff) {
+                orderTypeArr.push("Deposit");
+                effectArr.push("");
+            }
+            else if (false == eff) {
+                orderTypeArr.push("Withdrawal");
+                effectArr.push("");
+            }
+            //means something went wrong
+            else {
+                orderTypeArr.push("---");
+                effectArr.push("---");
+            }
+            
+            var is_long = result.get('isBuy');
+            if (is_long && op_is_stock) {
+                buysellArr.push("Buy");
+            }
+            else if (!is_long && op_is_stock) {
+                buysellArr.push("Sell");
+            }
+            else {
+                buysellArr.push("");
+            }
+            
+            tickerArr.push(result.get('ticker'));
+            stock_amountArr.push(result.get('amount'));
+            price.push(result.get('price'));
+            
+            count++;
+        }
         
+        console.log(count);
+
+        setTransDate(transDateArr);
+        setOrderType(orderTypeArr);
+        setBuySell(buysellArr);
+        setEffect(effectArr);
+        setTicker(tickerArr);
+        setStockAmount(stock_amountArr);
+        setPrices(price);
+        setTransLength(count);
+    }
+    
+    function transHistoryDisplay() {
+        var result =  "";
+        //for display debugging
+        //"<tr> <td>Nov 9</td> <td>Stock</td> <td>Buy</td> <td>Open</td> <td>BKKT</td> <td>1</td> <td>20</td> </tr>";
         
+        //not sure how to use react so I just did some basic string stuff. Looks ugly as hell though
+        for (var i=0; i<transLength; i++) {
+            result += "<tr>";
+            //trans date
+            result += "<td>";
+            result += transDate[i];
+            result += "</td>";
+            //order type
+            result += "<td>";
+            result += orderType[i];
+            result += "</td>"
+            //buysell
+            result += "<td>";
+            result += buysell[i];
+            result += "</td>";
+            //effect
+            result += "<td>";
+            result += effect[i];
+            result += "</td>";
+            //ticker
+            result += "<td>";
+            result += ticker[i];
+            result += "</td>"
+            //stock amount
+            result += "<td>";
+            result += stock_amount[i];
+            result += "</td>"
+            //prices
+            result += "<td>";
+            result += prices[i];
+            result += "</td>";
+                        
+            result += "</tr>";
+        }
         
         return result;
     }
@@ -300,11 +412,11 @@ function ProfilePage() {
                                 <th className="publicsans"> Effect </th>
                                 <th className="publicsans"> Security </th>
                                 <th className="publicsans"> Amount </th>
-                                <th className="publicsans"> Price 1</th>
+                                <th className="publicsans"> Price </th>
                             </tr>
                         </thead>
                         <tbody className="tabledesign">
-                            {getTransactionHistory()}
+                            {transHistoryDisplay()}
                         </tbody>
                     </table>
                 </div>
