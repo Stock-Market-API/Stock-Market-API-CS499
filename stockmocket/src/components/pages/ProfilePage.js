@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
 import "./ProfilePage.css";
 
@@ -12,44 +12,127 @@ function ProfilePage() {
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
 
-    async function getUserBalance() {
+    const getUserBalance = useCallback(async () => {
+        console.log("get balance");
+
         try {
             const currentUser = await Parse.User.current();
 
             var floatbalance = parseFloat(currentUser.get('balance'));
-            var roundedbalance = Math.round(floatbalance * 100) / 100;
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
             setbalanceDisplay(roundedbalance);
         }
         catch (err) {
             //alert("Not logged in");
         }
-    }
+    }, [balance])
 
-    //Only sets balance display when there is a valid balance
-    if (balance >= 0)
+    //Gets User Balance upon page load
+    useEffect(() => {
         getUserBalance();
+    },[getUserBalance]);
 
     //Saves user balance to backend
+    //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
-            var roundedbalance = Math.round(floatbalance * 100) / 100;
+            console.log("floatbalance: ", floatbalance);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
-            const currentUser = await Parse.User.current();
+            try {
+                const currentUser = await Parse.User.current();
 
-            currentUser.set('balance', roundedbalance);
-            currentUser.save();
+                currentUser.set('balance', roundedbalance);
+                currentUser.save();
+                getUserBalance();
+            }
+            catch {
+                console.log("Could not save balance");
+            }
         }
         else {
             console.log("Invalid balance");
         }
     }
 
-    window.addEventListener('submit', getUserBalance);
-    window.addEventListener('load', getUserBalance);
-    window.addEventListener('submit', setUserBalance);
+    //Withdraw operation
+    //Triggers balance display upon withdrawal
+    async function handleWithdraw(event) {
+        event.preventDefault();
+
+        const withdraw = prompt('Withdraw amount:'); 
+
+        if (withdraw == null) {
+            console.log("Cancel withdraw");
+            return 0;
+        }
+
+        else if (parseFloat(withdraw) > balance) {
+            alert("Attempting to withdraw more more money than allowed");
+        }
+
+        else if (withdraw > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatwithdraw = parseFloat(withdraw).toFixed(2);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            var totalbalance = ((roundedbalance - floatwithdraw) * 100) / 100;
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
+
+    //Deposit operation
+    //Triggers balance display upon deposit
+    async function handleDeposit(event) {
+        event.preventDefault();
+
+        const deposit = prompt('Deposit amount:');
+
+        if (deposit == null) {
+            console.log("Cancel deposit");
+            return 0;
+        }
+
+        else if (deposit > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatdeposit = parseFloat(parseFloat(deposit).toFixed(2));
+            var roundedbalance = parseFloat(Math.floor(floatbalance * 100) / 100);
+            var totalbalance = parseFloat(((roundedbalance + floatdeposit) * 100) / 100);
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
@@ -84,8 +167,9 @@ function ProfilePage() {
 
     }
 
+    //Gets User stocks on page load
     useEffect(() => {
-        window.addEventListener('load', getUserStocks());
+       getUserStocks();
     }, []);
 
     function stockDisplay() {
@@ -115,12 +199,13 @@ function ProfilePage() {
                 accountValue += values[i];
 
             accountValue += balanceDisplay;
-            accountValue = Math.round(accountValue * 100) / 100;
+            accountValue = Math.floor(accountValue * 100) / 100;
             return accountValue;
         }
 
-        else {
-            return 0;
+        else{
+            accountValue += balanceDisplay;
+            return accountValue;
         }
     }
     
@@ -168,6 +253,15 @@ function ProfilePage() {
                                 Set Balance
                             </button>
                         </div>
+                        <div> <br /> </div>
+                        <div>
+                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                Withdraw
+                            </button>
+                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                Deposit
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -180,7 +274,7 @@ function ProfilePage() {
                             <tr className="chartdesign">
 
                                 <th className="publicsans"> TICKER </th>
-                                <th className="publicsans"> SHARES</th>
+                                <th className="publicsans"> SHARES </th>
                                 <th className="publicsans"> AVERAGE PRICE </th>
                                 <th className="publicsans"> CURRENT PRICE </th>
                                 <th className="publicsans"> CHANGE </th>
