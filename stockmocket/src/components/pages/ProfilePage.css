@@ -1,28 +1,30 @@
 ﻿.profile-container {
     display: flex;
-    margin-left: 37%;
+    flex-direction: column;
+    margin-top: 5em;
+    margin-bottom: 5em;
+    align-content: center;
 }
 
 .user-assets {
     border: groove;
-    margin-bottom: 50%;
-    transform: translateY(50px);
-    height: 200px;
+    align-self: center;
     width: 50%;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-    .account-value {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
 
-    .cash-balance {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
+.account-value {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.cash-balance {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
 
 
 .stock-table {
-    transform: translate(-95%,50%);
-    max-height: 500px;
+/*    transform: translate(-95%,50%);*/
+    max-height: 25em;
     height: auto;
     overflow: auto;
 }
@@ -45,12 +47,12 @@
     margin-left: 5px;
 }
 
-    .balancebtn:hover {
-        background: linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
-        background-color: #1e62d0;
-    }
+.balancebtn:hover {
+    background: linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+    background-color: #1e62d0;
+}
 
-    .balancebtn:active {
-        position: relative;
-        top: 1px;
-    }
+.balancebtn:active {
+    position: relative;
+    top: 1px;   
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
+import TransactionRow from "./TransactionRow.js"
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
@@ -328,43 +329,21 @@ function ProfilePage() {
     }
     
     function transHistoryDisplay() {
-        var result =  "";
-        //for display debugging
-        //"<tr> <td>Nov 9</td> <td>Stock</td> <td>Buy</td> <td>Open</td> <td>BKKT</td> <td>1</td> <td>20</td> </tr>";
+        var result = [];
         
-        //not sure how to use react so I just did some basic string stuff. Looks ugly as hell though
         for (var i=0; i<transLength; i++) {
-            result += "<tr>";
-            //trans date
-            result += "<td>";
-            result += transDate[i];
-            result += "</td>";
-            //order type
-            result += "<td>";
-            result += orderType[i];
-            result += "</td>"
-            //buysell
-            result += "<td>";
-            result += buysell[i];
-            result += "</td>";
-            //effect
-            result += "<td>";
-            result += effect[i];
-            result += "</td>";
-            //ticker
-            result += "<td>";
-            result += ticker[i];
-            result += "</td>"
-            //stock amount
-            result += "<td>";
-            result += stock_amount[i];
-            result += "</td>"
-            //prices
-            result += "<td>";
-            result += prices[i];
-            result += "</td>";
-                        
-            result += "</tr>";
+            result.push(
+                <TransactionRow
+                    transDate="(not working)"
+                    orderType={orderType[i]}
+                    buysell={buysell[i]}
+                    effect={effect[i]}
+                    ticker={ticker[i]}
+                    stock_amount={stock_amount[i]}
+                    prices={prices[i]}
+                >
+                </TransactionRow>
+            )
         }
         
         return result;
