@@ -115,7 +115,7 @@ class usermarketpage extends Component {
                 stockObj.set('stockName', key);
                 stockObj.set('AveragePrice', price);
                 stockObj.set('sharesBought', parseInt(shares));
-
+                
                 try {
                     console.log("try now");
                     await stockObj.save();
@@ -159,7 +159,23 @@ class usermarketpage extends Component {
             catch (err) {
                 console.log(err.message);
             }
-
+            
+            //generate the transaction
+            var order_entry = new Parse.Object('Order');
+            order_entry.set('transDate', new Date());
+            order_entry.set('isStockOperation', true);
+            order_entry.set('isBuy', true);
+            order_entry.set('isOpenPos', true);
+            order_entry.set('ticker', key);
+            order_entry.set('amount', parseInt(shares));
+            order_entry.set('price', price);
+            order_entry.set('account', currentUser);
+            try {
+                await order_entry.save();
+            }
+            catch (err) {
+                console.log(err.message);
+            }
 
             console.log("Shares bought: ", shares);
         }
@@ -227,6 +243,23 @@ class usermarketpage extends Component {
                 await currentUser.save();
                 console.log('saving user balance success!');
             } catch (err) {
+                console.log(err.message);
+            }
+            
+            //generate the transaction
+            var order_entry = new Parse.Object('Order');
+            order_entry.set('transDate', new Date());
+            order_entry.set('isStockOperation', true);
+            order_entry.set('isBuy', false);
+            order_entry.set('isOpenPos', false);
+            order_entry.set('ticker', key);
+            order_entry.set('amount', parseInt(shares));
+            order_entry.set('price', price);
+            order_entry.set('account', currentUser);
+            try {
+                await order_entry.save();
+            }
+            catch (err) {
                 console.log(err.message);
             }
 

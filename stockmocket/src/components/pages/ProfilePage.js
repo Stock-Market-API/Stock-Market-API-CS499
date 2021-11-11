@@ -279,6 +279,9 @@ function ProfilePage() {
                 if (true == eff) {
                     effectArr.push("Open");
                 }
+                else {
+                    effectArr.push("Close");
+                }
             }
             else if (true == eff) {
                 orderTypeArr.push("Deposit");
