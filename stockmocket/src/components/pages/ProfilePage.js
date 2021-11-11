@@ -94,6 +94,18 @@ function ProfilePage() {
 
                 currentUser.set('balance', totalbalance);
                 currentUser.save();
+                
+                //add withdrawal to orders table
+                var order_entry = new Parse.Object('Order');
+                order_entry.set('transDate', new Date());
+                order_entry.set('isStockOperation', false);
+                order_entry.set('isBuy', false);
+                order_entry.set('isOpenPos', false);
+                order_entry.set('ticker', "");
+                order_entry.set('amount', parseFloat(floatwithdraw));
+                order_entry.set('account', currentUser);
+                order_entry.save();
+                
                 setBalance(totalbalance);
                 getUserBalance();
             }
@@ -130,6 +142,18 @@ function ProfilePage() {
 
                 currentUser.set('balance', totalbalance);
                 currentUser.save();
+                
+                //add deposit to orders table
+                var order_entry = new Parse.Object('Order');
+                order_entry.set('transDate', new Date());
+                order_entry.set('isStockOperation', false);
+                order_entry.set('isBuy', true);
+                order_entry.set('isOpenPos', true);
+                order_entry.set('ticker', "");
+                order_entry.set('amount', parseFloat(floatdeposit));
+                order_entry.set('account', currentUser);
+                order_entry.save();
+                
                 setBalance(totalbalance);
                 getUserBalance();
             }
