@@ -270,7 +270,7 @@ function ProfilePage() {
 
         //Append user owned stock data to be set to corresponding states
         for (let result of queryResults) {
-            transDateArr.push(result.get('transDate'));
+            transDateArr.push(result.get('transDate').toString());
             
             var op_is_stock = result.get('isStockOperation');
             var eff = result.get('isOpenPos');
@@ -330,11 +330,11 @@ function ProfilePage() {
     
     function transHistoryDisplay() {
         var result = [];
-        
+                
         for (var i=0; i<transLength; i++) {
             result.push(
                 <TransactionRow
-                    transDate="(not working)"
+                    transDate={transDate[i]}
                     orderType={orderType[i]}
                     buysell={buysell[i]}
                     effect={effect[i]}
@@ -352,7 +352,7 @@ function ProfilePage() {
     return (
         <div className="profile-container">
             <div className="user-assets">
-                Assets
+                <h1> Assets </h1>
                 <div> <br/> </div>
                 <div className="account-value">
                     Your Account Value: ${accountvalueDisplay()}
@@ -405,7 +405,7 @@ function ProfilePage() {
                     </table>
                 </div>
             </tbody>
-            <tbody>
+            <tbody className="stock-table">
                 <h1> Transaction history </h1>
                 <div className="container">
                     <div className="titledesign"> </div>

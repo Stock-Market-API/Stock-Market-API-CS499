@@ -1,14 +1,17 @@
 ﻿.profile-container {
     display: flex;
     flex-direction: column;
+    align-content: center;
+    gap: 5em;
+    
     margin-top: 5em;
     margin-bottom: 5em;
-    align-content: center;
 }
 
 .user-assets {
     border: groove;
     align-self: center;
+    text-align: center;
     width: 50%;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
