@@ -123,6 +123,28 @@ function ProfilePage() {
             return 0;
         }
     }
+    
+    //Get all transactions by user
+    //@return list of transactions by user
+    function getTransactionHistory() {
+        var history = [
+            [
+            "Nov 1 2021",
+            "Market",
+            "Buy",
+            "Open",
+            "PLTR",
+            "1",
+            "26.00"
+            ]
+        ];
+        
+        var result = [];
+        
+        
+        
+        return result;
+    }
 
     return (
         <div className="profile-container">
@@ -167,6 +189,28 @@ function ProfilePage() {
                         </thead>
                         <tbody className="tabledesign">
                             {stockDisplay()}
+                        </tbody>
+                    </table>
+                </div>
+            </tbody>
+            <tbody>
+                <h1> Transaction history </h1>
+                <div className="container">
+                    <div className="titledesign"> </div>
+                    <table className="table">
+                        <thead>
+                            <tr className="chartdesign">
+                                <th className="publicsans"> Time Placed </th>
+                                <th className="publicsans"> Order Type </th>
+                                <th className="publicsans"> Buy/Sell </th>
+                                <th className="publicsans"> Effect </th>
+                                <th className="publicsans"> Security </th>
+                                <th className="publicsans"> Amount </th>
+                                <th className="publicsans"> Price 1</th>
+                            </tr>
+                        </thead>
+                        <tbody className="tabledesign">
+                            {getTransactionHistory()}
                         </tbody>
                     </table>
                 </div>
