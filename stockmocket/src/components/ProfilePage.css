@@ -1,16 +1,20 @@
-﻿.profile-container {
+﻿﻿.profile-container {
     display: flex;
-    margin-left: 37%;
+    flex-direction: column;
+    align-content: center;
+    gap: 5em;
+    margin-top: 5em;
+    margin-bottom: 5em;
 }
 
 .user-assets {
     border: groove;
-    margin-bottom: 50%;
-    transform: translateY(50px);
-    height: 200px;
+    align-self: center;
+    text-align: center;
     width: 50%;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+
     .account-value {
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     }
@@ -21,10 +25,9 @@
 
 
 .stock-table {
-    transform: translate(-95%,50%);
-    max-height: 500px;
+    /*    transform: translate(-95%,50%);*/
+    max-height: 25em;
     height: auto;
-    overflow: auto;
 }
 
 .balancebtn {
@@ -43,6 +46,7 @@
     text-decoration: none;
     text-shadow: 0px 1px 0px #1570cd;
     margin-left: 5px;
+    margin-bottom: 5px;
 }
 
     .balancebtn:hover {
@@ -54,3 +58,34 @@
         position: relative;
         top: 1px;
     }
+
+
+
+.change-view {
+    box-shadow: inset 0px 1px 0px 0px #97c4fe;
+    background: linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+    background-color: #3d94f6;
+    border-radius: 6px;
+    border: 1px solid #337fed;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #1570cd;
+    display:flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+        .change-view:hover {
+             background: linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+             background-color: #1e62d0;
+        }
+
+        .change-view:active {
+            position: relative;
+            top: 1px;
+        }
