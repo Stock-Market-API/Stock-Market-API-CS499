@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
 
@@ -16,7 +16,7 @@ class usermarketpage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: []
+            data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: [], watchlisted: null
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,6 +24,10 @@ class usermarketpage extends Component {
         this.getUsername = this.getUsername(this);
         this.handleBuy = this.handleBuy.bind(this);
         this.handleSell = this.handleSell.bind(this);
+        this.addToWatchlist = this.addToWatchlist.bind(this);
+        this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
+        //this.watchlistButton = this.watchlistButton.bind(this);
+        this.isStockWatchlisted = this.isStockWatchlisted.bind(this);
 
     }
     handleChange(event) {
@@ -32,9 +36,10 @@ class usermarketpage extends Component {
 
     handleSubmit(event) {
         this.componentDidMount();
+        this.isStockWatchlisted();
         event.preventDefault();
         console.log(this.state.value);
-    }
+    } 
 
     async getUserBalance() {
         try {
@@ -66,6 +71,7 @@ class usermarketpage extends Component {
 
     componentDidMount() {
         key = this.state.value.toString();
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
         console.log(key)
         const url = `${iex.base_url}/stock/${key}/quote/?&token=${iex.api_token}`
         const urltwo = `${iex.base_url}/stock/${key}/company/?&token=${iex.api_token}`
@@ -85,6 +91,44 @@ class usermarketpage extends Component {
                     logo: res3
                 })
             });
+
+        //Checks initial watchlisted state on page load
+        this.isStockWatchlisted();
+    }
+
+    //Checks if current stock is watchlisted or not
+    async isStockWatchlisted() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //Stock is not watchlisted
+            if (stockResult.length == 0) {
+                this.setState({
+                    watchlisted: false
+                });
+                console.log("not a watchlisted stock");
+            }
+
+            //Stock is watchlisted
+            else {
+                this.setState({
+                    watchlisted: true
+                });
+                console.log("watchlisted stock");
+            }
+        }
+
+        catch {
+            console.log("Could not get watchlisted stocks");
+        }
     }
 
     async handleBuy() {
@@ -99,7 +143,7 @@ class usermarketpage extends Component {
         }
 
         //Handle invalid share number 
-        else if (shares <= 0) {
+        else if (parseInt(shares) <= 0) {
             alert("Enter a valid number of shares to buy");
             return 0;
         }
@@ -126,7 +170,7 @@ class usermarketpage extends Component {
                 stockObj.set('sharesBought', parseInt(shares));
 
                 //Buying a number of shares within user's balance
-                if (balance >= price * shares) {
+                if (balance >= price * parseInt(shares)) {
                     try {
                         console.log("try now");
                         stockObj.save();
@@ -150,7 +194,7 @@ class usermarketpage extends Component {
             }
 
             //Buying a number of shares within user's balance
-            else if (balance >= price * shares) {
+            else if (balance >= price * parseInt(shares)) {
                 var lastPrice = 0;
                 var lastShares = 0;
 
@@ -186,6 +230,23 @@ class usermarketpage extends Component {
                         console.log(err.message);
                     }
 
+                    //generate the transaction
+                    var order_entry = new Parse.Object('Order');
+                    order_entry.set('transDate', new Date());
+                    order_entry.set('isStockOperation', true);
+                    order_entry.set('isBuy', true);
+                    order_entry.set('isOpenPos', true);
+                    order_entry.set('ticker', key);
+                    order_entry.set('amount', parseInt(shares));
+                    order_entry.set('price', price);
+                    order_entry.set('account', currentUser);
+                    try {
+                        order_entry.save();
+                    }
+                    catch (err) {
+                        console.log(err.message);
+                    }
+
                     console.log("Shares bought: ", shares);
 
                 } catch (err) {
@@ -216,7 +277,7 @@ class usermarketpage extends Component {
         }
 
         //Handle invalid share number 
-        else if (shares <= 0) {
+        else if (parseInt(shares) <= 0) {
             alert("Enter a valid number of shares to sell");
             return 0;
         }
@@ -247,7 +308,7 @@ class usermarketpage extends Component {
                 }
 
                 //Sell a valid number of owned shares
-                if (shares <= lastShares) {
+                if (parseInt(shares) <= lastShares) {
                     stockObj.set('AveragePrice', stockObj.get('AveragePrice'));
                     stockObj.set('sharesBought', (parseInt(lastShares) - parseInt(shares)));
 
@@ -278,6 +339,7 @@ class usermarketpage extends Component {
                             newBalance = Math.floor(newBalance * 100) / 100;
 
                             currentUser.set('balance', newBalance);
+
                             this.setState({
                                 balanceDisplay: currentUser.get('balance')
                             });
@@ -285,6 +347,23 @@ class usermarketpage extends Component {
                                 currentUser.save();
                                 console.log('saving user balance success!');
                             } catch (err) {
+                                console.log(err.message);
+                            }
+
+                            //generate the transaction
+                            var order_entry = new Parse.Object('Order');
+                            order_entry.set('transDate', new Date());
+                            order_entry.set('isStockOperation', true);
+                            order_entry.set('isBuy', false);
+                            order_entry.set('isOpenPos', false);
+                            order_entry.set('ticker', key);
+                            order_entry.set('amount', parseInt(shares));
+                            order_entry.set('price', price);
+                            order_entry.set('account', currentUser);
+                            try {
+                                order_entry.save();
+                            }
+                            catch (err) {
                                 console.log(err.message);
                             }
 
@@ -306,6 +385,89 @@ class usermarketpage extends Component {
 
         catch (err) {
             alert("Please log in to sell shares");
+        }
+    }
+
+    async addToWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are receieved then create a row for it
+            if (stockResult.length == 0) {
+                var stockObj = new Parse.Object('Watchlist');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                //Add stock to watchlist
+                try {
+                    stockObj.save();
+                    this.setState({
+                        watchlisted: true
+                    });
+                    alert(key + " has been added to your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+            else {
+                alert(key + " is already in your watchlist");
+            }
+        }
+        catch(err){
+            alert("Could not add to watchlist")
+        }
+    }
+
+    async removeFromWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //Stock not found in watchlist
+            if (stockResult.length == 0) {
+                alert("Cannot remove a stock that is not in your watchlist")
+            }
+
+            //Remove stock from watchlist
+            else {
+                for (let result of stockResult) {
+                    var stockObj = result;
+                }
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                try {
+                    stockObj.destroy();
+                    this.setState({
+                        watchlisted: false
+                    });
+                    alert(key + " has been removed from your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+        }
+        catch (err) {
+            alert("Could not remove from watchlist")
         }
     }
 
@@ -359,8 +521,14 @@ class usermarketpage extends Component {
                             </div>
                         </div>
                         <div className = "stock-trading">
-                            <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
-                            <button className= "stockbtn" onClick={this.handleSell}> Sell </button>
+                            <button className="stockbtn" onClick={this.handleBuy}> Buy </button> 
+                            <button className="stockbtn" onClick={this.handleSell}> Sell </button>
+                        </div>
+                        <div>
+                            {this.state.watchlisted ?
+                                <button className="watchlistbtn" onClick={this.removeFromWatchlist}> Remove from Watchlist </button>
+                                :
+                                <button className="watchlistbtn" onClick={this.addToWatchlist}> Add to Watchlist </button>}
                         </div>
                     </div>
                     <div className="stockdescription">
@@ -375,7 +543,7 @@ class usermarketpage extends Component {
 
                     </div>
                     <div className="newcycle">
-                        <h1> NEW CYCLE UNDERWORKS</h1>
+                        <h1> NEWS CYCLE HERE</h1>
                         <h1>  homas Edward Patrick Brady Jr. is an American football quarterback for the Tampa Bay Buccaneers of the National Football League. He spent his first 20 seasons with the New England Patriots, where he was a central contributor to the franchise's dynasty from 2001 to 201 </h1>
                     </div>
                 </div>
