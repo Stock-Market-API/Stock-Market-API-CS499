@@ -9,10 +9,11 @@ import Aboutus from './components/pages/Aboutus'
 import MarketData from './components/pages/MarketData'
 import Footer from './components/Footer';
 import Usermarketpage from './components/pages/usermarketpage';
+import ProfilePage from './components/pages/ProfilePage';
 const Parse = require('parse/node');
-const PARSE_APPLICATION_ID = 'PkKseo3f5GALlC6FbYTPof2xofIOOOqxsfeIJ2Lx';
+const PARSE_APPLICATION_ID = 'lBuAZZz5WaaJKgKuAMAXyhbQXS6lwCao8qJkDNJA';
 const PARSE_HOST_URL = 'https://parseapi.back4app.com/';
-const PARSE_JAVASCRIPT_KEY = '2FokkUXZSKpMu65pSht3JHfeaGUKcwmbg4E5ISJ3';
+const PARSE_JAVASCRIPT_KEY = 'uC03MAEZnEBzq3i9VosN50CKh7mFAMQV4TDrC2E9';
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
@@ -28,6 +29,7 @@ function App() {
              <Route path='/aboutus' exact component={Aboutus} />
              <Route path='/market' exact component={MarketData} />
              <Route path='/usermarketpage' exact component={Usermarketpage} />
+             <Route path='/profile' exact component={ProfilePage} />
       </Switch>
       <Footer />
       </Router>

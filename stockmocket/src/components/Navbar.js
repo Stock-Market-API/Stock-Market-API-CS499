@@ -94,27 +94,48 @@ function Navbar(props) {
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                Profile
+                <i class="far fa-user-circle profileIcon"></i>  
                             </Link>;
         }
     }
 
-    function dashboard() {
-        return <li className='nav-item'> <Link
-            to='/dashboard'
-            className='nav-links'
-            onClick={closeMobileMenu}
-        >
-            <i class="far fa-user-circle profileIcon"></i>  
-        </Link>
-        </li>
-    }
+    // function dashboard() {
+    //     return <li className='nav-item'> <Link
+    //         to='/dashboard'
+    //         className='nav-links'
+    //         onClick={closeMobileMenu}
+    //     >
+    //         <i class="far fa-user-circle profileIcon"></i>  
+    //     </Link>
+    //     </li>
+    // }
 
-    function dashboardDisplay(loggedIn) {
+    // function dashboardDisplay(loggedIn) {
+    //     if (!loggedIn) {
+    //         return null;
+    //     } else {
+    //         return dashboard();
+    //     }
+    // }
+
+    function marketDirect(loggedIn) {
         if (!loggedIn) {
-            return null;
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
         } else {
-            return dashboard();
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
         }
     }
 
@@ -166,9 +187,6 @@ function Navbar(props) {
                                 AboutUs
                             </Link>
                         </li>
-                    <u1 id="para">
-                        {dashboardDisplay(loggedIn)}
-                    </u1>
                     </ul>
                     <u1 id="para">
                         {loginDisplay(loggedIn)}

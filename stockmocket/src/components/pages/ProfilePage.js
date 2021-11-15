@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+
+import React, { useState, useEffect } from "react";
 import UserStockRow from "./UserStockRow.js"
 import "./ProfilePage.css";
 
@@ -12,9 +13,7 @@ function ProfilePage() {
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
 
-    const getUserBalance = useCallback(async () => {
-        console.log("get balance");
-
+    async function getUserBalance() {
         try {
             const currentUser = await Parse.User.current();
 
@@ -25,114 +24,33 @@ function ProfilePage() {
         catch (err) {
             //alert("Not logged in");
         }
-    }, [balance])
+    }
 
-    //Gets User Balance upon page load
-    useEffect(() => {
-        getUserBalance();
-    },[getUserBalance]);
+    //Only sets balance display when there is a valid balance
+    //if (balance >= 0)
+       getUserBalance();
 
     //Saves user balance to backend
-    //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
-            console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
-            try {
-                const currentUser = await Parse.User.current();
+            const currentUser = await Parse.User.current();
 
-                currentUser.set('balance', roundedbalance);
-                currentUser.save();
-                getUserBalance();
-            }
-            catch {
-                console.log("Could not save balance");
-            }
+            currentUser.set('balance', roundedbalance);
+            currentUser.save();
         }
         else {
             console.log("Invalid balance");
         }
     }
 
-    //Withdraw operation
-    //Triggers balance display upon withdrawal
-    async function handleWithdraw(event) {
-        event.preventDefault();
-
-        const withdraw = prompt('Withdraw amount:'); 
-
-        if (withdraw == null) {
-            console.log("Cancel withdraw");
-            return 0;
-        }
-
-        else if (parseFloat(withdraw) > balance) {
-            alert("Attempting to withdraw more more money than allowed");
-        }
-
-        else if (withdraw > 0) {
-            var floatbalance = parseFloat(balance);
-            var floatwithdraw = parseFloat(withdraw).toFixed(2);
-            var roundedbalance = Math.floor(floatbalance * 100) / 100;
-            var totalbalance = ((roundedbalance - floatwithdraw) * 100) / 100;
-
-            try {
-                const currentUser = await Parse.User.current();
-
-                currentUser.set('balance', totalbalance);
-                currentUser.save();
-                setBalance(totalbalance);
-                getUserBalance();
-            }
-            catch{
-                console.log("Could not save balance");
-            }
-        }
-
-        else {
-            alert("Invalid number, please try again");
-        }
-    }
-
-    //Deposit operation
-    //Triggers balance display upon deposit
-    async function handleDeposit(event) {
-        event.preventDefault();
-
-        const deposit = prompt('Deposit amount:');
-
-        if (deposit == null) {
-            console.log("Cancel deposit");
-            return 0;
-        }
-
-        else if (deposit > 0) {
-            var floatbalance = parseFloat(balance);
-            var floatdeposit = parseFloat(parseFloat(deposit).toFixed(2));
-            var roundedbalance = parseFloat(Math.floor(floatbalance * 100) / 100);
-            var totalbalance = parseFloat(((roundedbalance + floatdeposit) * 100) / 100);
-
-            try {
-                const currentUser = await Parse.User.current();
-
-                currentUser.set('balance', totalbalance);
-                currentUser.save();
-                setBalance(totalbalance);
-                getUserBalance();
-            }
-            catch{
-                console.log("Could not save balance");
-            }
-        }
-
-        else {
-            alert("Invalid number, please try again");
-        }
-    }
+    window.addEventListener('submit', getUserBalance);
+    window.addEventListener('load', getUserBalance);
+    window.addEventListener('submit', setUserBalance);
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
@@ -167,9 +85,13 @@ function ProfilePage() {
 
     }
 
-    //Gets User stocks on page load
     useEffect(() => {
-       getUserStocks();
+        window.addEventListener('load', getUserStocks());
+        // window.addEventListener('submit', getUserBalance());
+        // window.addEventListener('load', getUserBalance());
+        // window.addEventListener('submit', setUserBalance());
+        // window.addEventListener('load', getUserBalance());
+        // window.addEventListener('submit', setUserBalance());
     }, []);
 
     function stockDisplay() {
@@ -229,15 +151,6 @@ function ProfilePage() {
                                 }} />
                             <button type="submit" className="balancebtn">
                                 Set Balance
-                            </button>
-                        </div>
-                        <div> <br /> </div>
-                        <div>
-                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
-                                Withdraw
-                            </button>
-                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
-                                Deposit
                             </button>
                         </div>
                     </form>

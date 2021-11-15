@@ -50,7 +50,7 @@ function Login() {
 
     //Redirects to home page upon successful form submission
     if (redirect) {
-        return <Redirect to="/market" />;
+        return <Redirect to="/usermarketpage" />;
     }
 
     return (
