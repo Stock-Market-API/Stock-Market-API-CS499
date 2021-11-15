@@ -139,6 +139,27 @@ function Navbar(props) {
         }
     }
 
+    function marketDirect(loggedIn) {
+        if (!loggedIn) {
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
+        } else {
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+        }
+    }
+
     return (
         <React.Fragment>
             <nav className={navbar ? 'navbar active' : 'navbar'}>

@@ -7,15 +7,13 @@
     /* background-color: aliceblue; */
     max-height: 2600px;
 }
-.usergreeting{
+
+.usergreeting {
     width: 100%;
     height: 150px;
     padding: 25px;
-  
-    
-    
-   
 }
+
 .searchbar{
     width: 100%;
     height: 50px;
@@ -24,14 +22,17 @@
      justify-content: center;
      align-items: center;
      margin-bottom: 25px;
+
 }
-.stockinfodisplay{
+
+.stockinfodisplay {
     width: 100%;
     height: 650px;
-     /* border: solid 1px black; */
+    /* border: solid 1px black; */
     display: inline;
 }
-.stockinfocenter{
+
+.stockinfocenter {
     width: 80%;
     height: 250px;
     /* border: solid 1px black; */
@@ -39,15 +40,16 @@
     margin-right: auto;
     display: flex;
 }
-.stocklogo{
-      /* border: solid 1px black; */
+
+.stocklogo {
+    /* border: solid 1px black; */
     width: 200px;
     height: 200px;
     margin-left: 30px;
     padding: 30px;
-   
 }
-.stockinfo{
+
+.stockinfo {
     /* border: solid 1px black; */
     width: 1000px;
     height: 200px;
@@ -56,6 +58,7 @@
     font-weight: 800;
     letter-spacing: .004em;
 }
+
 .stockbtn {
     box-shadow: inset 0px 1px 0px 0px #97c4fe;
     background: linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
@@ -93,19 +96,20 @@
      margin-bottom: 40px;
     
 }
-.maxstockdescription{
+
+.maxstockdescription {
     max-width: 80%;
     max-height: 250px;
-   /* border: solid 1px black; */
+    /* border: solid 1px black; */
     margin-left: auto;
-   margin-right: auto;
-     font-size: 12px;
-     
+    margin-right: auto;
+    font-size: 12px;
 }
+
 .newcycle{
     margin-top: 330px;
     max-width: 80%;
-    max-height: 700px;
+    max-height: 700px
     margin-left: auto;
     margin-right: auto;
     font-size: 12px;
@@ -113,26 +117,27 @@
     /* background-color: aliceblue; */
   
 }
-.descfont{
+
+.descfont {
     font-family: 'Noto Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
-
 }
+
 .tableinfo{
-    max-width: 75vw;
+    max-width: 75vw
     margin-top: 10px;
     margin-left: -15px;
     max-height: 500px;
 }
 
-.wp-table th:first-child, 
+.wp-table th:first-child,
 .wp-table td:first-child {
     padding-left: 16px;
 }
 
 
-.wp-table td, 
+.wp-table td,
 .wp-table th {
     padding: 8px 8px;
     display: table-cell;
@@ -143,34 +148,50 @@
 .wp-table th {
     font-weight: bold;
 }
- 
+
 .wp-table {
-    font-size: 15px!important;
-   
+    font-size: 15px !important;
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
     display: table;
 }
-.userfonts{
+
+.userfonts {
     color: black;
 }
-.companyname{
+
+.companyname {
     font-family: 'Josefin Sans';
     font-size: 18px;
     font-weight: bold;
 }
-.numbers{
+
+.numbers {
     font-family: 'Quattrocento Sans';
     font-weight: bold;
-    }
-
-  .tablenamestyling {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 800;
-        letter-spacing: .004em;
-       
 }
+
+.tablenamestyling {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 800;
+    letter-spacing: .004em;
+}
+
+.usergreeting {
+    width: 100%;
+    height: 150px;
+    padding: 25px;
+}
+
+.barrr {
+    width: 300px;
+    height: 35px;
+    font-size: 25px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
 .usergreeting{
     width: 100%;
     height: 150px;
