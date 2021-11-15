@@ -1,6 +1,6 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
+import TransactionRow from "./TransactionRow.js"
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
@@ -12,8 +12,19 @@ function ProfilePage() {
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+    
+    const [transDate, setTransDate] = useState([]);
+    const [orderType, setOrderType] = useState([]);
+    const [buysell, setBuySell] = useState([]);
+    const [effect, setEffect] = useState([]);
+    const [ticker, setTicker] = useState([]);
+    const [stock_amount, setStockAmount] = useState([]);
+    const [prices, setPrices] = useState([]);
+    const [transLength, setTransLength] = useState([]);
 
-    async function getUserBalance() {
+    const getUserBalance = useCallback(async () => {
+        console.log("get balance");
+
         try {
             const currentUser = await Parse.User.current();
 
@@ -24,33 +35,138 @@ function ProfilePage() {
         catch (err) {
             //alert("Not logged in");
         }
-    }
+    }, [balance])
 
-    //Only sets balance display when there is a valid balance
-    //if (balance >= 0)
-       getUserBalance();
+    //Gets User Balance upon page load
+    useEffect(() => {
+        getUserBalance();
+    },[getUserBalance]);
 
     //Saves user balance to backend
+    //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
+            console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
-            const currentUser = await Parse.User.current();
+            try {
+                const currentUser = await Parse.User.current();
 
-            currentUser.set('balance', roundedbalance);
-            currentUser.save();
+                currentUser.set('balance', roundedbalance);
+                currentUser.save();
+                getUserBalance();
+            }
+            catch {
+                console.log("Could not save balance");
+            }
         }
         else {
             console.log("Invalid balance");
         }
     }
 
-    window.addEventListener('submit', getUserBalance);
-    window.addEventListener('load', getUserBalance);
-    window.addEventListener('submit', setUserBalance);
+    //Withdraw operation
+    //Triggers balance display upon withdrawal
+    async function handleWithdraw(event) {
+        event.preventDefault();
+
+        const withdraw = prompt('Withdraw amount:'); 
+
+        if (withdraw == null) {
+            console.log("Cancel withdraw");
+            return 0;
+        }
+
+        else if (parseFloat(withdraw) > balance) {
+            alert("Attempting to withdraw more more money than allowed");
+        }
+
+        else if (withdraw > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatwithdraw = parseFloat(withdraw).toFixed(2);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            var totalbalance = ((roundedbalance - floatwithdraw) * 100) / 100;
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                
+                //add withdrawal to orders table
+                var order_entry = new Parse.Object('Order');
+                order_entry.set('transDate', new Date());
+                order_entry.set('isStockOperation', false);
+                order_entry.set('isBuy', false);
+                order_entry.set('isOpenPos', false);
+                order_entry.set('ticker', "");
+                order_entry.set('amount', parseFloat(floatwithdraw));
+                order_entry.set('account', currentUser);
+                order_entry.save();
+                
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
+
+    //Deposit operation
+    //Triggers balance display upon deposit
+    async function handleDeposit(event) {
+        event.preventDefault();
+
+        const deposit = prompt('Deposit amount:');
+
+        if (deposit == null) {
+            console.log("Cancel deposit");
+            return 0;
+        }
+
+        else if (deposit > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatdeposit = parseFloat(parseFloat(deposit).toFixed(2));
+            var roundedbalance = parseFloat(Math.floor(floatbalance * 100) / 100);
+            var totalbalance = parseFloat(((roundedbalance + floatdeposit) * 100) / 100);
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                
+                //add deposit to orders table
+                var order_entry = new Parse.Object('Order');
+                order_entry.set('transDate', new Date());
+                order_entry.set('isStockOperation', false);
+                order_entry.set('isBuy', true);
+                order_entry.set('isOpenPos', true);
+                order_entry.set('ticker', "");
+                order_entry.set('amount', parseFloat(floatdeposit));
+                order_entry.set('account', currentUser);
+                order_entry.save();
+                
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
@@ -85,13 +201,10 @@ function ProfilePage() {
 
     }
 
+    //Gets User stocks on page load
     useEffect(() => {
-        window.addEventListener('load', getUserStocks());
-        // window.addEventListener('submit', getUserBalance());
-        // window.addEventListener('load', getUserBalance());
-        // window.addEventListener('submit', setUserBalance());
-        // window.addEventListener('load', getUserBalance());
-        // window.addEventListener('submit', setUserBalance());
+       getUserStocks();
+       getTransactionHistory();
     }, []);
 
     function stockDisplay() {
@@ -130,11 +243,116 @@ function ProfilePage() {
             return accountValue;
         }
     }
+    
+    //Get all transactions by user
+    //@return list of transactions by user
+    async function getTransactionHistory() {
+        
+        var transDateArr = [];
+        var orderTypeArr = [];
+        var buysellArr = [];
+        var effectArr = [];
+        var tickerArr = [];
+        var stock_amountArr = [];
+        var price = [];
+        var count = 0;
+
+        //Get stock owner's username
+        const currentUser = await Parse.User.current();
+        const OwnerQuery = new Parse.Query('User');
+        OwnerQuery.equalTo('username', currentUser.get('username'));
+        const Owner = await OwnerQuery.first();
+
+        //Get all stocks owned by user
+        const historyQuery = new Parse.Query('Order');
+        historyQuery.equalTo('account', Owner);
+        let queryResults = await historyQuery.find();
+
+        //Append user owned stock data to be set to corresponding states
+        for (let result of queryResults) {
+            transDateArr.push(result.get('transDate').toString());
+            
+            var op_is_stock = result.get('isStockOperation');
+            var eff = result.get('isOpenPos');
+            if (true == op_is_stock) {
+                orderTypeArr.push("Stock");
+                
+                if (true == eff) {
+                    effectArr.push("Open");
+                }
+                else {
+                    effectArr.push("Close");
+                }
+            }
+            else if (true == eff) {
+                orderTypeArr.push("Deposit");
+                effectArr.push("");
+            }
+            else if (false == eff) {
+                orderTypeArr.push("Withdrawal");
+                effectArr.push("");
+            }
+            //means something went wrong
+            else {
+                orderTypeArr.push("---");
+                effectArr.push("---");
+            }
+            
+            var is_long = result.get('isBuy');
+            if (is_long && op_is_stock) {
+                buysellArr.push("Buy");
+            }
+            else if (!is_long && op_is_stock) {
+                buysellArr.push("Sell");
+            }
+            else {
+                buysellArr.push("");
+            }
+            
+            tickerArr.push(result.get('ticker'));
+            stock_amountArr.push(result.get('amount'));
+            price.push(result.get('price'));
+            
+            count++;
+        }
+        
+        console.log(count);
+
+        setTransDate(transDateArr);
+        setOrderType(orderTypeArr);
+        setBuySell(buysellArr);
+        setEffect(effectArr);
+        setTicker(tickerArr);
+        setStockAmount(stock_amountArr);
+        setPrices(price);
+        setTransLength(count);
+    }
+    
+    function transHistoryDisplay() {
+        var result = [];
+                
+        for (var i=0; i<transLength; i++) {
+            result.push(
+                <TransactionRow
+                    transDate={transDate[i]}
+                    orderType={orderType[i]}
+                    buysell={buysell[i]}
+                    effect={effect[i]}
+                    ticker={ticker[i]}
+                    stock_amount={stock_amount[i]}
+                    prices={prices[i]}
+                >
+                </TransactionRow>
+            )
+        }
+        
+        return result;
+    }
 
     return (
         <div className="profile-container">
             <div className="user-assets">
-                Assets
+                <h1> Assets </h1>
                 <div> <br/> </div>
                 <div className="account-value">
                     Your Account Value: ${accountvalueDisplay()}
@@ -151,6 +369,15 @@ function ProfilePage() {
                                 }} />
                             <button type="submit" className="balancebtn">
                                 Set Balance
+                            </button>
+                        </div>
+                        <div> <br /> </div>
+                        <div>
+                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                Withdraw
+                            </button>
+                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                Deposit
                             </button>
                         </div>
                     </form>
@@ -178,10 +405,32 @@ function ProfilePage() {
                     </table>
                 </div>
             </tbody>
+            <tbody className="stock-table">
+                <h1> Transaction history </h1>
+                <div className="container">
+                    <div className="titledesign"> </div>
+                    <table className="table">
+                        <thead>
+                            <tr className="chartdesign">
+                                <th className="publicsans"> Time Placed </th>
+                                <th className="publicsans"> Order Type </th>
+                                <th className="publicsans"> Buy/Sell </th>
+                                <th className="publicsans"> Effect </th>
+                                <th className="publicsans"> Security </th>
+                                <th className="publicsans"> Amount </th>
+                                <th className="publicsans"> Price </th>
+                            </tr>
+                        </thead>
+                        <tbody className="tabledesign">
+                            {transHistoryDisplay()}
+                        </tbody>
+                    </table>
+                </div>
+            </tbody>
         </div>
 
     );
 
 }
 
-export default ProfilePage;
+export default ProfilePage

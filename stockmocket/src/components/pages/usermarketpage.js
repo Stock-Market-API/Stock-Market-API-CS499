@@ -157,7 +157,7 @@ componentDidMount() {
 
         try {
             const currentUser = await Parse.User.current();
-            var balance = parseFloat(currentUser.get('balance'));
+            var balance = currentUser.get('balance');
 
             const stockQuery = new Parse.Query('Portfolio')
             stockQuery.equalTo('stockOwner', currentUser);
@@ -173,7 +173,7 @@ componentDidMount() {
                 stockObj.set('stockName', key);
                 stockObj.set('AveragePrice', price);
                 stockObj.set('sharesBought', parseInt(shares));
-
+                
                 try {
                     console.log("try now");
                     await stockObj.save();
@@ -183,7 +183,7 @@ componentDidMount() {
                 }
             }
 
-            else if (balance >= price) {
+            else {
                 var lastPrice = 0;
                 var lastShares = 0;
 
@@ -202,27 +202,40 @@ componentDidMount() {
                 try {
                     await stockObj.save();
                     console.log('else saving the stock success!');
-
-                    var newBalance = balance - (parseFloat(price) * parseInt(shares));
-                    currentUser.set('balance', newBalance);
-                    try {
-                        await currentUser.save();
-                        console.log('saving user balance success!');
-                    }
-                    catch (err) {
-                        console.log(err.message);
-                    }
-
-                    console.log("Shares bought: ", shares);
-
                 } catch (err) {
                     console.log(err.message);
                 }
+
             }
 
-            else {
-                alert("Balance too low");
+            var newBalance = balance - (price * parseInt(shares));
+            currentUser.set('balance', newBalance);
+            try {
+                await currentUser.save();
+                console.log('saving user balance success!');
             }
+            catch (err) {
+                console.log(err.message);
+            }
+            
+            //generate the transaction
+            var order_entry = new Parse.Object('Order');
+            order_entry.set('transDate', new Date());
+            order_entry.set('isStockOperation', true);
+            order_entry.set('isBuy', true);
+            order_entry.set('isOpenPos', true);
+            order_entry.set('ticker', key);
+            order_entry.set('amount', parseInt(shares));
+            order_entry.set('price', price);
+            order_entry.set('account', currentUser);
+            try {
+                await order_entry.save();
+            }
+            catch (err) {
+                console.log(err.message);
+            }
+
+            console.log("Shares bought: ", shares);
         }
 
         catch (err) {
@@ -277,25 +290,39 @@ componentDidMount() {
                     try {
                         await stockObj.save();
                         console.log('else selling the stock success!');
-
-                        var newBalance = balance + (price * parseInt(shares));
-                        currentUser.set('balance', newBalance);
-                        try {
-                            await currentUser.save();
-                            console.log('saving user balance success!');
-                        } catch (err) {
-                            console.log(err.message);
-                        }
-
-                        console.log("Shares sold: ", shares);
-
                     } catch (err) {
                         console.log(err.message);
                     }
                 }
-
             }
 
+            var newBalance = balance + (price * parseInt(shares));
+            currentUser.set('balance', newBalance);
+            try {
+                await currentUser.save();
+                console.log('saving user balance success!');
+            } catch (err) {
+                console.log(err.message);
+            }
+            
+            //generate the transaction
+            var order_entry = new Parse.Object('Order');
+            order_entry.set('transDate', new Date());
+            order_entry.set('isStockOperation', true);
+            order_entry.set('isBuy', false);
+            order_entry.set('isOpenPos', false);
+            order_entry.set('ticker', key);
+            order_entry.set('amount', parseInt(shares));
+            order_entry.set('price', price);
+            order_entry.set('account', currentUser);
+            try {
+                await order_entry.save();
+            }
+            catch (err) {
+                console.log(err.message);
+            }
+
+            console.log("Shares sold: ", shares);
         }
 
         catch (err) {
@@ -416,4 +443,4 @@ render() {
     )
 }
 }
-export default usermarketpage;
+export default usermarketpage
