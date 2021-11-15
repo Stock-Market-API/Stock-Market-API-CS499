@@ -11,11 +11,11 @@ function Cards() {
         <div className='cards__wrapper'>
           <ul className='cards__items'>
             <CardItem
-              src='images/'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              src='images/temporaryaboutme.jpg'
+              text='Hi,  my name is Dewan and Im an aspiring fullstack developer. Ive done work in mobile development, web development and even database development. For this project, Im focusing on improving my backend skills and helping out with the frontend when needed.'
               contact='Contact me@'
               label='Dewan Sunnah'
-              contact='Email: unknown'
+              contact='Email: dewansunnah613@gmail.com'
               path='/aboutus'
             />
              <CardItem
@@ -35,24 +35,24 @@ function Cards() {
               path='/aboutus'
             />
             <CardItem
-              src='images/emran_aboutus.png'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              src='images/Brian(1).png'
+              text='For this project I worked on the land page informations blocks, market page and user marketpage using the IEXClous api for the data'
               label='Shu Qiang Qu'
-              contact='Email: unknown'
+              contact='Email: Shuqiangwu1@gmail.com'
               path='/aboutus'
             />
           </ul>
           <ul className='cards__items'>
             <CardItem
               src='images/kento_aboutus.jpeg'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              text='Hey Im Ivan! For this project I worked on creating the database schema.'
               label='Ivan Yatsko'
-              contact='Email: unknown'
+              contact='Email: Ivan.Yatsko@gmail.com'
               path='/aboutus'
             />
             <CardItem
               src='images/emran_aboutus.png'
-              text='Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah Blah blah blah blah'
+              text=''
               label='Our Professor'
               contact='Email: unknown'
               path='/aboutus'
