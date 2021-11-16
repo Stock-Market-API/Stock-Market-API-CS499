@@ -212,7 +212,7 @@ componentDidMount() {
                 
                 try {
                     console.log("try now");
-                    await stockObj.save();
+                    stockObj.save();
                     console.log('saving the stock success!')
                 } catch (err) {
                     console.log(err.message);
@@ -236,7 +236,7 @@ componentDidMount() {
                 stockObj.set('sharesBought', parseInt(lastShares) + parseInt(shares));
 
                 try {
-                    await stockObj.save();
+                    stockObj.save();
                     console.log('else saving the stock success!');
                 } catch (err) {
                     console.log(err.message);
@@ -247,7 +247,7 @@ componentDidMount() {
             var newBalance = balance - (price * parseInt(shares));
             currentUser.set('balance', newBalance);
             try {
-                await currentUser.save();
+                currentUser.save();
                 console.log('saving user balance success!');
             }
             catch (err) {
@@ -265,7 +265,7 @@ componentDidMount() {
             order_entry.set('price', price);
             order_entry.set('account', currentUser);
             try {
-                await order_entry.save();
+                order_entry.save();
             }
             catch (err) {
                 console.log(err.message);
@@ -315,7 +315,7 @@ componentDidMount() {
                 //delete the object if you sell all of it
                 if ((lastShares - parseInt(shares)) <= 0) {
                     try {
-                        await stockObj.destroy();
+                        stockObj.destroy();
                         //console.log('Deleting the stock success!');
                     } catch (err) {
                         console.log(err.message);
@@ -324,7 +324,7 @@ componentDidMount() {
 
                 else {
                     try {
-                        await stockObj.save();
+                        stockObj.save();
                         console.log('else selling the stock success!');
                     } catch (err) {
                         console.log(err.message);
@@ -335,7 +335,7 @@ componentDidMount() {
             var newBalance = balance + (price * parseInt(shares));
             currentUser.set('balance', newBalance);
             try {
-                await currentUser.save();
+                currentUser.save();
                 console.log('saving user balance success!');
             } catch (err) {
                 console.log(err.message);
@@ -352,7 +352,7 @@ componentDidMount() {
             order_entry.set('price', price);
             order_entry.set('account', currentUser);
             try {
-                await order_entry.save();
+                order_entry.save();
             }
             catch (err) {
                 console.log(err.message);
