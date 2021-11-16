@@ -10,6 +10,7 @@ import MarketData from './components/pages/MarketData'
 import Footer from './components/Footer';
 import Usermarketpage from './components/pages/usermarketpage';
 import ProfilePage from './components/pages/ProfilePage'
+import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 const Parse = require('parse/node');
 const PARSE_APPLICATION_ID = 'dzk6zpD8cESqwkJrCSFrgeVrajZmYhxHO9LjFfyA';
 const PARSE_HOST_URL = 'https://parseapi.back4app.com/';
@@ -30,6 +31,7 @@ function App() {
              <Route path='/market' exact component={MarketData} />
              <Route path='/usermarketpage' exact component={Usermarketpage} />
              <Route path='/profile' exact component={ProfilePage} />
+             <Route path='/history' exact component={TransactionHistoryPage}/>
       </Switch>
       <Footer />
       </Router>

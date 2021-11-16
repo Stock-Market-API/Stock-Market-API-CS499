@@ -45,9 +45,10 @@
     font-size: 12px;
     font-weight: bold;
     padding: 4px 12px;
-    text-decoration: none;
+    text-decoration: none; 
     text-shadow: 0px 1px 0px #1570cd;
     margin-left: 5px;
+    margin-bottom: 5px;
 }
 
 .balancebtn:hover {
