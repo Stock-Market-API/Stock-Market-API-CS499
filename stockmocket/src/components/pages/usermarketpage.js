@@ -1,13 +1,8 @@
 import Plot from 'react-plotly.js';
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
-import { Button } from '../Button';
 const Parse = require('parse/node');
-
-
-//var user = "brian";
-//var currentbal = parseFloat("1540.547892")
 
 var logo1, newimg_one, newimg_two, newimg_three;
 var key1 = "tsla"
@@ -24,7 +19,8 @@ class usermarketpage extends Component{
         this.state = {
             data: {}, logo: [], info: {}, value: 'tsla', balanceDisplay: [], username: [], news : {} , data4: [],
             news2: {},
-            news3: {}, stockChartXValues: [], stockChartYValues: []
+            news3: {}, stockChartXValues: [], stockChartYValues: [],
+            watchlisted: null
            
         }
         this.handleChange = this.handleChange.bind(this);
@@ -33,6 +29,9 @@ class usermarketpage extends Component{
         this.getUsername = this.getUsername(this);
         this.handleBuy = this.handleBuy.bind(this);
         this.handleSell = this.handleSell.bind(this);
+        this.addToWatchlist = this.addToWatchlist.bind(this);
+        this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
+        this.isStockWatchlisted = this.isStockWatchlisted.bind(this);
 
 
     }
@@ -109,6 +108,7 @@ class usermarketpage extends Component{
 
 componentDidMount() {
     this.fetchStockGraph();
+    this.isStockWatchlisted();
         const url = `${iex.base_url}/stock/${this.state.value.toString()}/quote/?&token=${iex.api_token}`
         const urltwo = `${iex.base_url}/stock/${this.state.value.toString()}/company/?&token=${iex.api_token}`
         const urlthree = `${iex.base_url}/stock/${this.state.value.toString()}/logo/?&token=${iex.api_token}`
@@ -148,6 +148,42 @@ componentDidMount() {
             
           });
     }
+
+    //Checks if current stock is watchlisted or not
+    async isStockWatchlisted() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //Stock is not watchlisted
+            if (stockResult.length == 0) {
+                this.setState({
+                    watchlisted: false
+                });
+                console.log("not a watchlisted stock");
+            }
+
+            //Stock is watchlisted
+            else {
+                this.setState({
+                    watchlisted: true
+                });
+                console.log("watchlisted stock");
+            }
+        }
+
+        catch {
+            console.log("Could not get watchlisted stocks");
+        }
+    }
+
     async handleBuy() {
         const shares = prompt('Buy shares'); //Number of shares inputted saved to sharedAmount upon prompt submission
         const price = this.state.data.latestPrice; //Current price
@@ -382,7 +418,13 @@ render() {
                 <div className = "stock-trading">
                             <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
                             <button className="stockbtn" onClick={this.handleSell}> Sell </button>
-                        </div>
+                 </div>
+                <div>
+                     {this.state.watchlisted ?
+                        <button className="watchlistbtn" onClick={this.removeFromWatchlist}> Remove from Watchlist </button>
+                        :
+                        <button className="watchlistbtn" onClick={this.addToWatchlist}> Add to Watchlist </button>}
+                 </div>
                 </div>
                 <div className="stockdescription">
                 <div className ='maxstockdescription'> 
