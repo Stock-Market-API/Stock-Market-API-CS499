@@ -366,39 +366,47 @@ function ProfilePage() {
 
     return (
         <div className="profile-container">
-            <div>
+            <div className="user-assets">
                 <h1> Assets </h1>
-                <div className="user-assets">
-                    
-                    <table className="balances-buttons">
-                        <tr>
-                            <table className="asset-breakdown-table">
-                            <tr>
-                            <td>Equity value:</td>
-                            <td>${stocks_value}</td>
-                            </tr>
-                            <tr>
-                            <td>Cash balance:</td>
-                            <td>${balanceDisplay}</td>
-                            </tr>
-                            <tr>
-                            <td>Total account value:</td>
-                            <td>${account_value}</td>
-                            </tr>
+                <table>
+                    <tr>
+                        <td>
+                            <table className="balances-buttons">
+                                <tr>
+                                    <table className="asset-breakdown-table">
+                                    <tr>
+                                    <td>Equity value:</td>
+                                    <td>${stocks_value}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Cash balance:</td>
+                                    <td>${balanceDisplay}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Total account value:</td>
+                                    <td>${account_value}</td>
+                                    </tr>
+                                    </table>
+                                </tr>
+                                <tr>
+                                    <div className="cash-balance">
+                                        <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                            Withdraw
+                                        </button>
+                                        <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                            Deposit
+                                        </button>
+                                    </div>
+                                </tr>
                             </table>
-                        </tr>
-                        <tr>
-                            <div className="cash-balance">
-                                <button type="submit" className="balancebtn" onClick={handleWithdraw}>
-                                    Withdraw
-                                </button>
-                                <button type="submit" className="balancebtn" onClick={handleDeposit}>
-                                    Deposit
-                                </button>
+                        </td>
+                        <td>
+                            <div className="piechart-placeholder">
+                                pie chart goes here
                             </div>
-                        </tr>
-                    </table>
-                </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <tbody className="stock-table">
                 <h1> Your Stocks </h1>

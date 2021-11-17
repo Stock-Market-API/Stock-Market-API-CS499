@@ -9,11 +9,19 @@
 }
 
 .user-assets {
-    /*border: groove;*/
-    width: 50%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 3em;
+    padding-right: 3em;
+    
+    border: groove;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     
-    
+    align-self: center;
+}
+
+.piechart-placeholder {
+    background-color: #ddd;
 }
 
 .balances-buttons {
