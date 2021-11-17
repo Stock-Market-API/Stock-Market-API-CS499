@@ -278,9 +278,13 @@ function ProfilePage() {
         OwnerQuery.equalTo('username', currentUser.get('username'));
         const Owner = await OwnerQuery.first();
 
-        //Get all stocks owned by user
+        //Get all transactions made by user
         const historyQuery = new Parse.Query('Order');
         historyQuery.equalTo('account', Owner);
+        //Filter to 10 most recent
+        historyQuery.descending('transDate');
+        historyQuery.limit(10);
+        
         let queryResults = await historyQuery.find();
 
         //Append user owned stock data to be set to corresponding states
@@ -431,7 +435,8 @@ function ProfilePage() {
                 </div>
             </tbody>
             <tbody className="stock-table">
-                <h1> Transaction history </h1>
+                <h1> Recent Transactions </h1>
+                <p> For more transactions, go to <a href="/history">Transaction History</a> </p>
                 <div className="container">
                     <div className="titledesign"> </div>
                     <table className="table">

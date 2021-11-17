@@ -43,7 +43,7 @@
 
 .stock-table {
 /*    transform: translate(-95%,50%);*/
-    max-height: 25em;
+    max-height: 30em;
     height: auto;
     overflow: auto;
 }
