@@ -8,6 +8,9 @@ const Parse = require('parse/node');
 function ProfilePage() {
     const [balance, setBalance] = useState(null);
     const [balanceDisplay, setbalanceDisplay] = useState(0);
+    const [account_value, set_account_value] = useState(0);
+    const [stocks_value, set_stocks_value] = useState(0);
+    
     const [stocks, setStocks] = useState([]);
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
@@ -42,6 +45,7 @@ function ProfilePage() {
         getUserBalance();
     },[getUserBalance]);
 
+    //NOTE DEPRECATING THIS FEATURE!!!!!!
     //Saves user balance to backend
     //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
@@ -205,6 +209,7 @@ function ProfilePage() {
     useEffect(() => {
        getUserStocks();
        getTransactionHistory();
+       
     }, []);
 
     function stockDisplay() {
@@ -225,24 +230,34 @@ function ProfilePage() {
     function accountvalueDisplay() {
         var accountValue = 0;
         var values = [];
-
+        console.log("Current stockslength", stocksLength);
         if (stocksLength != 0) {
             for (var i = 0; i < stocksLength; i++) 
                 values.push(stockPrice[i] * shares[i]);
 
             for (var i = 0; i < stocksLength; i++) 
                 accountValue += values[i];
-
+            
             accountValue += balanceDisplay;
             accountValue = Math.floor(accountValue * 100) / 100;
-            return accountValue;
+            set_account_value(accountValue);
         }
 
         else{
+            
             accountValue += balanceDisplay;
-            return accountValue;
+            set_account_value(accountValue);
         }
     }
+    
+    function equityValueDisplay() {
+        set_stocks_value(Math.floor((account_value - balanceDisplay) * 100) / 100);
+    }
+    
+    useEffect(() => {
+        accountvalueDisplay();
+        equityValueDisplay();
+    }, []);
     
     //Get all transactions by user
     //@return list of transactions by user
@@ -351,36 +366,38 @@ function ProfilePage() {
 
     return (
         <div className="profile-container">
-            <div className="user-assets">
+            <div>
                 <h1> Assets </h1>
-                <div> <br/> </div>
-                <div className="account-value">
-                    Your Account Value: ${accountvalueDisplay()}
-                </div>
-                <div className="cash-balance">
-                    Cash Balance: ${balanceDisplay}
-                    <form className="form" onSubmit={setUserBalance}>
-                        <div className="balance-btns">
-                            <input type="text" className="balance-input"
-                                //Sets balance input on submit
-                                value={balance}
-                                onChange={(e) => {
-                                    setBalance(e.target.value);
-                                }} />
-                            <button type="submit" className="balancebtn">
-                                Set Balance
-                            </button>
-                        </div>
-                        <div> <br /> </div>
-                        <div>
-                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
-                                Withdraw
-                            </button>
-                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
-                                Deposit
-                            </button>
-                        </div>
-                    </form>
+                <div className="user-assets">
+                    
+                    <table className="balances-buttons">
+                        <tr>
+                            <table className="asset-breakdown-table">
+                            <tr>
+                            <td>Equity value:</td>
+                            <td>${stocks_value}</td>
+                            </tr>
+                            <tr>
+                            <td>Cash balance:</td>
+                            <td>${balanceDisplay}</td>
+                            </tr>
+                            <tr>
+                            <td>Total account value:</td>
+                            <td>${account_value}</td>
+                            </tr>
+                            </table>
+                        </tr>
+                        <tr>
+                            <div className="cash-balance">
+                                <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                    Withdraw
+                                </button>
+                                <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                    Deposit
+                                </button>
+                            </div>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <tbody className="stock-table">
