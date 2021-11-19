@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import iex from './iexapitoken.js'
+import React, { Component} from "react";
+import { Link } from "react-router-dom";
+import iex from './iexapitoken.js';
+import "./UserStockRow.css";
 
 var latestime;
 var d;
@@ -12,6 +14,7 @@ class UserStockRow extends Component {
             data: {},
         }
     }
+
     componentDidMount() {
         const url = `${iex.base_url}/stock/${this.props.ticker}/quote/?&token=${iex.api_token}`
 
@@ -22,22 +25,24 @@ class UserStockRow extends Component {
             d = new Date(latestime).toLocaleDateString("en-US")
             this.setState({
                 data: data
-
             })
-            console.log(data);
         })
-
     }
 
     render() {
         return (
             <tr className="tabledesign">
-
-                <td className="cellcolor"> {this.props.ticker} </td>
+                <td>
+                    <Link to={{
+                        pathname: '/usermarketpage',
+                        state: { value: this.props.ticker }
+                    }} className="cellcolor"> {this.props.ticker} </Link>
+                </td> 
                 <td className="numbers"> {this.props.shares} </td>
                 <td className="numbers"> ${this.props.stockPrice} </td>
                 <td className="numbers"> ${this.state.data.latestPrice} </td>
                 <td className="numbers" style={{ color: Math.sign(this.state.data.changePercent) == -1 ? "red" : "green" }}> {this.state.data.changePercent} </td>
+                <td className="numbers"> ${this.props.totalPrice} </td>
             </tr>
 
         )
@@ -45,4 +50,6 @@ class UserStockRow extends Component {
 
 }
 
+
 export default UserStockRow;
+

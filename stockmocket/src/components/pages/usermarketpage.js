@@ -1,5 +1,5 @@
 import Plot from 'react-plotly.js';
-import React, {Component} from "react";
+import React, { Component } from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
 const Parse = require('parse/node');
@@ -40,8 +40,8 @@ class usermarketpage extends Component{
       }
   
     handleSubmit(event) {
-    this.componentDidMount();
-      event.preventDefault();
+        this.componentDidMount();
+        event.preventDefault();
       console.log(this.state.value);
     }
     fetchStockGraph(){
@@ -109,10 +109,21 @@ class usermarketpage extends Component{
 componentDidMount() {
     this.fetchStockGraph();
     this.isStockWatchlisted();
-        const url = `${iex.base_url}/stock/${this.state.value.toString()}/quote/?&token=${iex.api_token}`
-        const urltwo = `${iex.base_url}/stock/${this.state.value.toString()}/company/?&token=${iex.api_token}`
-        const urlthree = `${iex.base_url}/stock/${this.state.value.toString()}/logo/?&token=${iex.api_token}`
-        const urlfour= `${iex.base_url}/stock/${this.state.value.toString()}/news/last/${'4'}/?&token=${iex.api_token}`
+
+    //Loads default stock data when accessing this page through the navbar or login redirect 
+    if ((typeof this.props.location.state == 'undefined' || this.props.location.state.value == null)) {
+        key = this.state.value.toString();
+    }
+
+    //If page was accessed by clicking a table ticker symbol,
+    //loads the clicked ticker's data
+    else {
+        key = this.props.location.state.value.toString();
+    }
+        const url = `${iex.base_url}/stock/${key}/quote/?&token=${iex.api_token}`
+        const urltwo = `${iex.base_url}/stock/${key}/company/?&token=${iex.api_token}`
+        const urlthree = `${iex.base_url}/stock/${key}/logo/?&token=${iex.api_token}`
+        const urlfour= `${iex.base_url}/stock/${key}/news/last/${'4'}/?&token=${iex.api_token}`
         // const urlfive= `${iex.base_url}/time-series/news/${this.state.value.toString()}range=last-week&limit=10/?&token=${iex.api_token}`
         Promise.all([fetch(url), fetch(urltwo) ,fetch(urlthree), fetch(urlfour)])
         .then(([res1, res2, res3,res4]) => { 
@@ -212,7 +223,7 @@ componentDidMount() {
                 
                 try {
                     console.log("try now");
-                    await stockObj.save();
+                    stockObj.save();
                     console.log('saving the stock success!')
                 } catch (err) {
                     console.log(err.message);
@@ -236,7 +247,7 @@ componentDidMount() {
                 stockObj.set('sharesBought', parseInt(lastShares) + parseInt(shares));
 
                 try {
-                    await stockObj.save();
+                    stockObj.save();
                     console.log('else saving the stock success!');
                 } catch (err) {
                     console.log(err.message);
@@ -247,7 +258,7 @@ componentDidMount() {
             var newBalance = balance - (price * parseInt(shares));
             currentUser.set('balance', newBalance);
             try {
-                await currentUser.save();
+                currentUser.save();
                 console.log('saving user balance success!');
             }
             catch (err) {
@@ -265,7 +276,7 @@ componentDidMount() {
             order_entry.set('price', price);
             order_entry.set('account', currentUser);
             try {
-                await order_entry.save();
+                order_entry.save();
             }
             catch (err) {
                 console.log(err.message);
@@ -324,7 +335,7 @@ componentDidMount() {
 
                 else {
                     try {
-                        await stockObj.save();
+                        stockObj.save();
                         console.log('else selling the stock success!');
                     } catch (err) {
                         console.log(err.message);
@@ -335,7 +346,7 @@ componentDidMount() {
             var newBalance = balance + (price * parseInt(shares));
             currentUser.set('balance', newBalance);
             try {
-                await currentUser.save();
+                currentUser.save();
                 console.log('saving user balance success!');
             } catch (err) {
                 console.log(err.message);
@@ -352,7 +363,7 @@ componentDidMount() {
             order_entry.set('price', price);
             order_entry.set('account', currentUser);
             try {
-                await order_entry.save();
+                order_entry.save();
             }
             catch (err) {
                 console.log(err.message);
@@ -366,20 +377,103 @@ componentDidMount() {
         }
     }
 
+    async addToWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are receieved then create a row for it
+            if (stockResult.length == 0) {
+                var stockObj = new Parse.Object('Watchlist');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                //Add stock to watchlist
+                try {
+                    stockObj.save();
+                    this.setState({
+                        watchlisted: true
+                    });
+                    alert(key + " has been added to your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+            else {
+                alert(key + " is already in your watchlist");
+            }
+        }
+        catch (err) {
+            alert("Could not add to watchlist")
+        }
+    }
+
+    async removeFromWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //Stock not found in watchlist
+            if (stockResult.length == 0) {
+                alert("Cannot remove a stock that is not in your watchlist")
+            }
+
+            //Remove stock from watchlist
+            else {
+                for (let result of stockResult) {
+                    var stockObj = result;
+                }
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                try {
+                    stockObj.destroy();
+                    this.setState({
+                        watchlisted: false
+                    });
+                    alert(key + " has been removed from your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+        }
+        catch (err) {
+            alert("Could not remove from watchlist")
+        }
+    }
+
 render() {
     return(
         <div className="uncontainer">
             <div className ="usergreeting">
                 <h1 className = "namedesc"> Hello {this.state.username} </h1>
-                <h1> Current Balance is $ {this.state.balanceDisplay}</h1>
+                <h1> Current Balance is ${this.state.balanceDisplay}</h1>
             </div> 
             <div className="searchbar">
             <form onSubmit={this.handleSubmit}>
-          <label>
-          <input className="barrr" type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input className="subbbb" type="submit" value="Submit" />
-        </form>
+                <label>
+                    <input className="barrr" type="text" value={this.state.value} onChange={this.handleChange} />
+                </label>
+                <input className="subbbb" type="submit" value="Submit" />
+            </form>
           
             
             </div>
@@ -416,15 +510,15 @@ render() {
                    </div>
                 </div>
                 <div className = "stock-trading">
-                            <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
-                            <button className="stockbtn" onClick={this.handleSell}> Sell </button>
-                 </div>
+                     <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
+                     <button className="stockbtn" onClick={this.handleSell}> Sell </button>
+                </div>
                 <div>
                      {this.state.watchlisted ?
                         <button className="watchlistbtn" onClick={this.removeFromWatchlist}> Remove from Watchlist </button>
                         :
                         <button className="watchlistbtn" onClick={this.addToWatchlist}> Add to Watchlist </button>}
-                 </div>
+                </div>
                 </div>
                 <div className="stockdescription">
                 <div className ='maxstockdescription'> 

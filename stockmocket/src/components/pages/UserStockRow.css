@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital@1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
 
@@ -79,6 +79,7 @@
 
 .cellcolor {
     color: blue;
+    text-decoration: none;
 }
 
 .tabledesign {
@@ -141,4 +142,3 @@
         background-color: Blue;
         color: white;
     }
-

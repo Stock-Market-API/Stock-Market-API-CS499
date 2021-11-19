@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import StockRow from "./StockRow.js";
 import "./ProfilePage.css";
-import "./UserWatchlist.css";
+import "./MockData.css";
 
 const Parse = require('parse/node');
 
