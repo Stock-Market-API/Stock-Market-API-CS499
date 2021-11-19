@@ -326,7 +326,7 @@ componentDidMount() {
                 //delete the object if you sell all of it
                 if ((lastShares - parseInt(shares)) <= 0) {
                     try {
-                        await stockObj.destroy();
+                        stockObj.destroy();
                         //console.log('Deleting the stock success!');
                     } catch (err) {
                         console.log(err.message);
@@ -374,6 +374,89 @@ componentDidMount() {
 
         catch (err) {
             alert("Please log in to sell shares");
+        }
+    }
+    
+    async addToWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are receieved then create a row for it
+            if (stockResult.length == 0) {
+                var stockObj = new Parse.Object('Watchlist');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                //Add stock to watchlist
+                try {
+                    stockObj.save();
+                    this.setState({
+                        watchlisted: true
+                    });
+                    alert(key + " has been added to your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+            else {
+                alert(key + " is already in your watchlist");
+            }
+        }
+        catch (err) {
+            alert("Could not add to watchlist")
+        }
+    }
+
+    async removeFromWatchlist() {
+        key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            //Finds watchlisted stock owned by user
+            const stockQuery = new Parse.Query('Watchlist');
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            const stockResult = await stockQuery.find();
+
+            //Stock not found in watchlist
+            if (stockResult.length == 0) {
+                alert("Cannot remove a stock that is not in your watchlist")
+            }
+
+            //Remove stock from watchlist
+            else {
+                for (let result of stockResult) {
+                    var stockObj = result;
+                }
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+
+                try {
+                    stockObj.destroy();
+                    this.setState({
+                        watchlisted: false
+                    });
+                    alert(key + " has been removed from your watchlist");
+                }
+                catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+        }
+        catch (err) {
+            alert("Could not remove from watchlist")
         }
     }
 
