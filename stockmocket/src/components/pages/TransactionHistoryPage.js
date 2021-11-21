@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import TransactionTable from './TransactionTable';
+import TransactionTable from './TransactionHistoryComponents/TransactionTable';
+import TransactionHistoryFilters from './TransactionHistoryComponents/TransactionHistoryFilters';
 const Parse = require('parse/node');
 
 const TransactionHistoryPage = () => {
     const [tHistory, setTHistory] = useState([]);
+    const [fullTHistory, setFullTHistory] = useState([]);
 
     useEffect(() => { 
       const getTHistory = async () => {
           const data = await fetchTHistory()
           setTHistory(data)
+          setFullTHistory(data)
       }
       getTHistory()
     }, [])
@@ -16,7 +19,6 @@ const TransactionHistoryPage = () => {
     const fetchTHistory = async() =>{
   
       var retArr = []
-  
 
       const Owner = await Parse.User.current();
     
@@ -95,13 +97,56 @@ const TransactionHistoryPage = () => {
       return retArr
     
     }
+
+
+    const FilterTHistory = (filterDeposit, filterWithdraw, filterBuy, filterSell, filterStock, stockText) => {
+
+      var newHistory = []
+    
+      if((filterDeposit && filterWithdraw && filterBuy && filterSell) 
+      || (!filterDeposit && !filterWithdraw && !filterBuy && !filterSell &&!filterStock)){
+        setTHistory(fullTHistory)
+      }
+  
+      else{
+  
+        if(filterDeposit){
+          newHistory = [...newHistory, ...fullTHistory.filter((transaction) => transaction.orderType ===  "Deposit")]
+        }
+  
+        if(filterWithdraw){
+          newHistory = [...newHistory, ...fullTHistory.filter((transaction) => transaction.orderType ===  "Withdrawl")]
+        }
+  
+        if(filterBuy){
+          newHistory = [...newHistory, ...fullTHistory.filter((transaction) => transaction.buySell ===  "Buy")]
+        }
+  
+        if(filterSell){
+          newHistory = [...newHistory, ...fullTHistory.filter((transaction) => transaction.buySell ===  "Sell")]
+        }
+        
+        if(filterStock){
+          if(filterBuy || filterSell){
+            newHistory = newHistory.filter((transaction) => transaction.Security === stockText.toUpperCase())
+          }
+          else{
+            newHistory = fullTHistory.filter((transaction) => transaction.Security === stockText.toUpperCase())
+          }
+        }
+
+        setTHistory(newHistory)
+      }
+
+    }
   
   
   
     return (
       <div className="profile-container">
           <h1>Transaction History</h1>
-          <TransactionTable tHistory = {tHistory}/>
+          <TransactionHistoryFilters onFilter = {FilterTHistory}/>
+          {tHistory.length > 0 ? <TransactionTable tHistory = {tHistory}/> : "No History To Show"}
       </div>
     );
 }
