@@ -21,7 +21,7 @@
 
 
 .stock-table {
-    transform: translate(-85%,60%);
+    transform: translate(-95%,50%);
     max-height: 500px;
     height: auto;
     overflow: auto;
@@ -42,6 +42,7 @@
     padding: 4px 12px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #1570cd;
+    margin-left: 5px;
 }
 
     .balancebtn:hover {
@@ -52,4 +53,8 @@
     .balancebtn:active {
         position: relative;
         top: 1px;
+    }
+
+    .portfolioGraph {
+        background-color: black;
     }

@@ -9,14 +9,14 @@ class UserStockRow extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            data: {},
+            data: {}
         }
     }
     componentDidMount() {
         const url = `${iex.base_url}/stock/${this.props.ticker}/quote/?&token=${iex.api_token}`
 
         fetch(url).then((Response) => Response.json()).then((data) => {
-            console.log(data)
+            // console.log(data)
             latestime = (data.latestUpdate)
             t = new Date(latestime).toLocaleTimeString("en-US")
             d = new Date(latestime).toLocaleDateString("en-US")
@@ -24,7 +24,7 @@ class UserStockRow extends Component {
                 data: data
 
             })
-            console.log(data);
+            //console.log(data);
         })
 
     }

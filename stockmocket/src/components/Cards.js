@@ -44,10 +44,10 @@ function Cards() {
           </ul>
           <ul className='cards__items'>
             <CardItem
-              src='images/kento_aboutus.jpeg'
-              text='Hey Im Ivan! For this project I worked on creating the database schema.'
+              src='images/ivan.jpg'
+              text='Hello! I know a thing or two about stocks. I am much more of a C/C++ programmer, but this project gives me a little exposure to how webapp development works, especially the backend side.'
               label='Ivan Yatsko'
-              contact='Email: Ivan.Yatsko@gmail.com'
+              contact='Email: IVAN.YATSKO33@myhunter.cuny.edu'
               path='/aboutus'
             />
             <CardItem

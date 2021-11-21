@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, Component } from "react";
 import UserStockRow from "./UserStockRow.js"
+import ProfileDiversity from "./PortfolioDiversity.js";
+import iex from './iexapitoken.js'
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
@@ -11,8 +13,17 @@ function ProfilePage() {
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+    const [stockValue, setstockValue] = useState([]);
 
-    async function getUserBalance() {
+    
+    // console.log("STOCKS", stocks);
+    // console.log("SHARES", shares);
+    //console.log("STOCKVALUE", stockValue);
+
+
+    const getUserBalance = useCallback(async () => {
+        console.log("get balance");
+
         try {
             const currentUser = await Parse.User.current();
 
@@ -23,33 +34,128 @@ function ProfilePage() {
         catch (err) {
             //alert("Not logged in");
         }
-    }
+    }, [balance])
 
-    //Only sets balance display when there is a valid balance
-    //if (balance >= 0)
-       getUserBalance();
+    //Gets User Balance upon page load
+    useEffect(() => {
+        getUserBalance();
+    },[getUserBalance]);
+
+    // function getCurrentPrice(prop){
+    //     var placeholder = [];
+    //     const url = `${iex.base_url}/stock/${prop}/quote/?&token=${iex.api_token}`
+    //         fetch(url).then((Response) => Response.json()).then((data) => {
+    //             setapidata(data);
+    //         })
+    // }
+
+
+     
+
+
 
     //Saves user balance to backend
+    //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
+            console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
-            const currentUser = await Parse.User.current();
+            try {
+                const currentUser = await Parse.User.current();
 
-            currentUser.set('balance', roundedbalance);
-            currentUser.save();
+                currentUser.set('balance', roundedbalance);
+                currentUser.save();
+                getUserBalance();
+            }
+            catch {
+                console.log("Could not save balance");
+            }
         }
         else {
             console.log("Invalid balance");
         }
     }
 
-    window.addEventListener('submit', getUserBalance);
-    window.addEventListener('load', getUserBalance);
-    window.addEventListener('submit', setUserBalance);
+
+    //Withdraw operation
+    //Triggers balance display upon withdrawal
+    async function handleWithdraw(event) {
+        event.preventDefault();
+
+        const withdraw = prompt('Withdraw amount:'); 
+
+        if (withdraw == null) {
+            console.log("Cancel withdraw");
+            return 0;
+        }
+
+        else if (parseFloat(withdraw) > balance) {
+            alert("Attempting to withdraw more more money than allowed");
+        }
+
+        else if (withdraw > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatwithdraw = parseFloat(withdraw).toFixed(2);
+            var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            var totalbalance = ((roundedbalance - floatwithdraw) * 100) / 100;
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
+
+    //Deposit operation
+    //Triggers balance display upon deposit
+    async function handleDeposit(event) {
+        event.preventDefault();
+
+        const deposit = prompt('Deposit amount:');
+
+        if (deposit == null) {
+            console.log("Cancel deposit");
+            return 0;
+        }
+
+        else if (deposit > 0) {
+            var floatbalance = parseFloat(balance);
+            var floatdeposit = parseFloat(parseFloat(deposit).toFixed(2));
+            var roundedbalance = parseFloat(Math.floor(floatbalance * 100) / 100);
+            var totalbalance = parseFloat(((roundedbalance + floatdeposit) * 100) / 100);
+
+            try {
+                const currentUser = await Parse.User.current();
+
+                currentUser.set('balance', totalbalance);
+                currentUser.save();
+                setBalance(totalbalance);
+                getUserBalance();
+            }
+            catch{
+                console.log("Could not save balance");
+            }
+        }
+
+        else {
+            alert("Invalid number, please try again");
+        }
+    }
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
@@ -57,6 +163,7 @@ function ProfilePage() {
         var AveragePrice = [];
         var sharesBought = [];
         var count = 0;
+
 
         //Get stock owner's username
         const currentUser = await Parse.User.current();
@@ -82,19 +189,61 @@ function ProfilePage() {
         setShares(sharesBought);
         setstocksLength(count);
 
+
     }
 
+
+       
+       useEffect(() => {
+        getstockValue();
+     }, [stocks,shares]);
+
+
+
+
+
+
+
+
+    async function getstockValue(){
+        var stockvals = [];
+        if (stocks != 0 || stocks != null || typeof(stocks) != "undefined"){
+        for(const stock of stocks){
+            const response = await fetch(`${iex.base_url}/stock/${stock}/quote/?&token=${iex.api_token}`)
+            const res = await response.json();
+            stockvals.push(res.latestPrice);
+        }  
+    }
+        if(shares == 0 || shares == null){
+            return null;
+        }else{
+            calculatestockValue(stockvals);
+        }
+    }
+    function calculatestockValue(props){
+        var stockvals = [];
+        for(var i = 0; i < props.length; i++){
+            var x = Math.floor((props[i] * shares[i]) * 100) / 100;
+            stockvals.push(x);
+        }
+        //console.log(stockvals);
+        setstockValue(stockvals);
+
+    }
+
+
+
+    //Gets User stocks on page load
     useEffect(() => {
-        window.addEventListener('load', getUserStocks());
-        // window.addEventListener('submit', getUserBalance());
-        // window.addEventListener('load', getUserBalance());
-        // window.addEventListener('submit', setUserBalance());
-        // window.addEventListener('load', getUserBalance());
-        // window.addEventListener('submit', setUserBalance());
+       getUserStocks();
     }, []);
+
+
+
 
     function stockDisplay() {
         var profileStocks = [];
+        //console.log(shares);
 
         for (var i = 0; i < stocksLength; i++) {
             profileStocks.push(
@@ -123,12 +272,29 @@ function ProfilePage() {
             accountValue = Math.floor(accountValue * 100) / 100;
             return accountValue;
         }
-
         else{
             accountValue += balanceDisplay;
             return accountValue;
         }
     }
+
+    function displayChartData(){
+        if((stockValue == 0 || stockValue == null)){
+            // console.log("STOCK IN IFSTATEMENT", stocks);
+            return null;
+        } else if (stocks == 0 || stocks == null){
+            // console.log("SHARES IN IFSTATMENT", shares);
+            return null;
+        }else{
+            // console.log("TRIGGERING ELSE STATEMENT NOW");
+            return (<ProfileDiversity stock={stocks} chartData={stockValue}/>)
+
+        }
+
+    }
+
+
+
 
     return (
         <div className="profile-container">
@@ -152,7 +318,17 @@ function ProfilePage() {
                                 Set Balance
                             </button>
                         </div>
+                        <div> <br /> </div>
+                        <div>
+                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                Withdraw
+                            </button>
+                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                Deposit
+                            </button>
+                        </div>
                     </form>
+                    
                 </div>
             </div>
             <tbody className="stock-table">
@@ -177,6 +353,10 @@ function ProfilePage() {
                     </table>
                 </div>
             </tbody>
+            <div className="PortfolioChart">
+                {displayChartData()}
+                
+            </div>
         </div>
 
     );

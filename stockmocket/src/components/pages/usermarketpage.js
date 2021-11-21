@@ -49,7 +49,7 @@ class usermarketpage extends Component{
         key = this.state.value.toString();
         const pointerToThis = this;
         console.log(pointerToThis);
-        const API_KEY = 'YAB9H6YWJ71GXX22';
+        const API_KEY = '3EWFECNW3SBMJCXY';
         let API_Call = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${key}&outputsize=compact&apikey=YAB9H6YWJ71GXX22`;
         let stockChartXValuesFunction = [];
         let stockChartYValuesFunction = [];
@@ -71,7 +71,7 @@ class usermarketpage extends Component{
               }
     
               // console.log(stockChartXValuesFunction);
-              console.log(stockChartYValuesFunction);
+              //console.log(stockChartYValuesFunction);
               pointerToThis.setState({
                 stockChartXValues: stockChartXValuesFunction,
                 stockChartYValues: stockChartYValuesFunction
@@ -108,7 +108,7 @@ class usermarketpage extends Component{
     }
 
 componentDidMount() {
-    this.fetchStockGraph();
+        this.fetchStockGraph();
         const url = `${iex.base_url}/stock/${this.state.value.toString()}/quote/?&token=${iex.api_token}`
         const urltwo = `${iex.base_url}/stock/${this.state.value.toString()}/company/?&token=${iex.api_token}`
         const urlthree = `${iex.base_url}/stock/${this.state.value.toString()}/logo/?&token=${iex.api_token}`
@@ -123,7 +123,7 @@ componentDidMount() {
             newimg_one = (res4[0].image).toString();
             newimg_two = (res4[1].image).toString();
             newimg_three = (res4[2].image).toString();
-            console.log('test1111')
+            //console.log('test1111')
             
  
              t = new Date(res4[0].datetime).toLocaleTimeString("en-US")
@@ -198,7 +198,7 @@ componentDidMount() {
 
                 stockObj.set('AveragePrice', newAveragePrice);
                 stockObj.set('sharesBought', parseInt(lastShares) + parseInt(shares));
-
+                console.log("TYPE OF ", typeof(newAveragePrice));
                 try {
                     await stockObj.save();
                     console.log('else saving the stock success!');

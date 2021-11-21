@@ -46,7 +46,7 @@ function MarketData(){
         </thead>
         <tbody className = "tabledesign">
             
-            < StockRow  ticker = "AMZN" />
+            <StockRow  ticker = "AMZN" />
             <StockRow ticker = "GOOG" />
             <StockRow ticker = "TSLA" />
             <StockRow ticker = "MA" />

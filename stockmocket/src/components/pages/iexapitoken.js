@@ -1,5 +1,5 @@
  const iexapitoken = {
-api_token: 'pk_17160fc37bf441978cc87d08cb0991bd',
+api_token: 'pk_995f83a8e13b43658f254c033a4a5272 ',
 base_url: 'https://cloud.iexapis.com/stable'
 
 };

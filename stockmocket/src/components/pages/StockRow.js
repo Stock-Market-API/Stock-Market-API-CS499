@@ -13,6 +13,7 @@ class StockRow extends Component {
            data: {},
         }
     }
+
 componentDidMount() {
     const url = `${iex.base_url}/stock/${this.props.ticker}/quote/?&token=${iex.api_token}`
 

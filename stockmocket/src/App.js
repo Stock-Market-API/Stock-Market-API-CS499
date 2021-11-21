@@ -10,10 +10,11 @@ import MarketData from './components/pages/MarketData'
 import Footer from './components/Footer';
 import Usermarketpage from './components/pages/usermarketpage';
 import ProfilePage from './components/pages/ProfilePage';
+
 const Parse = require('parse/node');
-const PARSE_APPLICATION_ID = 'lBuAZZz5WaaJKgKuAMAXyhbQXS6lwCao8qJkDNJA';
+const PARSE_APPLICATION_ID = 'dzk6zpD8cESqwkJrCSFrgeVrajZmYhxHO9LjFfyA';
 const PARSE_HOST_URL = 'https://parseapi.back4app.com/';
-const PARSE_JAVASCRIPT_KEY = 'uC03MAEZnEBzq3i9VosN50CKh7mFAMQV4TDrC2E9';
+const PARSE_JAVASCRIPT_KEY = 'U7pYiIC6ngqJM9gx974UsTli8hhnQ9fEG3ypeN6y';
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
