@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
+import iex from './iexapitoken.js'
 import TransactionRow from "./TransactionRow.js"
 import "./ProfilePage.css";
 
@@ -178,13 +179,6 @@ function ProfilePage() {
 
     }
 
-    //Gets User stocks on page load
-    useEffect(() => {
-       getUserStocks();
-       getTransactionHistory();
-       
-    }, []);
-
     function stockDisplay() {
         var profileStocks = [];
 
@@ -204,12 +198,35 @@ function ProfilePage() {
         set_account_value(balanceDisplay + stocks_value);
     }
     
+    function getCurrPrices(tickers) {
+        let currPrice = []
+        
+        for (var i=0; i < stocksLength; i++) {
+            const url = `${iex.base_url}/stock/${stocks[i]}/quote/?&token=${iex.api_token}`;
+                
+            fetch(url).then((Response) => Response.json()).then((data)  => {
+                currPrice.push(parseFloat(data.latestPrice));
+            })
+        }
+        
+        return currPrice;
+    }
+    
     function equityValueDisplay() {
+        console.log("scope: equityValueDisplay");
         var stocksValue = 0;
         var values = [];
+        
         if (stocksLength != 0) {
-            for (var i = 0; i < stocksLength; i++) 
-                values.push(stockPrice[i] * shares[i]);
+            //fetch current price for each ticker
+            let currPrice = getCurrPrices(ticker);
+            
+            console.log("TEST");
+            
+            for (var i = 0; i < stocksLength; i++) {
+                values.push(currPrice[i] * shares[i]);
+            }
+            console.log(values);
 
             for (var i = 0; i < stocksLength; i++) 
                 stocksValue += values[i];
@@ -261,7 +278,10 @@ function ProfilePage() {
     
     //i really hate awaits
     useEffect(() => {
-        getUserBalance().then(balanceDisplay => {
+        getTransactionHistory();
+        getUserBalance();
+        getUserStocks().then(stocks => {
+            console.log("calling equityValueDisplay");
             equityValueDisplay();
             accountvalueDisplay();
         }).then(account_value => {
