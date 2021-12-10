@@ -268,7 +268,7 @@ function OptionsRow(props) {
 
                             try {
                                 console.log("saving new balance");
-                                                                setOptionsSold(!optionsSold);
+                                setOptionsSold(!optionsSold);
                                 currentUser.save();
                             }
                             catch (err) {
@@ -297,7 +297,7 @@ function OptionsRow(props) {
     
     return (
         <tr className="tabledesign">
-            <td onClick={() => { handleClick() }} >
+            <td onDoubleClick={() => { handleClick() }} >
                 <Link to={{
                     pathname: '/usermarketpage',
                     state: { value: props.ticker }
