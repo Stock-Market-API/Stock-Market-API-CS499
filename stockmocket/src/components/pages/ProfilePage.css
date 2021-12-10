@@ -3,17 +3,36 @@
     flex-direction: column;
     align-content: center;
     gap: 5em;
+    margin-top: 3em;
     
-    margin-top: 5em;
     margin-bottom: 5em;
 }
 
+.bar{
+    display: inline-block;
+    border: 2px solid black;
+    padding: 1rem 1rem;
+    width: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
+}
+
 .user-assets {
-    border: groove;
+    float: left;
     align-self: center;
     text-align: center;
-    width: 50%;
+    border: 2px solid black;
+    padding: 1rem 1rem;
+    width: 680px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.chart {
+    float: right;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 470px;
+    height: 50%;
 }
 
 .account-value {
