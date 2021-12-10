@@ -149,3 +149,7 @@
     background-color: Blue;
     color: white;
   }
+
+.options-container{
+    margin-bottom: 256px;
+}

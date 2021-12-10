@@ -32,6 +32,8 @@ class usermarketpage extends Component{
         this.addToWatchlist = this.addToWatchlist.bind(this);
         this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
         this.isStockWatchlisted = this.isStockWatchlisted.bind(this);
+        this.buyCallOption = this.buyCallOption.bind(this);
+        this.buyPutOption = this.buyPutOption.bind(this);
 
 
     }
@@ -118,6 +120,9 @@ componentDidMount() {
     //If page was accessed by clicking a table ticker symbol,
     //loads the clicked ticker's data
     else {
+        this.setState({
+            value: this.props.location.state.value
+        });
         key = this.props.location.state.value.toString();
     }
         const url = `${iex.base_url}/stock/${key}/quote/?&token=${iex.api_token}`
@@ -376,6 +381,138 @@ componentDidMount() {
             alert("Please log in to sell shares");
         }
     }
+
+    //Buy call option
+    async buyCallOption() {
+        const strikeprice = prompt('Enter strikeprice');
+        this.optionprice(strikeprice, this.state.data.latestPrice);
+        //const priceOfoption = prompt('Option Price = ' + this.optionprice(strikeprice));
+        alert('Option Price bought at ' + this.optionprice(strikeprice));
+        const time = Date.now();
+        const expire = time + epocmonth;
+        alert("Buy Date = " + new Date(time).toLocaleDateString("en-US") + " Date Expire = " + new Date(expire).toLocaleDateString("en-US"));
+
+        key = key.toUpperCase();
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            const stockQuery = new Parse.Query('Options')
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            stockQuery.equalTo('expireDate', expire);
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are receieved then create a row for it
+            if (stockResult.length == 0) {
+                var stockObj = new Parse.Object('Options');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+                stockObj.set('strikePrice', parseFloat(strikeprice));
+                stockObj.set('initialOptionPrice', this.optionprice(strikeprice));
+                stockObj.set('expireDate', new Date(expire));
+                stockObj.set('callOrPut', "Call");
+
+                try {
+                    console.log("try now");
+                    stockObj.save();
+                    console.log('saving the stock success!')
+
+                    var newBalance = parseFloat(currentUser.get('balance')) - strikeprice * 100;
+                    currentUser.set('balance', parseFloat(newBalance));
+
+                    this.setState({
+                        value: newBalance
+                    });
+
+                    try {
+                        currentUser.save();
+                    }
+                    catch (err) {
+                        console.log("Could not save bought call option");
+                    }
+
+                } catch (err) {
+                    console.log(err.message);
+                }
+
+            }
+
+            else {
+                console.log("Option exists")
+            }
+            console.log("result: ", stockResult);
+        }
+        catch (err) {
+            console.log("Error buying call option");
+        }
+    }
+
+    //Buy put option
+    async buyPutOption() {
+        const strikeprice = prompt('Enter strikeprice');
+        this.optionprice(strikeprice, this.state.data.latestPrice);
+        //const priceOfoption = prompt('Option Price = ' + this.optionprice(strikeprice)); //price of the option the user brought
+        alert('Option Price bought at ' + this.optionprice(strikeprice));
+        const time = Date.now();
+        const expire = time + epocmonth; // this is when the option expires. 
+        alert("Buy Date = " + new Date(time).toLocaleDateString("en-US") + " Date Expire = " + new Date(expire).toLocaleDateString("en-US"));
+
+        key = key.toUpperCase();
+
+        try {
+            const currentUser = await Parse.User.current();
+
+            const stockQuery = new Parse.Query('Options')
+            stockQuery.equalTo('stockOwner', currentUser);
+            stockQuery.equalTo('stockName', key);
+            stockQuery.equalTo('expireDate', expire);
+            const stockResult = await stockQuery.find();
+
+            //If no Queries are receieved then create a row for it
+            if (stockResult.length == 0) {
+                var stockObj = new Parse.Object('Options');
+                stockObj.set('stockOwner', currentUser);
+                stockObj.set('stockName', key);
+                stockObj.set('strikePrice', parseFloat(strikeprice));
+                stockObj.set('initialOptionPrice', this.optionprice(strikeprice));
+                stockObj.set('expireDate', new Date(expire));
+                stockObj.set('callOrPut', "Put");
+
+                try {
+                    console.log("try now");
+                    stockObj.save();
+                    console.log('saving the stock success!')
+
+                    var newBalance = currentUser.get('balance') - strikeprice * 100;
+                    currentUser.set('balance', parseFloat(newBalance));
+
+                    this.setState({
+                        value: newBalance
+                    })
+
+                    try {
+                        currentUser.save();
+                    }
+                    catch (err) {
+                        console.log("Could not save bought put option");
+                    }
+                } catch (err) {
+                    console.log(err.message);
+                }
+            }
+
+            else {
+                console.log("Option exists")
+            }
+
+            console.log("result: ", stockResult);
+        }
+        catch (err) {
+            console.log("Error buying put option");
+        }
+
+    }
     
     async addToWatchlist() {
         key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
@@ -595,6 +732,8 @@ render() {
                 <div className = "stock-trading">
                      <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
                      <button className="stockbtn" onClick={this.handleSell}> Sell </button>
+                     <button className="stockbtn" onClick={this.buyCallOption}> Call Option </button>
+                     <button className="stockbtn" onClick={this.buyPutOption}> Put Option </button>
                 </div>
                 <div>
                      {this.state.watchlisted ?

@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import iex from './iexapitoken.js';
 import "./UserStockRow.css";
