@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
+import TransactionRow from "./TransactionRow.js"
+import iexapitoken from "./iexapitoken"
+import PortfolioDiversity from "./PortfolioDiversity";
+import { Link } from 'react-router-dom';
 import UserWatchlist from "./UserWatchlist.js";
-import TransactionRow from "./TransactionRow.js";
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
 
 function ProfilePage() {
+
     const [balance, setBalance] = useState(null);
     const [balanceDisplay, setbalanceDisplay] = useState(0);
     const [stocks, setStocks] = useState([]);
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+    const [stockValue, setstockValue] = useState([]);
     const [profileDisplay, setprofileDisplay] = useState(false);
-
     const [transDate, setTransDate] = useState([]);
     const [orderType, setOrderType] = useState([]);
     const [buysell, setBuySell] = useState([]);
@@ -48,6 +52,7 @@ function ProfilePage() {
     useEffect(() => {
         getUserBalance();
     }, [getUserBalance]);
+
 
     //Saves user balance to backend
     //Triggers balance display change when balance is changed
@@ -356,8 +361,65 @@ function ProfilePage() {
         return result;
     }
 
+    useEffect(() => {
+        getstockValue();
+     }, [stocks,shares]);
+
+
+     async function getstockValue(){
+        var stockvals = [];
+        if (stocks != 0 || stocks != null || typeof(stocks) != "undefined"){
+        for(const stock of stocks){
+            const response = await fetch(`${iexapitoken.base_url}/stock/${stock}/quote/?&token=${iexapitoken.api_token}`)
+            const res = await response.json();
+            stockvals.push(res.latestPrice);
+        }  
+    }
+        if(shares == 0 || shares == null){
+            return null;
+        }else{
+            calculatestockValue(stockvals);
+        }
+    }
+    function calculatestockValue(props){
+        var stockvals = [];
+        for(var i = 0; i < props.length; i++){
+            var x = Math.floor((props[i] * shares[i]) * 100) / 100;
+            stockvals.push(x);
+        }
+        //console.log(stockvals);
+        setstockValue(stockvals);
+ 
+    }
+
+
+    function displayChartData(){
+        if((stockValue == 0 || stockValue == null)){
+            // console.log("STOCK IN IFSTATEMENT", stocks);
+            const errormsg = {
+                color: "white",
+                backgroundColor: "DodgerBlue",
+                padding: "10px",
+                fontFamily: "Arial"
+              };
+            return (<div>
+                <Link to="/usermarketpage" style={errormsg}>Explore market page and buy a stock!</Link>
+            </div>);
+        } else if (stocks == 0 || stocks == null){
+            // console.log("SHARES IN IFSTATMENT", shares);
+            return null;
+        }else{
+            // console.log("TRIGGERING ELSE STATEMENT NOW");
+            return (<PortfolioDiversity stock={stocks} chartData={stockValue}/>)
+ 
+        }
+ 
+    }
+
+
     return (
         <div className="profile-container">
+            <div className="bar">
             <div className="user-assets">
                 Assets
                 <div> <br /> </div>
@@ -388,6 +450,10 @@ function ProfilePage() {
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div className="chart">
+                {displayChartData()}
                 </div>
             </div>
             <div>
@@ -441,7 +507,6 @@ function ProfilePage() {
                 </div>
             </tbody>
         </div>
-
     );
 
 }
