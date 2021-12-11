@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Domine&display=swap');
 .uncontainer{
     /* background-color: aliceblue; */
     max-height: 2600px;
@@ -86,6 +87,38 @@
         position: relative;
         top: 1px;
     }
+
+.watchlistbtn {
+    box-shadow: inset 0px 1px 0px 0px #97c4fe;
+    background: linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+    background-color: #3d94f6;
+    border-radius: 6px;
+    border: 1px solid #337fed;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #1570cd;
+    margin-bottom: -200px;
+    margin-left: 5px;
+    transform: translate(-93%, 150%);
+    margin-top: 10px;
+}
+
+    .watchlistbtn:hover {
+        background: linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+        background-color: #1e62d0;
+    }
+
+    .watchlistbtn:active {
+        position: relative;
+        top: 1px;
+    }
+
 .stockdescription{
     width: 80%;
     max-height: 300px;
@@ -115,7 +148,7 @@
     font-size: 12px;
     margin-bottom: 80px;
     /* background-color: aliceblue; */
-  
+    font-family: 'Domine', serif;
 }
 
 .descfont {
@@ -241,7 +274,7 @@
 }
 
   .threeboxes{
-   
+    font-family: 'Domine', serif;
     display: flex;
   }
   .boxone{
@@ -250,6 +283,7 @@
     width: 23vw;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Domine', serif;
    
    
   }
@@ -259,6 +293,7 @@
     width: 23vw;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Domine', serif;
    
   
   }
@@ -268,11 +303,13 @@
     width: 23vw;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Domine', serif;
    
    
   }
   .newheader{
     margin: 10px;
+    font-family: 'Domine', serif;
   }
   .imagebox{
     max-width: 23vw;
@@ -291,6 +328,8 @@
      max-height: 600px;
      margin-left: auto;
      margin-right: auto;
+     font-family: 'Domine', serif;
+     font-size: 15px;
      
  }
  .stockGraph{

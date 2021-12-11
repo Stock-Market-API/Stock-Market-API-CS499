@@ -94,43 +94,29 @@ function Navbar(props) {
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                <i class="far fa-user-circle profileIcon"></i>  
+                Profile
                             </Link>;
         }
     }
 
-    function historyDisplay(loggedIn) {
+    function dashboard() {
+        return <li className='nav-item'> <Link
+            to='/dashboard'
+            className='nav-links'
+            onClick={closeMobileMenu}
+        >
+            <i class="far fa-user-circle profileIcon"></i>  
+        </Link>
+        </li>
+    }
+
+    function dashboardDisplay(loggedIn) {
         if (!loggedIn) {
             return null;
         } else {
-            return <Link
-                to='/history'
-                className='nav-links'
-                onClick={closeMobileMenu}
-            >
-                History
-            </Link>;
+            return dashboard();
         }
     }
-
-    // function dashboard() {
-    //     return <li className='nav-item'> <Link
-    //         to='/dashboard'
-    //         className='nav-links'
-    //         onClick={closeMobileMenu}
-    //     >
-    //         <i class="far fa-user-circle profileIcon"></i>  
-    //     </Link>
-    //     </li>
-    // }
-
-    // function dashboardDisplay(loggedIn) {
-    //     if (!loggedIn) {
-    //         return null;
-    //     } else {
-    //         return dashboard();
-    //     }
-    // }
 
     function marketDirect(loggedIn) {
         if (!loggedIn) {
@@ -153,23 +139,17 @@ function Navbar(props) {
         }
     }
 
-    function marketDirect(loggedIn) {
+    function optionsDisplay(loggedIn) {
         if (!loggedIn) {
-            return <Link
-                to='/market'
-                className='nav-links'
-                onClick={closeMobileMenu}
-            >
-                Market
-            </Link>
+            return null
 
         } else {
             return <Link
-                to='/usermarketpage'
+                to='/options'
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                Market
+                Options
             </Link>
         }
     }
@@ -190,9 +170,8 @@ function Navbar(props) {
                             {profileDisplay(loggedIn)}
                         </u1>
                         <li className='nav-item'>
-                            {historyDisplay(loggedIn)}
+                            {optionsDisplay(loggedIn)}
                         </li>
-
                         <li className='nav-item'>
                             {marketDirect(loggedIn)}
                         </li>
@@ -205,6 +184,9 @@ function Navbar(props) {
                                 AboutUs
                             </Link>
                         </li>
+                    <u1 id="para">
+                        {dashboardDisplay(loggedIn)}
+                    </u1>
                     </ul>
                     <u1 id="para">
                         {loginDisplay(loggedIn)}

@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quattrocento+Sans:ital@1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@171;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Domine&display=swap');
 .stocktitle{
     margin: 35px;
 }
@@ -8,6 +9,26 @@
     display: flex;
     margin-left: 7%;
 
+}
+h1{
+    font-family: 'Domine', serif;
+}
+.safe {
+    margin: 30px;
+    font-family: 'Domine', serif;
+    
+}
+.margins{
+    margin: 100px;
+}
+.para{
+   
+    text-indent: 50px;
+    margin: auto;
+    max-width: 60vw;
+    max-height: 60vh;
+    line-height: 1.8;
+    font-family: 'Domine', serif;
 }
 .chartticker{
     display: flex;
