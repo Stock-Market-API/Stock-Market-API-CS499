@@ -17,6 +17,7 @@ function ProfilePage() {
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+    const [stock_curr_price, set_stock_curr_price] = useState(0);
     
     const [transDate, setTransDate] = useState([]);
     const [orderType, setOrderType] = useState([]);
@@ -148,6 +149,8 @@ function ProfilePage() {
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
+        console.log("scope:getUserStocks");
+        
         var stockName = [];
         var AveragePrice = [];
         var sharesBought = [];
@@ -198,18 +201,20 @@ function ProfilePage() {
         set_account_value(balanceDisplay + stocks_value);
     }
     
-    function getCurrPrices(tickers) {
+    async function getCurrPrices() {
+        console.log("scope: getCurrPrices");
+        console.log(stocks.length);
         let currPrice = []
-        
-        for (var i=0; i < stocksLength; i++) {
+                
+        for (var i=0; i < stocks.length; i++) {
             const url = `${iex.base_url}/stock/${stocks[i]}/quote/?&token=${iex.api_token}`;
                 
-            fetch(url).then((Response) => Response.json()).then((data)  => {
+            await fetch(url).then((Response) => Response.json()).then((data)  => {
                 currPrice.push(parseFloat(data.latestPrice));
             })
-        }
-        
-        return currPrice;
+        };
+        console.log(currPrice)
+        set_stock_curr_price(currPrice);
     }
     
     function equityValueDisplay() {
@@ -218,19 +223,18 @@ function ProfilePage() {
         var values = [];
         
         if (stocksLength != 0) {
-            //fetch current price for each ticker
-            let currPrice = getCurrPrices(ticker);
-            
             console.log("TEST");
             
-            for (var i = 0; i < stocksLength; i++) {
-                values.push(currPrice[i] * shares[i]);
+            for (var i = 0; i < stocks.length; i++) {
+                values.push(stock_curr_price[i] * shares[i]);
             }
             console.log(values);
 
-            for (var i = 0; i < stocksLength; i++) 
+            for (var i = 0; i < stocks.length; i++) 
                 stocksValue += values[i];
         }
+        stocksValue.toFixed(2);
+        
         set_stocks_value(stocksValue);
     }
     
@@ -272,22 +276,32 @@ function ProfilePage() {
         }
         
         var basis = totalDeps - totalWiths;
-        
-        set_total_gain_loss(account_value - basis);
+                
+        set_total_gain_loss(Math.floor((account_value - basis) * 100) / 100);
     }
     
-    //i really hate awaits
     useEffect(() => {
         getTransactionHistory();
         getUserBalance();
-        getUserStocks().then(stocks => {
-            console.log("calling equityValueDisplay");
-            equityValueDisplay();
-            accountvalueDisplay();
-        }).then(account_value => {
-            calcGainLoss();
-        })}, []);
-        
+        getUserStocks();
+    }, []);
+    
+    
+    useEffect(() => {
+        getCurrPrices();
+    }, [stocks]);
+    
+    useEffect(() => {
+        equityValueDisplay();
+    }, [stock_curr_price]);
+    
+    useEffect(() => {
+        accountvalueDisplay();
+    }, [stocks_value, balanceDisplay]);
+    
+    useEffect(() => {
+        calcGainLoss();
+    }, [account_value]);
     
     //Get all transactions by user
     //@return list of transactions by user
@@ -367,7 +381,7 @@ function ProfilePage() {
             count++;
         }
         
-        console.log(count);
+        //console.log(count);
 
         setTransDate(transDateArr);
         setOrderType(orderTypeArr);
