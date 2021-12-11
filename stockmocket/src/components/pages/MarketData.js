@@ -28,7 +28,18 @@ function MarketData(){
     return (
      <div>
          <div className= "container">  
+         <div className = "safe">   <h1> Investing in Safe Stocks & Low Volatility Stocks </h1>   </div>
+           
+             <div className= "para"> While we all might love the idea of investing in stocks risk-free, there's no such thing as a stock that's 100% safe.
+                  Even the best companies can face unexpected trouble, and it's common for even the most stable corporations to experience 
+                  significant stock price volatility. We've seen this during the COVID-19 pandemic, during which many strong companies have
+                   experienced dramatic drops in stock price. If you want a completely safe investment with little chance you'll lose money, 
+                   Treasury securities or CDs may be your best bet. That said, some stocks are significantly safer than others. 
+                   If a company is in good financial shape, has pricing power over its rivals, and sells products that people buy even during 
+                   deep recessions, it’s likely a relatively safe investment.  By Matthew Frankel  </div>
+        
          <div className = "titledesign">  <h1> Our Top 20 Recommended Stocks </h1></div>
+         
          <table className ="table">
         <thead>
             <tr className = "chartdesign">
@@ -69,7 +80,9 @@ function MarketData(){
          
          
          </div>
+         <div className= "margins"> </div>
      </div>
+   
     );
 
 }

@@ -1,16 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Domine&display=swap');
 .lp1container1{
     width: 100%;
-    height: 450px;
+    height: 460px;
     background-color: rgb(228, 227, 227);
+   
+    font-family: 'Domine', serif;
 }
-
+h1{
+    font-family: 'Domine', serif;
+}
 .lptitle{
     text-align: center;
-    padding-top: 75px;
+    padding-top: 55px;
+    font-family: 'Domine', serif;
    }
 .lpreasons{
     display: flex;
     text-align: center;
+    font-family: 'Domine', serif;
 }
 .lpreasonbox{
     width: 20%;
@@ -20,42 +27,57 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 60px;
+    font-family: 'Domine', serif;
    
 }
 .titledesc{
     margin-top: 20px;
     color: black;
+    font-family: 'Domine', serif;
 }
 
 .lpcontainer2{
     width: 100%;
-    height: 850px;
+    height: 840px;
     background-color: white;
     display: flex;
+    font-family: 'Domine', serif;
 }
 .box1{
     width: 50%;
-    height: 850px;
-   
+    height: 550px;
+    margin-top: 100px;
     justify-content: center;
     display: flex;
     padding: 10px;
+    font-family: 'Domine', serif;
 }
 .box2{
     width: 50%;
    
     height: 850px;
-   
+    line-height: 1.9;
     margin-left: auto;
     display: block;
     text-align: center;
-    margin-top: 350px;
+    margin-top: 200px;
+    font-family: 'Domine', serif;
+    font-size: 16px;
+}
+
+.desc{
+ margin-top: 5px;
+ margin-left: 80px;
+ font-family: 'Domine', serif;
+ max-width: 200px;
+ line-height: 1.5;
 }
 .box3{
    
-    margin-top: 25px;
+    margin-top: 15px;
    margin-left: 30%;
    margin-right: 30%;
+   font-family: 'Domine', serif;
 }
 
 .lpcontainer3{
@@ -63,12 +85,14 @@
     height: 450px;
     background-color: rgb(228, 227, 227);
     padding-top: 40px;
+    font-family: 'Domine', serif;
 }
 .container3steps{
     text-align: center;
     margin: 10px;
     font-size: 20px;
     line-height: 400%;
+    font-family: 'Domine', serif;
        
       
        
