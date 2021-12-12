@@ -58,6 +58,7 @@ function ProfilePage() {
     //Triggers balance display change when balance is changed
     async function setUserBalance(event) {
         event.preventDefault();
+        
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
