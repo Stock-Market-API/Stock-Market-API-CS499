@@ -17,13 +17,26 @@
 }
 
 .user-assets {
-    float: left;
-    align-self: center;
-    text-align: center;
-    border: 2px solid black;
-    padding: 1rem 1rem;
-    width: 680px;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 3em;
+    padding-right: 3em;
+    
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+    align-self: center;
+}
+
+.piechart-placeholder {
+    background-color: #ddd;
+}
+
+.balances-buttons {
+    
+}
+
+.asset-breakdown-table {
+    
 }
 
 .chart {
@@ -46,7 +59,7 @@
 
 .stock-table {
 /*    transform: translate(-95%,50%);*/
-    max-height: 25em;
+    max-height: 30em;
     height: auto;
     overflow: auto;
 }
@@ -86,8 +99,6 @@
     position: relative;
     top: 1px;   
 }
-
-
 
 /* For Options */
 .user-greeting {

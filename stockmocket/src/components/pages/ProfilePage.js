@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
+import iex from './iexapitoken.js'
 import TransactionRow from "./TransactionRow.js"
 import iexapitoken from "./iexapitoken"
 import PortfolioDiversity from "./PortfolioDiversity";
@@ -13,12 +14,20 @@ function ProfilePage() {
 
     const [balance, setBalance] = useState(null);
     const [balanceDisplay, setbalanceDisplay] = useState(0);
+    const [account_value, set_account_value] = useState(0);
+    const [stocks_value, set_stocks_value] = useState(0);
+    const [total_gain_loss, set_total_gain_loss] = useState(0);
+    
     const [stocks, setStocks] = useState([]);
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
+
+    const [stock_curr_price, set_stock_curr_price] = useState(0);
+    
     const [stockValue, setstockValue] = useState([]);
     const [profileDisplay, setprofileDisplay] = useState(false);
+  
     const [transDate, setTransDate] = useState([]);
     const [orderType, setOrderType] = useState([]);
     const [buysell, setBuySell] = useState([]);
@@ -28,7 +37,8 @@ function ProfilePage() {
     const [prices, setPrices] = useState([]);
     const [transLength, setTransLength] = useState([]);
 
-    const getUserBalance = useCallback(async () => {
+    async function getUserBalance() {
+        
         console.log("get balance");
 
         try {
@@ -36,6 +46,8 @@ function ProfilePage() {
 
             var floatbalance = parseFloat(currentUser.get('balance'));
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
+            
+            setBalance(roundedbalance);
             setbalanceDisplay(roundedbalance);
 
             //Sets balance on page load, balance is null on page load
@@ -46,39 +58,9 @@ function ProfilePage() {
         catch (err) {
             //alert("Not logged in");
         }
-    }, [balance])
 
-    //Gets User Balance upon page load
-    useEffect(() => {
-        getUserBalance();
-    }, [getUserBalance]);
-
-
-    //Saves user balance to backend
-    //Triggers balance display change when balance is changed
-    async function setUserBalance(event) {
-        event.preventDefault();
-        
-
-        if (balance >= 0) {
-            var floatbalance = parseFloat(balance);
-            var roundedbalance = Math.floor(floatbalance * 100) / 100;
-
-            try {
-                const currentUser = await Parse.User.current();
-
-                currentUser.set('balance', roundedbalance);
-                currentUser.save();
-                getUserBalance();
-            }
-            catch {
-                console.log("Could not save balance");
-            }
-        }
-        else {
-            console.log("Invalid balance");
-        }
     }
+    //useEffect called later for less synchronization hell
 
     //Withdraw operation
     //Triggers balance display upon withdrawal
@@ -182,6 +164,8 @@ function ProfilePage() {
 
     //Gets all of currently logged in user's stock data
     async function getUserStocks() {
+        console.log("scope:getUserStocks");
+        
         var stockName = [];
         var AveragePrice = [];
         var sharesBought = [];
@@ -213,12 +197,6 @@ function ProfilePage() {
 
     }
 
-    //Gets User stocks on page load
-    useEffect(() => {
-        getUserStocks();
-        getTransactionHistory();
-    }, []);
-
     function stockDisplay() {
         var profileStocks = [];
 
@@ -236,27 +214,113 @@ function ProfilePage() {
 
     //Account Value = Total Stock Values + Balance
     function accountvalueDisplay() {
-        var accountValue = 0;
+        set_account_value(balanceDisplay + stocks_value);
+    }
+    
+    async function getCurrPrices() {
+        console.log("scope: getCurrPrices");
+        console.log(stocks.length);
+        let currPrice = []
+                
+        for (var i=0; i < stocks.length; i++) {
+            const url = `${iex.base_url}/stock/${stocks[i]}/quote/?&token=${iex.api_token}`;
+                
+            await fetch(url).then((Response) => Response.json()).then((data)  => {
+                currPrice.push(parseFloat(data.latestPrice));
+            })
+        };
+        console.log(currPrice)
+        set_stock_curr_price(currPrice);
+    }
+    
+    function equityValueDisplay() {
+        console.log("scope: equityValueDisplay");
+        var stocksValue = 0;
         var values = [];
-
+        
         if (stocksLength != 0) {
-            for (var i = 0; i < stocksLength; i++)
-                values.push(stockPrice[i] * shares[i]);
 
-            for (var i = 0; i < stocksLength; i++)
-                accountValue += values[i];
+            console.log("TEST");
+            
+            for (var i = 0; i < stocks.length; i++) {
+                values.push(stock_curr_price[i] * shares[i]);
+            }
+            console.log(values);
 
-            accountValue += balanceDisplay;
-            accountValue = Math.floor(accountValue * 100) / 100;
-            return accountValue;
+            for (var i = 0; i < stocks.length; i++) 
+                stocksValue += values[i];
         }
+        stocksValue.toFixed(2);
+        
+        set_stocks_value(stocksValue);
+    }
+    
 
-        else {
-            accountValue += balanceDisplay;
-            return accountValue;
+    //Calculate net gain/loss then display
+    async function calcGainLoss() {
+        
+        const currentUser = await Parse.User.current();
+        const OwnerQuery = new Parse.Query('User');
+        OwnerQuery.equalTo('username', currentUser.get('username'));
+        const Owner = await OwnerQuery.first();
+                
+        //find all deposits and add it up
+        const depositQuery = new Parse.Query('Order');
+        depositQuery.equalTo('account', Owner);
+        depositQuery.equalTo('isStockOperation', false);
+        depositQuery.equalTo('isOpenPos', true);
+        depositQuery.equalTo('isBuy', true);
+        
+        var depositArr = await depositQuery.find();
+        var totalDeps = 0;
+        
+        for (var row of depositArr) {
+            totalDeps += row.get('amount');
         }
+        
+        //find all withdrawals and add it up
+        const withdrawalQuery = new Parse.Query('Order');
+        withdrawalQuery.equalTo('account', Owner);
+        withdrawalQuery.equalTo('isStockOperation', false);
+        withdrawalQuery.equalTo('isOpenPos', false);
+        withdrawalQuery.equalTo('isBuy', false);
+        
+        var withArr = await withdrawalQuery.find();
+        var totalWiths = 0;
+        
+        for (var row of withArr) {
+            totalWiths += row.get('amount');
+        }
+        
+        var basis = totalDeps - totalWiths;
+                
+        set_total_gain_loss(Math.floor((account_value - basis) * 100) / 100);
     }
 
+    
+    useEffect(() => {
+        getTransactionHistory();
+        getUserBalance();
+        getUserStocks();
+    }, []);
+    
+    
+    useEffect(() => {
+        getCurrPrices();
+    }, [stocks]);
+    
+    useEffect(() => {
+        equityValueDisplay();
+    }, [stock_curr_price]);
+    
+    useEffect(() => {
+        accountvalueDisplay();
+    }, [stocks_value, balanceDisplay]);
+    
+    useEffect(() => {
+        calcGainLoss();
+    }, [account_value]);
+    
     //Get all transactions by user
     //@return list of transactions by user
     async function getTransactionHistory() {
@@ -276,17 +340,23 @@ function ProfilePage() {
         OwnerQuery.equalTo('username', currentUser.get('username'));
         const Owner = await OwnerQuery.first();
 
-        //Get all stocks owned by user
+        //Get all transactions made by user
         const historyQuery = new Parse.Query('Order');
         historyQuery.equalTo('account', Owner);
+        //Filter to 10 most recent
+        historyQuery.descending('transDate');
+        historyQuery.limit(10);
+        
         let queryResults = await historyQuery.find();
-
+        console.log("getTransactionHistory");
+        
         //Append user owned stock data to be set to corresponding states
         for (let result of queryResults) {
             transDateArr.push(result.get('transDate').toString());
 
             var op_is_stock = result.get('isStockOperation');
             var eff = result.get('isOpenPos');
+            
             if (true == op_is_stock) {
                 orderTypeArr.push("Stock");
 
@@ -328,8 +398,6 @@ function ProfilePage() {
 
             count++;
         }
-
-        console.log(count);
 
         setTransDate(transDateArr);
         setOrderType(orderTypeArr);
@@ -422,36 +490,51 @@ function ProfilePage() {
         <div className="profile-container">
             <div className="bar">
             <div className="user-assets">
-                Assets
-                <div> <br /> </div>
-                <div className="account-value">
-                    Your Account Value: ${accountvalueDisplay()}
-                </div>
-                <div className="cash-balance">
-                    Cash Balance: ${balanceDisplay}
-                    <form className="form" onSubmit={setUserBalance}>
-                        <div className="balance-btns">
-                            <input type="text" className="balance-input"
-                                //Sets balance input on submit
-                                value={balance}
-                                onChange={(e) => {
-                                    setBalance(e.target.value);
-                                }} />
-                            <button type="submit" className="balancebtn">
-                                Set Balance
-                            </button>
-                        </div>
-                        <div> <br /> </div>
-                        <div>
-                            <button type="submit" className="balancebtn" onClick={handleWithdraw}>
-                                Withdraw
-                            </button>
-                            <button type="submit" className="balancebtn" onClick={handleDeposit}>
-                                Deposit
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                <h1> Assets </h1>
+                <table>
+                    <tr>
+                        <td>
+                            <table className="balances-buttons">
+                                <tr>
+                                    <table className="asset-breakdown-table">
+                                    <tr>
+                                    <td>Equity value:</td>
+                                    <td>${stocks_value}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Cash balance:</td>
+                                    <td>${balanceDisplay}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Total account value:</td>
+                                    <td>${account_value}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Net gain/loss:</td>
+                                    <td>${total_gain_loss}</td>
+                                    </tr>
+                                    </table>
+                                </tr>
+                                <tr>
+                                    <div className="cash-balance">
+                                        <button type="submit" className="balancebtn" onClick={handleWithdraw}>
+                                            Withdraw
+                                        </button>
+                                        <button type="submit" className="balancebtn" onClick={handleDeposit}>
+                                            Deposit
+                                        </button>
+                                    </div>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <div className="piechart-placeholder">
+                                pie chart goes here
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
             </div>
             <div className="chart">
                 {displayChartData()}
@@ -486,7 +569,8 @@ function ProfilePage() {
                 </div>
             </tbody>
             <tbody className="stock-table">
-                <h1> Transaction history </h1>
+                <h1> Recent Transactions </h1>
+                <p> For more transactions, go to <a href="/history">History</a> </p>
                 <div className="container">
                     <div className="titledesign"> </div>
                     <table className="table">

@@ -19,13 +19,14 @@ class UserStockRow extends Component {
         const url = `${iex.base_url}/stock/${this.props.ticker}/quote/?&token=${iex.api_token}`
 
         fetch(url).then((Response) => Response.json()).then((data) => {
-            console.log(data)
+            //console.log(data)
             latestime = (data.latestUpdate)
             t = new Date(latestime).toLocaleTimeString("en-US")
             d = new Date(latestime).toLocaleDateString("en-US")
             this.setState({
                 data: data
             })
+
         })
     }
 
@@ -50,6 +51,4 @@ class UserStockRow extends Component {
 
 }
 
-
 export default UserStockRow;
-
