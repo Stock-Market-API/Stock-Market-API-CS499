@@ -139,6 +139,21 @@ function Navbar(props) {
         }
     }
 
+    function historyDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null
+
+        } else {
+            return <Link
+                to='/history'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                History
+            </Link>
+        }
+    }
+
     function optionsDisplay(loggedIn) {
         if (!loggedIn) {
             return null
@@ -174,6 +189,9 @@ function Navbar(props) {
                         </li>
                         <li className='nav-item'>
                             {marketDirect(loggedIn)}
+                        </li>
+                        <li className='nav-item'>
+                            {historyDisplay(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link

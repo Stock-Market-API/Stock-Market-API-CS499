@@ -2,6 +2,7 @@ import Plot from 'react-plotly.js';
 import React, { Component } from "react";
 import iex from './iexapitoken.js'
 import "./usermarketpage.css"
+import DButton from './DButton.js';
 const Parse = require('parse/node');
 
 var logo1, newimg_one, newimg_two, newimg_three;
@@ -750,17 +751,29 @@ render() {
                    </div>
                 </div>
                 <div className = "stock-trading">
-                     <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> 
-                     <button className="stockbtn" onClick={this.handleSell}> Sell </button>
-                     <button className="stockbtn" onClick={this.buyCallOption}> Call Option </button>
-                     <button className="stockbtn" onClick={this.buyPutOption}> Put Option </button>
+                     {/* <button className= "stockbtn" onClick={this.handleBuy}> Buy </button> */}
+                     {/* <button className="stockbtn" onClick={this.handleSell}> Sell </button> */}
+                     <DButton color="blue" text="Buy" onClick={this.handleBuy}/>
+                     <DButton color="blue" text="Sell" onClick={this.handleSell}/>
+                     <DButton color="blue" text="Buy Call Option" onClick={this.buyCallOption}/>
+                     <DButton color="blue" text="Buy Put Option" onClick={this.buyPutOption}/>
                 </div>
+
                 <div>
+                     {this.state.watchlisted ?  
+                     <DButton color="blue" text= "Remove from Watchlist" onClick={this.removeFromWatchlist}/> 
+                     :
+                     <DButton color="blue" text= "Add Watchlist" onClick={this.addToWatchlist}/>
+                    }
+                     {/* <button className="stockbtn" onClick={this.buyCallOption}> Call Option </button>
+                     <button className="stockbtn" onClick={this.buyPutOption}> Put Option </button> */}
+                </div>
+                {/* <div style={{marginTop: 50, marginRight:100}}  >
                      {this.state.watchlisted ?
                         <button className="watchlistbtn" onClick={this.removeFromWatchlist}> Remove from Watchlist </button>
                         :
                         <button className="watchlistbtn" onClick={this.addToWatchlist}> Add to Watchlist </button>}
-                </div>
+                </div> */}
                 </div>
                 <div className="stockdescription">
                 <div className ='maxstockdescription'> 

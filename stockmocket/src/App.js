@@ -10,8 +10,8 @@ import MarketData from './components/pages/MarketData';
 import Footer from './components/Footer';
 import ProfilePage from './components/pages/ProfilePage';
 import Usermarketpage from './components/pages/usermarketpage';
-import UserWatchlist from './components/pages/UserWatchlist';
 import Options from './components/pages/Options';
+import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 
 const Parse = require('parse/node');
 const PARSE_APPLICATION_ID = 'dzk6zpD8cESqwkJrCSFrgeVrajZmYhxHO9LjFfyA';
@@ -34,6 +34,7 @@ function App(props) {
              <Route path='/profile' exact component={ProfilePage} />
              <Route path='/usermarketpage' exact component={Usermarketpage} />
              <Route path='/options' exact component={Options} />
+             <Route path='/history' exact component={TransactionHistoryPage} />
             </Switch> 
          <Footer />
       </Router>
