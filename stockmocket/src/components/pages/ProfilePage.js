@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
 import UserStockRow from "./UserStockRow.js"
 import TransactionRow from "./TransactionRow.js"
+import iexapitoken from "./iexapitoken"
+import PortfolioDiversity from "./PortfolioDiversity";
+import { Link } from 'react-router-dom';
+import UserWatchlist from "./UserWatchlist.js";
 import "./ProfilePage.css";
 
 const Parse = require('parse/node');
 
 function ProfilePage() {
+
     const [balance, setBalance] = useState(null);
     const [balanceDisplay, setbalanceDisplay] = useState(0);
     const [stocks, setStocks] = useState([]);
     const [stockPrice, setstockPrice] = useState(0);
     const [shares, setShares] = useState(0);
     const [stocksLength, setstocksLength] = useState(0);
-    
+    const [stockValue, setstockValue] = useState([]);
+    const [profileDisplay, setprofileDisplay] = useState(false);
     const [transDate, setTransDate] = useState([]);
     const [orderType, setOrderType] = useState([]);
     const [buysell, setBuySell] = useState([]);
@@ -31,6 +37,11 @@ function ProfilePage() {
             var floatbalance = parseFloat(currentUser.get('balance'));
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
             setbalanceDisplay(roundedbalance);
+
+            //Sets balance on page load, balance is null on page load
+            if (balance == null) {
+                setBalance(roundedbalance);
+            }
         }
         catch (err) {
             //alert("Not logged in");
@@ -40,7 +51,8 @@ function ProfilePage() {
     //Gets User Balance upon page load
     useEffect(() => {
         getUserBalance();
-    },[getUserBalance]);
+    }, [getUserBalance]);
+
 
     //Saves user balance to backend
     //Triggers balance display change when balance is changed
@@ -50,7 +62,6 @@ function ProfilePage() {
 
         if (balance >= 0) {
             var floatbalance = parseFloat(balance);
-            console.log("floatbalance: ", floatbalance);
             var roundedbalance = Math.floor(floatbalance * 100) / 100;
 
             try {
@@ -74,7 +85,7 @@ function ProfilePage() {
     async function handleWithdraw(event) {
         event.preventDefault();
 
-        const withdraw = prompt('Withdraw amount:'); 
+        const withdraw = prompt('Withdraw amount:');
 
         if (withdraw == null) {
             console.log("Cancel withdraw");
@@ -96,7 +107,7 @@ function ProfilePage() {
 
                 currentUser.set('balance', totalbalance);
                 currentUser.save();
-                
+
                 //add withdrawal to orders table
                 var order_entry = new Parse.Object('Order');
                 order_entry.set('transDate', new Date());
@@ -107,7 +118,7 @@ function ProfilePage() {
                 order_entry.set('amount', parseFloat(floatwithdraw));
                 order_entry.set('account', currentUser);
                 order_entry.save();
-                
+
                 setBalance(totalbalance);
                 getUserBalance();
             }
@@ -144,7 +155,7 @@ function ProfilePage() {
 
                 currentUser.set('balance', totalbalance);
                 currentUser.save();
-                
+
                 //add deposit to orders table
                 var order_entry = new Parse.Object('Order');
                 order_entry.set('transDate', new Date());
@@ -155,7 +166,7 @@ function ProfilePage() {
                 order_entry.set('amount', parseFloat(floatdeposit));
                 order_entry.set('account', currentUser);
                 order_entry.save();
-                
+
                 setBalance(totalbalance);
                 getUserBalance();
             }
@@ -204,8 +215,8 @@ function ProfilePage() {
 
     //Gets User stocks on page load
     useEffect(() => {
-       getUserStocks();
-       getTransactionHistory();
+        getUserStocks();
+        getTransactionHistory();
     }, []);
 
     function stockDisplay() {
@@ -214,8 +225,9 @@ function ProfilePage() {
         for (var i = 0; i < stocksLength; i++) {
             profileStocks.push(
                 <UserStockRow ticker={stocks[i]}
-                              shares={shares[i]}
-                              stockPrice={stockPrice[i]}>
+                    shares={shares[i]}
+                    stockPrice={stockPrice[i]}
+                    totalPrice={(stockPrice[i] * shares[i]).toFixed(2)}>
                 </UserStockRow>)
         }
 
@@ -228,10 +240,10 @@ function ProfilePage() {
         var values = [];
 
         if (stocksLength != 0) {
-            for (var i = 0; i < stocksLength; i++) 
+            for (var i = 0; i < stocksLength; i++)
                 values.push(stockPrice[i] * shares[i]);
 
-            for (var i = 0; i < stocksLength; i++) 
+            for (var i = 0; i < stocksLength; i++)
                 accountValue += values[i];
 
             accountValue += balanceDisplay;
@@ -239,16 +251,16 @@ function ProfilePage() {
             return accountValue;
         }
 
-        else{
+        else {
             accountValue += balanceDisplay;
             return accountValue;
         }
     }
-    
+
     //Get all transactions by user
     //@return list of transactions by user
     async function getTransactionHistory() {
-        
+
         var transDateArr = [];
         var orderTypeArr = [];
         var buysellArr = [];
@@ -272,12 +284,12 @@ function ProfilePage() {
         //Append user owned stock data to be set to corresponding states
         for (let result of queryResults) {
             transDateArr.push(result.get('transDate').toString());
-            
+
             var op_is_stock = result.get('isStockOperation');
             var eff = result.get('isOpenPos');
             if (true == op_is_stock) {
                 orderTypeArr.push("Stock");
-                
+
                 if (true == eff) {
                     effectArr.push("Open");
                 }
@@ -298,7 +310,7 @@ function ProfilePage() {
                 orderTypeArr.push("---");
                 effectArr.push("---");
             }
-            
+
             var is_long = result.get('isBuy');
             if (is_long && op_is_stock) {
                 buysellArr.push("Buy");
@@ -309,14 +321,14 @@ function ProfilePage() {
             else {
                 buysellArr.push("");
             }
-            
+
             tickerArr.push(result.get('ticker'));
             stock_amountArr.push(result.get('amount'));
             price.push(result.get('price'));
-            
+
             count++;
         }
-        
+
         console.log(count);
 
         setTransDate(transDateArr);
@@ -328,11 +340,11 @@ function ProfilePage() {
         setPrices(price);
         setTransLength(count);
     }
-    
+
     function transHistoryDisplay() {
         var result = [];
-                
-        for (var i=0; i<transLength; i++) {
+
+        for (var i = 0; i < transLength; i++) {
             result.push(
                 <TransactionRow
                     transDate={transDate[i]}
@@ -346,15 +358,72 @@ function ProfilePage() {
                 </TransactionRow>
             )
         }
-        
+
         return result;
     }
 
+    useEffect(() => {
+        getstockValue();
+     }, [stocks,shares]);
+
+
+     async function getstockValue(){
+        var stockvals = [];
+        if (stocks != 0 || stocks != null || typeof(stocks) != "undefined"){
+        for(const stock of stocks){
+            const response = await fetch(`${iexapitoken.base_url}/stock/${stock}/quote/?&token=${iexapitoken.api_token}`)
+            const res = await response.json();
+            stockvals.push(res.latestPrice);
+        }  
+    }
+        if(shares == 0 || shares == null){
+            return null;
+        }else{
+            calculatestockValue(stockvals);
+        }
+    }
+    function calculatestockValue(props){
+        var stockvals = [];
+        for(var i = 0; i < props.length; i++){
+            var x = Math.floor((props[i] * shares[i]) * 100) / 100;
+            stockvals.push(x);
+        }
+        //console.log(stockvals);
+        setstockValue(stockvals);
+ 
+    }
+
+
+    function displayChartData(){
+        if((stockValue == 0 || stockValue == null)){
+            // console.log("STOCK IN IFSTATEMENT", stocks);
+            const errormsg = {
+                color: "white",
+                backgroundColor: "DodgerBlue",
+                padding: "10px",
+                fontFamily: "Arial"
+              };
+            return (<div>
+                <Link to="/usermarketpage" style={errormsg}>Explore market page and buy a stock!</Link>
+            </div>);
+        } else if (stocks == 0 || stocks == null){
+            // console.log("SHARES IN IFSTATMENT", shares);
+            return null;
+        }else{
+            // console.log("TRIGGERING ELSE STATEMENT NOW");
+            return (<PortfolioDiversity stock={stocks} chartData={stockValue}/>)
+ 
+        }
+ 
+    }
+
+
     return (
         <div className="profile-container">
+            <div className="bar">
             <div className="user-assets">
-                <h1> Assets </h1>
-                <div> <br/> </div>
+                Assets
+                <div> <br /> </div>
                 <div className="account-value">
                     Your Account Value: ${accountvalueDisplay()}
                 </div>
@@ -384,20 +453,30 @@ function ProfilePage() {
                     </form>
                 </div>
             </div>
+            <div className="chart">
+                {displayChartData()}
+                </div>
+            </div>
+            <div>
+                <button className="change-view" onClick={() => setprofileDisplay(!profileDisplay)} > Watchlist View </button>
+            </div>
+            <tbody className="watchlist">
+                {profileDisplay ? <UserWatchlist /> : null}
+            </tbody>
             <tbody className="stock-table">
-                <h1> Your Stocks </h1>
                 <div className="container">
+                    <div> <br /> </div>
+                    <h1> Your Stocks </h1>
                     <div className="titledesign">  </div>
                     <table className="table">
                         <thead>
                             <tr className="chartdesign">
-
                                 <th className="publicsans"> TICKER </th>
                                 <th className="publicsans"> SHARES </th>
                                 <th className="publicsans"> AVERAGE PRICE </th>
                                 <th className="publicsans"> CURRENT PRICE </th>
-                                <th className="publicsans"> CHANGE </th>
-
+                                <th className="publicsans"> % CHANGE </th>
+                                <th className="publicsans"> TOTAL PRICE </th>
                             </tr>
                         </thead>
                         <tbody className="tabledesign">
@@ -429,9 +508,8 @@ function ProfilePage() {
                 </div>
             </tbody>
         </div>
-
     );
 
 }
 
-export default ProfilePage
+export default ProfilePage;
