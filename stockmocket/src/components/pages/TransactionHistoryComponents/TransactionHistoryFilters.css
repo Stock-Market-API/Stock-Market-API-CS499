@@ -1,0 +1,26 @@
+.filter-form {
+    max-width: 500px;
+    margin: 10px auto;
+    overflow: auto;
+    min-height: 100px;
+    border: 1px solid blue;
+    padding: 10px;
+    border-radius: 5px;
+    align-items: center;
+  }
+
+  .filter-form-block{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .filter-form-block{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-form-block-stock{
+    display: block
+}

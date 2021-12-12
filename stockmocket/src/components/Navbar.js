@@ -94,14 +94,55 @@ function Navbar(props) {
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                <i class="far fa-user-circle profileIcon"></i>  
+                Profile
                             </Link>;
+        }
+    }
+
+    function dashboard() {
+        return <li className='nav-item'> <Link
+            to='/profile'
+            className='nav-links'
+            onClick={closeMobileMenu}
+        >
+            <i class="far fa-user-circle profileIcon"></i>  
+        </Link>
+        </li>
+    }
+
+    function dashboardDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null;
+        } else {
+            return dashboard();
+        }
+    }
+
+    function marketDirect(loggedIn) {
+        if (!loggedIn) {
+            return <Link
+                to='/market'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
+
+        } else {
+            return <Link
+                to='/usermarketpage'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Market
+            </Link>
         }
     }
 
     function historyDisplay(loggedIn) {
         if (!loggedIn) {
-            return null;
+            return null
+
         } else {
             return <Link
                 to='/history'
@@ -109,67 +150,36 @@ function Navbar(props) {
                 onClick={closeMobileMenu}
             >
                 History
-            </Link>;
-        }
-    }
-
-    // function dashboard() {
-    //     return <li className='nav-item'> <Link
-    //         to='/dashboard'
-    //         className='nav-links'
-    //         onClick={closeMobileMenu}
-    //     >
-    //         <i class="far fa-user-circle profileIcon"></i>  
-    //     </Link>
-    //     </li>
-    // }
-
-    // function dashboardDisplay(loggedIn) {
-    //     if (!loggedIn) {
-    //         return null;
-    //     } else {
-    //         return dashboard();
-    //     }
-    // }
-
-    function marketDirect(loggedIn) {
-        if (!loggedIn) {
-            return <Link
-                to='/market'
-                className='nav-links'
-                onClick={closeMobileMenu}
-            >
-                Market
-            </Link>
-
-        } else {
-            return <Link
-                to='/usermarketpage'
-                className='nav-links'
-                onClick={closeMobileMenu}
-            >
-                Market
             </Link>
         }
     }
 
-    function marketDirect(loggedIn) {
+    function redditDisplay(loggedIn) {
         if (!loggedIn) {
-            return <Link
-                to='/market'
-                className='nav-links'
-                onClick={closeMobileMenu}
-            >
-                Market
-            </Link>
+            return null
 
         } else {
             return <Link
-                to='/usermarketpage'
+                to='/reddit'
                 className='nav-links'
                 onClick={closeMobileMenu}
             >
-                Market
+                Reddit
+            </Link>
+        }
+    }
+
+    function optionsDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null
+
+        } else {
+            return <Link
+                to='/options'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Options
             </Link>
         }
     }
@@ -187,14 +197,19 @@ function Navbar(props) {
                     </div>
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                         <u1 id="para">
-                            {profileDisplay(loggedIn)}
+                            {dashboardDisplay(loggedIn)}
                         </u1>
+                        <li className='nav-item'>
+                            {optionsDisplay(loggedIn)}
+                        </li>
+                        <li className='nav-item'>
+                            {marketDirect(loggedIn)}
+                        </li>
                         <li className='nav-item'>
                             {historyDisplay(loggedIn)}
                         </li>
-
                         <li className='nav-item'>
-                            {marketDirect(loggedIn)}
+                            {redditDisplay(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link
