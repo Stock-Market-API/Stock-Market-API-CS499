@@ -154,6 +154,21 @@ function Navbar(props) {
         }
     }
 
+    function redditDisplay(loggedIn) {
+        if (!loggedIn) {
+            return null
+
+        } else {
+            return <Link
+                to='/reddit'
+                className='nav-links'
+                onClick={closeMobileMenu}
+            >
+                Reddit
+            </Link>
+        }
+    }
+
     function optionsDisplay(loggedIn) {
         if (!loggedIn) {
             return null
@@ -192,6 +207,9 @@ function Navbar(props) {
                         </li>
                         <li className='nav-item'>
                             {historyDisplay(loggedIn)}
+                        </li>
+                        <li className='nav-item'>
+                            {redditDisplay(loggedIn)}
                         </li>
                         <li className='nav-item'>
                             <Link

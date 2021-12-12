@@ -12,6 +12,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import Usermarketpage from './components/pages/usermarketpage';
 import Options from './components/pages/Options';
 import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
+import RedditPage from './components/pages/RedditPage';
 
 const Parse = require('parse/node');
 const PARSE_APPLICATION_ID = 'dzk6zpD8cESqwkJrCSFrgeVrajZmYhxHO9LjFfyA';
@@ -35,6 +36,7 @@ function App(props) {
              <Route path='/usermarketpage' exact component={Usermarketpage} />
              <Route path='/options' exact component={Options} />
              <Route path='/history' exact component={TransactionHistoryPage} />
+             <Route path='/reddit' exact component={RedditPage} />
             </Switch> 
          <Footer />
       </Router>
