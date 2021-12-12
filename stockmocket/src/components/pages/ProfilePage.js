@@ -457,8 +457,8 @@ function ProfilePage() {
                 {displayChartData()}
                 </div>
             </div>
-            <div>
-                <button className="change-view" onClick={() => setprofileDisplay(!profileDisplay)} > Watchlist View </button>
+            <div className = "btncontainer">
+                <button className="balancebtn" onClick={() => setprofileDisplay(!profileDisplay)} > Watchlist View </button>
             </div>
             <tbody className="watchlist">
                 {profileDisplay ? <UserWatchlist /> : null}

@@ -13,7 +13,6 @@ body {
 .itemcontainer {
   max-width: 750px;
   margin: 30px auto;
-  overflow: auto;
   min-height: 300px;
   border: 1px solid steelblue;
   padding: 30px;
@@ -28,6 +27,20 @@ body {
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
+}
+
+.redditimage{
+    width: 502px;
+    height: 502px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.redditvideo{
+    width: 502px;
+    height: 502px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .Dbtn {
@@ -90,9 +103,4 @@ body {
 .form-control-check input {
   flex: 2;
   height: 20px;
-}
-
-footer {
-  margin-top: 30px;
-  text-align: center;
 }

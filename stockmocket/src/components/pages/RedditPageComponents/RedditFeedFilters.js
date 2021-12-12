@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import DButton from "../DButton"
+import "./RedditPage.css"
 
 
 const RedditFeedFilters = ({OnSearch, OnHot, OnNew, OnTop}) =>{

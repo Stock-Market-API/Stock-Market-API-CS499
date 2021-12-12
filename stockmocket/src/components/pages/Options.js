@@ -102,7 +102,7 @@ function Options(props) {
         <div className="options-container">
             <div>
             <div className ="user-greeting"> 
-                User Balance = {balance}
+                Current Balance is ${balance}
             </div>
             </div>
             <h1 className="options-header"> Your Options </h1>

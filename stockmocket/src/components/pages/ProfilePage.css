@@ -51,6 +51,13 @@
     overflow: auto;
 }
 
+.btncontainer {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin-top: -50px;
+}
+
 .balancebtn {
     box-shadow: inset 0px 1px 0px 0px #97c4fe;
     background: linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
@@ -79,6 +86,8 @@
     position: relative;
     top: 1px;   
 }
+
+
 
 /* For Options */
 .user-greeting {

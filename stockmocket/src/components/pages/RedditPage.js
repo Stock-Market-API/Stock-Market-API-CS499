@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RedditFeed from './RedditPageComponents/RedditFeed';
 import RedditFeedFilters from './RedditPageComponents/RedditFeedFilters';
+import "./RedditPageComponents/RedditPage.css"
 const snoowrap = require ("snoowrap")
 
 function RedditPage() {
