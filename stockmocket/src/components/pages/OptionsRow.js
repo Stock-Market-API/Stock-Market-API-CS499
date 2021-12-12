@@ -9,11 +9,12 @@ const Parse = require('parse/node');
 function OptionsRow(props) {
     const [data, setData] = useState([]);
     const [optionsSold, setOptionsSold] = useGlobalState('optionsSold');
+    
 
     //Used for options calculations
     var time;
-    var epocmonth = 2629743;
-    var epocday = 86400;
+    var epocmonth = 2629743000;
+    var epocday = 86400000;
 
     //Fetch API data 
     useEffect(() => {
@@ -85,26 +86,24 @@ function OptionsRow(props) {
         return Math.ceil(30 - time);
     }
 
-    function optionprice(strikeprice) {
-        return Math.round((strikeprice) * .10);
-    }
+    // function optionprice(strikeprice) {
+    //     return Math.round((strikeprice) * .10);
+    // }
 
     function optionpricecalc(stockprice, strikeprice) {
-        return (strikeprice - stockprice) * 100;
+        return (stockprice - strikeprice) * 100;
     }
 
     /********************************************************* */
 
     async function sellCall() {
-        var expiretime = 1640127561;
-        var temtime = 1639177161;
-        var tempprice = 1137.06;
-        var initoptionprice = 137;
-        var x = expiretime - temtime;
-        var t = x / epocday;
-        const timedecay = (decayone(t / 30));
-        const optionprice = optionpricecalc(data.latestPrice, props.strikePrice);
-
+        var temtime = Date.now()
+        var oldstockprice 
+        var expiretime
+        var x
+        var t
+        var timedecay
+        var optionprice
         const message = window.confirm("Sell " + props.ticker + " " + props.option + " with strike price of $" + props.strikePrice + "?");
 
         if (message) {
@@ -135,6 +134,13 @@ function OptionsRow(props) {
                     for (let result in stockResult) {
                         if (String(stockResult[result].get('expireDate')) == props.expireDate) {
                             var stockObj = stockResult[result];
+                            expiretime = (stockResult[result].get('expireDate')).getTime()
+                            oldstockprice = stockResult[result].get('boughtPrice')
+                            x = expiretime - temtime; //amount of days that past
+                            t = x / epocday;
+                            t = Math.abs(30 - t)
+                            timedecay = (decayone(t / 30));
+                            optionprice = optionpricecalc(data.latestPrice, oldstockprice);
                         }
                     }
 
@@ -142,26 +148,30 @@ function OptionsRow(props) {
                         var newBalance;
 
                         //In, At, or Out of the money check
-                        if (data.latestPrice > props.optionPrice) { //in the money when stockprice is higher than strike
+                        if (data.latestPrice < props.strikePrice) { //in the money when stockprice is higher than strike
                             console.log("In the money  " + inthemoney(t / 30, optionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + inthemoney(t / 30, optionprice) * timedecay;
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + inthemoney(t / 30, optionprice) * timedecay;
+                            currentUser.set('balance', parseFloat(newBalance.toFixed(2)));
                             console.log("balance", newBalance);
 
                         }
                         else if
-                            ((data.latestPrice < props.optionPrice + 1) && (data.latestPrice > props.optionPrice - 1)) {
-                            console.log('At The Money ' + atthemoney(t, initoptionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + atthemoney(t, initoptionprice) * timedecay;
+                            ((data.latestPrice < props.strikePrice + 1) && (data.latestPrice > props.strikePrice - 1)) {
+                            console.log('At The Money ' + atthemoney(t, optionprice) * timedecay);
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + atthemoney(t, optionprice) * timedecay;
+                            currentUser.set('balance', parseFloat(newBalance.toFixed(2)));
                             console.log("balance", newBalance);
                         }
-                        else if (data.latestPrice < props.optionPrice) {
+                        else if (data.latestPrice > props.strikePrice) {
                             console.log("Out of the Money " + outofthemoney(t, optionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + outofthemoney(t, optionprice) * timedecay;
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + outofthemoney(t, optionprice) * timedecay;
+                            currentUser.set('balance', parseFloat(newBalance.toFixed(2)));
                             console.log("balance", newBalance);
                         }
 
                         else {
                             newBalance = parseFloat(currentUser.get('balance'));
+                            currentUser.set('balance', parseFloat(newBalance.toFixed(2)));
                         }
 
                         console.log("old balance", parseFloat(currentUser.get('balance')));
@@ -197,14 +207,13 @@ function OptionsRow(props) {
     }
 
     async function sellPut() {
-        var expiretime = 1640127561;
-        var temtime = 1639177161;
-        var tempprice = 1137.06;
-        var initoptionprice = 137;
-        var x = expiretime - temtime;
-        var t = x / epocday;
-        const timedecay = (decayone(t / 30));
-        const optionprice = optionpricecalc(data.latestPrice, props.strikePrice);
+        var temtime = Date.now()
+        var oldstockprice 
+        var expiretime
+        var x
+        var t
+        var timedecay
+        var optionprice
 
         const message = window.confirm("Sell " + props.ticker + " " + props.option + " with strike price of $" + props.strikePrice + "?");
 
@@ -236,6 +245,13 @@ function OptionsRow(props) {
                     for (let result in stockResult) {
                         if (String(stockResult[result].get('expireDate')) == props.expireDate) {
                             var stockObj = stockResult[result];
+                            expiretime = (stockResult[result].get('expireDate')).getTime()
+                            oldstockprice = stockResult[result].get('boughtPrice')
+                            x = expiretime - temtime; //amount of days that past
+                            t = x / epocday;
+                            t = Math.abs(30 - t)
+                            timedecay = (decayone(t / 30));
+                            optionprice = optionpricecalc(data.latestPrice, oldstockprice);
                         }
                     }
 
@@ -245,18 +261,18 @@ function OptionsRow(props) {
                         //In, At, or Out of the money check
                         if (data.latestPrice > props.optionPrice) { //in the money when stockprice is higher than strike
                             console.log("In the money  " + inthemoney(t / 30, optionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + inthemoney(t / 30, optionprice) * timedecay;
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + inthemoney(t / 30, optionprice) * timedecay;
                             currentUser.set('balance', parseFloat(newBalance));
                         }
                         else if ((data.latestPrice < props.optionPrice + 1) && (data.latestPrice > props.optionPrice - 1)) {
-                            console.log('At The Money ' + atthemoney(t, initoptionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + atthemoney(t, initoptionprice) * timedecay;
+                            console.log('At The Money ' + atthemoney(t, optionprice) * timedecay);
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + atthemoney(t, optionprice) * timedecay;
                             currentUser.set('balance', parseFloat(newBalance));
                             console.log("balance", newBalance);
                         }
                         else if (data.latestPrice < props.optionPrice) {
                             console.log("Out of the Money " + outofthemoney(t, optionprice) * timedecay);
-                            newBalance = parseFloat(currentUser.get('balance')) + outofthemoney(t, optionprice) * timedecay;
+                            newBalance = parseFloat(currentUser.get('balance')) + props.optionPrice + outofthemoney(t, optionprice) * timedecay;
                             currentUser.set('balance', parseFloat(newBalance));
                             console.log("balance", newBalance);
                         }
@@ -303,7 +319,7 @@ function OptionsRow(props) {
                     state: { value: props.ticker }
                 }} className="cellcolor"> {props.ticker} </Link>
             </td>
-            <td onClick={() => { handleClick() }} className="numbers" > ${props.optionPrice} </td>
+            <td onClick={() => { handleClick() }} className="numbers" > ${props.priceBought} </td>
             <td onClick={() => { handleClick() }} className="numbers"> ${props.strikePrice} </td>
             <td onClick={() => { handleClick() }} className="numbers" > {props.option} </td>
             <td onClick={() => { handleClick() }} className="numbers"> {props.expireDate} </td>

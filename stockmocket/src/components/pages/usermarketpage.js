@@ -10,7 +10,7 @@ var key = "googl";
 var logo1 = '';
 var s = '';
 var d,t , d_newtwo, t_newtwo , d_newthree, t_newthree;
-var epocmonth = 2629743;
+var epocmonth = 2629743000;
 const BarStyling = {width:"40rem",background:"#F2F1F9", border:"none", padding:"0.5rem"};
 
 class usermarketpage extends Component{
@@ -34,6 +34,8 @@ class usermarketpage extends Component{
         this.isStockWatchlisted = this.isStockWatchlisted.bind(this);
         this.buyCallOption = this.buyCallOption.bind(this);
         this.buyPutOption = this.buyPutOption.bind(this);
+        this.optionprice = this.optionprice.bind(this);
+        this.optionpricecalc = this.optionpricecalc.bind(this);
 
 
     }
@@ -84,7 +86,7 @@ class usermarketpage extends Component{
         try {
             const currentUser = await Parse.User.current();
             this.setState({
-                balanceDisplay: currentUser.get('balance')
+                balanceDisplay: currentUser.get('balance').toFixed(2)
             });
         }
 
@@ -382,16 +384,28 @@ componentDidMount() {
         }
     }
 
+    optionprice(strikeprice) {
+        return Math.round((strikeprice) * .10);
+    }
+    optionpricecalc(stockprice, strikeprice) {
+        return (strikeprice - stockprice) * 100;
+    }
+
     //Buy call option
     async buyCallOption() {
         const strikeprice = prompt('Enter strikeprice');
         this.optionprice(strikeprice, this.state.data.latestPrice);
+        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice == 0){
+            alert("Invalid StrikePrice")
+            return
+        }
         //const priceOfoption = prompt('Option Price = ' + this.optionprice(strikeprice));
         alert('Option Price bought at ' + this.optionprice(strikeprice));
         const time = Date.now();
         const expire = time + epocmonth;
         alert("Buy Date = " + new Date(time).toLocaleDateString("en-US") + " Date Expire = " + new Date(expire).toLocaleDateString("en-US"));
 
+        
         key = key.toUpperCase();
 
         try {
@@ -410,6 +424,7 @@ componentDidMount() {
                 stockObj.set('stockName', key);
                 stockObj.set('strikePrice', parseFloat(strikeprice));
                 stockObj.set('initialOptionPrice', this.optionprice(strikeprice));
+                stockObj.set('boughtPrice', parseFloat(this.state.data.latestPrice)); 
                 stockObj.set('expireDate', new Date(expire));
                 stockObj.set('callOrPut', "Call");
 
@@ -418,11 +433,11 @@ componentDidMount() {
                     stockObj.save();
                     console.log('saving the stock success!')
 
-                    var newBalance = parseFloat(currentUser.get('balance')) - strikeprice * 100;
+                    var newBalance = parseFloat(currentUser.get('balance')) - strikeprice * .1;
                     currentUser.set('balance', parseFloat(newBalance));
 
                     this.setState({
-                        value: newBalance
+                        balanceDisplay: newBalance
                     });
 
                     try {
@@ -451,6 +466,10 @@ componentDidMount() {
     //Buy put option
     async buyPutOption() {
         const strikeprice = prompt('Enter strikeprice');
+        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice == 0){
+            alert("Invalid StrikePrice")
+            return
+        }
         this.optionprice(strikeprice, this.state.data.latestPrice);
         //const priceOfoption = prompt('Option Price = ' + this.optionprice(strikeprice)); //price of the option the user brought
         alert('Option Price bought at ' + this.optionprice(strikeprice));
@@ -476,6 +495,7 @@ componentDidMount() {
                 stockObj.set('stockName', key);
                 stockObj.set('strikePrice', parseFloat(strikeprice));
                 stockObj.set('initialOptionPrice', this.optionprice(strikeprice));
+                stockObj.set('boughtPrice', parseFloat(this.state.data.latestPrice)); 
                 stockObj.set('expireDate', new Date(expire));
                 stockObj.set('callOrPut', "Put");
 
@@ -484,11 +504,11 @@ componentDidMount() {
                     stockObj.save();
                     console.log('saving the stock success!')
 
-                    var newBalance = currentUser.get('balance') - strikeprice * 100;
+                    var newBalance = currentUser.get('balance') - strikeprice * .1;
                     currentUser.set('balance', parseFloat(newBalance));
 
                     this.setState({
-                        value: newBalance
+                        balanceDisplay: newBalance
                     })
 
                     try {

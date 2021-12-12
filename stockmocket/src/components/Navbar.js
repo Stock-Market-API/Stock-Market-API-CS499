@@ -101,7 +101,7 @@ function Navbar(props) {
 
     function dashboard() {
         return <li className='nav-item'> <Link
-            to='/dashboard'
+            to='/profile'
             className='nav-links'
             onClick={closeMobileMenu}
         >
@@ -167,7 +167,7 @@ function Navbar(props) {
                     </div>
                     <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                         <u1 id="para">
-                            {profileDisplay(loggedIn)}
+                            {dashboardDisplay(loggedIn)}
                         </u1>
                         <li className='nav-item'>
                             {optionsDisplay(loggedIn)}
@@ -184,9 +184,6 @@ function Navbar(props) {
                                 AboutUs
                             </Link>
                         </li>
-                    <u1 id="para">
-                        {dashboardDisplay(loggedIn)}
-                    </u1>
                     </ul>
                     <u1 id="para">
                         {loginDisplay(loggedIn)}
