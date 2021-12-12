@@ -37,11 +37,10 @@ body {
 }
 
 .redditvideo{
-    width: 502px;
-    height: 502px;
-    margin-right: auto;
-    margin-left: auto;
+  width: 500px;
+  height: 500px;
 }
+
 
 .Dbtn {
   display: inline-block;
@@ -104,3 +103,4 @@ body {
   flex: 2;
   height: 20px;
 }
+

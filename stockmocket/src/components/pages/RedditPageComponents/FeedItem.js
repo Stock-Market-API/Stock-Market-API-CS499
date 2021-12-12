@@ -28,9 +28,8 @@ const FeedItem = ({post}) =>{
             <img src={post.post_url} width="500" height ="500" alt=""/> 
             </div>}
             {post.is_video && 
-            <video controls>
-                <source src = {post.media.reddit_video.fallback_url} type="video/mp4"></source>  
-            </video>
+            <video id="video_player" src={post.media.reddit_video.fallback_url} width="500" height ="500" controls />
+
              }
         </div>
     )

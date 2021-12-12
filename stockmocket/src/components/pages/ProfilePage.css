@@ -22,7 +22,7 @@
 .user-assets {
     padding-top: 1em;
     padding-bottom: 1em;
-    padding-left: 16em;
+    padding-left: 15em;
     padding-right: 3em;
     
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -34,13 +34,7 @@
     background-color: #ddd;
 }
 
-.balances-buttons {
-    
-}
 
-.asset-breakdown-table {
-    
-}
 
 .chart {
     float: right;
