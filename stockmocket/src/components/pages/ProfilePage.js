@@ -76,6 +76,7 @@ function ProfilePage() {
 
         else if (parseFloat(withdraw) > balance) {
             alert("Attempting to withdraw more more money than allowed");
+            return
         }
 
         else if (withdraw > 0) {
@@ -213,8 +214,9 @@ function ProfilePage() {
     }
 
     //Account Value = Total Stock Values + Balance
-    function accountvalueDisplay() {
-        set_account_value(balanceDisplay + stocks_value);
+    async function accountvalueDisplay() {
+        const currentUser = await Parse.User.current();
+        set_account_value(currentUser.get("balance") + stocks_value);
     }
     
     async function getCurrPrices() {
@@ -294,7 +296,7 @@ function ProfilePage() {
         
         var basis = totalDeps - totalWiths;
                 
-        set_total_gain_loss(Math.floor((account_value - basis) * 100) / 100);
+        set_total_gain_loss(Math.floor((account_value - basis) * 100) / 100) ;
     }
 
     
@@ -315,7 +317,7 @@ function ProfilePage() {
     
     useEffect(() => {
         accountvalueDisplay();
-    }, [stocks_value, balanceDisplay]);
+    }, [stocks_value]);
     
     useEffect(() => {
         calcGainLoss();
@@ -527,11 +529,11 @@ function ProfilePage() {
                                 </tr>
                             </table>
                         </td>
-                        <td>
+                        {/* <td>
                             <div className="piechart-placeholder">
                                 pie chart goes here
                             </div>
-                        </td>
+                        </td> */}
                     </tr>
                 </table>
 

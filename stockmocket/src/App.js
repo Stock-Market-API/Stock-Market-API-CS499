@@ -15,9 +15,9 @@ import TransactionHistoryPage from './components/pages/TransactionHistoryPage';
 import RedditPage from './components/pages/RedditPage';
 
 const Parse = require('parse/node');
-const PARSE_APPLICATION_ID = 'dzk6zpD8cESqwkJrCSFrgeVrajZmYhxHO9LjFfyA';
+const PARSE_APPLICATION_ID = 'dVAtpphyTkgy21u2aW8Z05uynBQk1jgHwZgGh7Ma';
 const PARSE_HOST_URL = 'https://parseapi.back4app.com/';
-const PARSE_JAVASCRIPT_KEY = 'U7pYiIC6ngqJM9gx974UsTli8hhnQ9fEG3ypeN6y';
+const PARSE_JAVASCRIPT_KEY = 'NsPwPQHboezOraPomemoflQtu6oHDHSUZOZyN9cM';
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
