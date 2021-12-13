@@ -7,16 +7,16 @@ function Reasons() {
         <div className = "lptitle"> <h1> Why Stock Mocket?</h1></div>
         <div className = "lpreasons"> 
         <div className = "lpreasonbox"> 
-       <div>  <img src='./Images/secure-data .png' className = "iconsize"/> </div> 
+       <div>  <img src='https://cdn-icons-png.flaticon.com/512/1035/1035311.png' width="128" height="128" className = "iconsize"/> </div> 
        <div className = "titledesc"> <h1> Secure </h1>  </div> 
         <div className = "desc" > Trade with confidence knowing that your data is secure.</div>
          </div>
         <div className = "lpreasonbox">
-        <div>  <img src='./images/fast.png' className = "iconsize"/> </div> 
+        <div>  <img src='https://cdn1.iconfinder.com/data/icons/transport-1-12/52/82-512.png' width="128" height="128" className = "iconsize"/> </div> 
         <div className = "titledesc"><h1> Fast </h1>  </div> 
         <div className = "desc" > Power by Industry Leading Data </div></div>
         <div className = "lpreasonbox"> 
-        <div>  <img src='./images/free .png' className = "iconsize"/> </div> 
+        <div>  <img src='https://images-ext-2.discordapp.net/external/Va2YcKO_ttDsQskpR222UGP17cfFomC-f47Rb9MKgUM/https/image.flaticon.com/icons/png/512/1007/1007924.png' width="128" height="128" className = "iconsize"/> </div> 
         <div className = "titledesc"><h1> Free </h1>  </div> 
         <div className = "desc"> Risk Free Trading. Why risk your hard own money</div></div>
 
