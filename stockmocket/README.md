@@ -11,11 +11,6 @@
 ---
  
  
-# Steps
- 
- 
-1. Clone Repository
-2. CD into **stockmocket**
 3. Run `$ npm install`
  
  
