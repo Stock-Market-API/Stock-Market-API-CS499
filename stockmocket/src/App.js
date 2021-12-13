@@ -24,7 +24,7 @@ Parse.serverURL = PARSE_HOST_URL;
 function App(props) {
     return (
       <React.Fragment>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
          <Navbar />
            <Switch>
              <Route path='/' exact component={Home} />
