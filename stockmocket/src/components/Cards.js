@@ -11,7 +11,7 @@ function Cards() {
         <div className='cards__wrapper'>
           <ul className='cards__items'>
             <CardItem
-              src='images/temporaryaboutme.jpg'
+              src='https://cdn.discordapp.com/attachments/919981879745192016/919991415310803055/DewanSunnah.jpg'
               text='Hi,  my name is Dewan and Im an aspiring fullstack developer. Ive done work in mobile development, web development and even database development. For this project, Im focusing on improving my backend skills and helping out with the frontend when needed.'
               contact='Contact me@'
               label='Dewan Sunnah'
