@@ -35,3 +35,14 @@
 ---
 # Check out our deployed website:
 [WEBSITE](https://stock-market-api.github.io/Stock-Market-API-CS499/)
+
+## There is a known issue where the intial route isn't correct, but it does not affect the site functionality. The fix is to simply click on the logo which will bring you to the intended landing page.
+
+Other issues that might occur:
+- If the stock information doesn't appear, the API limit for iex has run out
+- If the stock graph doesn't appear, the API limit for alphavantage has run out
+- Otherwise the issue mighthave occured with Back4App
+
+
+
+
