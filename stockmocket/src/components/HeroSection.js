@@ -48,7 +48,7 @@ function HeroSection() {
 
     return (
         <div className='hero-container'>
-            <video src="/videos/video-1.mp4" autoPlay loop muted />
+            <video src="https://cdn.discordapp.com/attachments/919981879745192016/919983889315942461/video-1.mp4" autoPlay loop muted />
             <h1>Welcome to paper trading</h1>
             <p>Fake it till you make it!</p>
             <div className="hero-btns">

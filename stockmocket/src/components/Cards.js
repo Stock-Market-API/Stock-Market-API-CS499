@@ -19,7 +19,7 @@ function Cards() {
               path='/aboutus'
             />
              <CardItem
-              src='images/Dibba_aboutus3.jpeg'
+              src='https://cdn.discordapp.com/attachments/919981879745192016/919985026014261298/Dibba_aboutus3.jpeg'
               text='Hey im Dibba! Throughout college, Ive focused on building mobile applications - but now Im exploring more fullstack web development. For this project I worked on the frontend side of things with the use of ReactJS.'
               label='Dibba Roy'
               contact='Email: Roydibba@gmail.com'
@@ -28,14 +28,14 @@ function Cards() {
           </ul>
           <ul className='cards__items'>
             <CardItem
-              src='images/Jordan_aboutus.jpeg'
+              src='https://cdn.discordapp.com/attachments/919981879745192016/919985026265927700/Jordan_aboutus.jpeg'
               text='Hey! Im Jordan and Im an aspiring fullstack developer. For this project I focused more on the frontend for this site using ReactJS.'
               label='Jordan Sze'
               contact='Email: jsze5341@gmail.com'
               path='/aboutus'
             />
             <CardItem
-              src='images/Brian(1).png'
+              src='https://cdn.discordapp.com/attachments/919981879745192016/919985025733263430/Brian1.png'
               text='For this project I worked on the land page informations blocks, market page and user marketpage using the IEXClous api for the data'
               label='Shu Qiang Qu'
               contact='Email: Shuqiangwu1@gmail.com'
@@ -44,7 +44,7 @@ function Cards() {
           </ul>
           <ul className='cards__items'>
             <CardItem
-              src='images/kento_aboutus.jpeg'
+              src='https://cdn.discordapp.com/attachments/919981879745192016/919983990608384040/IMG_20210930_155310489.jpg'
               text='Hey Im Ivan! For this project I worked on creating the database schema.'
               label='Ivan Yatsko'
               contact='Email: Ivan.Yatsko@gmail.com'

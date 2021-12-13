@@ -45,7 +45,7 @@ function Register() {
 
     return (
         <div className="form-bg">
-            <video src="/videos/video-4.mp4" autoPlay loop muted />
+            <video src="https://cdn.discordapp.com/attachments/919981879745192016/919983889995407431/video-4.mp4" autoPlay loop muted />
             <div className="form-container">
                 <div className="form-header"></div>
                 <div className="form-content"> Register
