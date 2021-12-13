@@ -24,7 +24,7 @@ function Reasons() {
         
     </div>
     <div className ='lpcontainer2'>  
-    <div className = "box1"> <img src =" ./Images/img-Get-Your-1-Hour-Free-Consultation.png" /> </div>
+    <div className = "box1"> <img src =" ./Images/reasons.png" /> </div>
     <div className = "box2">  
     <h1> Trade with Confidence </h1>
     <div className= 'box3'> Over the past two years, if we’ve learned anything, it is that people suckat investing. Many individuals blew their Covid-relief money on stocks that tanked. Others threw their hopes into stocks that grew rapidly near the end of quarantine, but later tanked because they didn’t realize they had to sell their stock afterwards. 
