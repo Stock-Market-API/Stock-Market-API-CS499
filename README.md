@@ -41,7 +41,7 @@ There is a known issue where the intial route isn't correct, but it does not aff
 Other issues that might occur:
 - If the stock information doesn't appear, the API limit for iex has run out
 - If the stock graph doesn't appear, the API limit for alphavantage has run out
-- Otherwise the issue mighthave occured with Back4App
+- Otherwise the issue might have occured with Back4App
 
 
 
