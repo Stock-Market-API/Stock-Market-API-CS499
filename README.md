@@ -11,7 +11,7 @@
 ---
  
  
-# Steps
+# Steps to run locally
  
  
 1. Clone Repository
