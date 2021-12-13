@@ -87,7 +87,7 @@ class usermarketpage extends Component{
         try {
             const currentUser = await Parse.User.current();
             this.setState({
-                balanceDisplay: currentUser.get('balance').toFixed(2)
+                balanceDisplay: parseFloat(currentUser.get('balance').toFixed(2))
             });
         }
 
@@ -208,7 +208,18 @@ componentDidMount() {
         const price = this.state.data.latestPrice; //Current price
         key = key.toUpperCase(); //Ticker to be saved as all upper case letters only
 
+
+        if(shares == null){
+            return
+        }
+
         console.log("Shares to buy: ", shares);
+        if(shares <= 0){
+            alert("Can't buy that amount of shares")
+            return
+        }
+
+
 
         try {
             const currentUser = await Parse.User.current();
@@ -264,7 +275,11 @@ componentDidMount() {
             }
 
             var newBalance = balance - (price * parseInt(shares));
+            newBalance = parseFloat(newBalance.toFixed(2))
             currentUser.set('balance', newBalance);
+            this.setState({
+                balanceDisplay: newBalance
+            });
             try {
                 currentUser.save();
                 console.log('saving user balance success!');
@@ -306,6 +321,17 @@ componentDidMount() {
 
         console.log("Shares to sell: ", parseInt(shares));
 
+        if(shares == null){
+            return
+        }
+
+        if(shares <= 0){
+            alert("Can't sell that amount shares")
+            return
+        }
+
+
+
         try {
             const currentUser = await Parse.User.current();
             var balance = currentUser.get('balance');
@@ -317,7 +343,9 @@ componentDidMount() {
 
             //If no Queries are recieved
             if (stockResult.length == 0) {
-                console.log('That stock does not exist');
+                // console.log('That stock does not exist');
+                alert("You don't own that stock")
+                return
             }
 
             else {
@@ -352,7 +380,12 @@ componentDidMount() {
             }
 
             var newBalance = balance + (price * parseInt(shares));
+            newBalance = parseFloat(newBalance.toFixed(2))
             currentUser.set('balance', newBalance);
+
+            this.setState({
+                balanceDisplay: newBalance
+            });
             try {
                 currentUser.save();
                 console.log('saving user balance success!');
@@ -396,7 +429,12 @@ componentDidMount() {
     async buyCallOption() {
         const strikeprice = prompt('Enter strikeprice');
         this.optionprice(strikeprice, this.state.data.latestPrice);
-        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice == 0){
+
+        if(strikeprice == null){
+            return
+        }
+
+        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice <= 0){
             alert("Invalid StrikePrice")
             return
         }
@@ -435,6 +473,7 @@ componentDidMount() {
                     console.log('saving the stock success!')
 
                     var newBalance = parseFloat(currentUser.get('balance')) - strikeprice * .1;
+                    newBalance = newBalance.toFixed(2)
                     currentUser.set('balance', parseFloat(newBalance));
 
                     this.setState({
@@ -467,7 +506,12 @@ componentDidMount() {
     //Buy put option
     async buyPutOption() {
         const strikeprice = prompt('Enter strikeprice');
-        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice == 0){
+
+        if(strikeprice == null){
+            return
+        }
+
+        if(strikeprice == null || (typeof strikeprice) == "undefined" || strikeprice <= 0){
             alert("Invalid StrikePrice")
             return
         }
@@ -506,6 +550,7 @@ componentDidMount() {
                     console.log('saving the stock success!')
 
                     var newBalance = currentUser.get('balance') - strikeprice * .1;
+                    newBalance = newBalance.toFixed(2)
                     currentUser.set('balance', parseFloat(newBalance));
 
                     this.setState({
@@ -673,6 +718,7 @@ componentDidMount() {
             //Stock not found in watchlist
             if (stockResult.length == 0) {
                 alert("Cannot remove a stock that is not in your watchlist")
+                return
             }
 
             //Remove stock from watchlist

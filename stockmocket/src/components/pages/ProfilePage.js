@@ -509,7 +509,7 @@ function ProfilePage() {
                                     </tr>
                                     <tr>
                                     <td>Total account value:</td>
-                                    <td>${account_value}</td>
+                                    <td>${parseFloat(account_value.toFixed(2))}</td>
                                     </tr>
                                     <tr>
                                     <td>Net gain/loss:</td>
