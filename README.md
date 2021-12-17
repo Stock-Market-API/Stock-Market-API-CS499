@@ -27,7 +27,7 @@
  
 5. Run `$ npm install react-plotly.js plotly.js`
 6. Run `$ npm i react-chartjs-2@3.3.0`
-7. Run `$ npm install react-hooks-global-state
+7. Run `$ npm install react-hooks-global-state`
 8. Run `$ npm start`
  
 > 
